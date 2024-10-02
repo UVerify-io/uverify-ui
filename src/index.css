@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --toastify-icon-color-warning: #FFFFFF;
+    --toastify-icon-color-error: #FFFFFF;
+    --toastify-icon-color-info: #FFFFFF;
+    --toastify-icon-color-success: #FFFFFF;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff99 #ffffff11;
+}
+
+*::-webkit-scrollbar {
+  width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff99;
+  border-radius: 5px;
+}
+
+.Toastify__toast-container {
+  width: 100%;
+}
+
+@media only screen and (min-width: 480px) {
+  .Toastify__toast-container {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 640px) {
+  .Toastify__toast-container {
+    max-width: 520px;
+  }
+}
+
+.Toastify__toast--info {
+  @apply bg-blue-500/60;
+  @apply text-white;
+  @apply border;
+  @apply border-white/25;
+  @apply backdrop-blur-sm;
+  @apply shadow-sm;
+}
+
+.Toastify__toast--success {
+  @apply bg-green-300/50;
+  @apply text-white;
+  @apply border;
+  @apply border-white/25;
+  @apply backdrop-blur-sm;
+  @apply shadow-sm;
+}
+
+.Toastify__toast--warning {
+  @apply bg-yellow-500/60;
+  @apply text-white;
+  @apply border;
+  @apply border-white/25;
+  @apply backdrop-blur-sm;
+  @apply shadow-sm;
+}
+
+.Toastify__close-button {
+  @apply text-white;
+  opacity: 0.8;
+}
+
+.Toastify__toast--error {
+  @apply bg-red-500/60;
+  @apply text-white;
+  @apply border;
+  @apply border-white/25;
+  @apply backdrop-blur-sm;
+  @apply shadow-sm;
+}
+
+#paypalConnectButton {
+  width: 100%;
+}
+
+#paypalConnectButton > a {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  max-width: unset;
+}
