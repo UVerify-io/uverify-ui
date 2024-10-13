@@ -1,4 +1,17 @@
-import { useState, RefObject, useMemo, useSyncExternalStore } from 'react';
+import {
+  useState,
+  RefObject,
+  useMemo,
+  useSyncExternalStore,
+  createContext,
+  useContext,
+} from 'react';
+import {
+  FingerprintStyle,
+  IdentityCardStyle,
+  MetadataViewerStyle,
+  PaginationStyle,
+} from '../templates/defaultStyles';
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState(() => {
@@ -39,3 +52,64 @@ export function useDimensions(ref: RefObject<HTMLElement>) {
   );
   return useMemo(() => JSON.parse(dimensions), [dimensions]);
 }
+
+export type Shades =
+  | '50'
+  | '100'
+  | '200'
+  | '300'
+  | '400'
+  | '500'
+  | '600'
+  | '700'
+  | '800'
+  | '900'
+  | '950';
+
+export type Colors = {
+  ice: Partial<{
+    [key in Shades]: string;
+  }>;
+  green: Partial<{
+    [key in Shades]: string;
+  }>;
+  cyan?: Partial<{ [key in Shades]: string }>;
+};
+
+export type Components = Partial<{
+  pagination: PaginationStyle;
+  identityCard: IdentityCardStyle;
+  metadataViewer: MetadataViewerStyle;
+  fingerprint: FingerprintStyle;
+}>;
+
+export type ThemeSettings = {
+  background: string;
+  colors: Colors;
+  components: Components;
+};
+
+export type ThemeContextType = {
+  background: string;
+  setBackground: (update: string) => void;
+  restoreDefaults: () => void;
+  applyTheme: (theme: Partial<ThemeSettings>) => void;
+  colors: Colors;
+  setColors: (update: Colors) => void;
+  components: Components;
+  setComponents: (update: Components) => void;
+};
+
+export const UVerifyThemeContext = createContext<ThemeContextType>(
+  {} as ThemeContextType
+);
+
+export const useUVerifyTheme = () => {
+  const context = useContext(UVerifyThemeContext);
+  if (!context) {
+    throw new Error(
+      'useUVerifyTheme must be used within a UVerifyThemeProvider'
+    );
+  }
+  return context;
+};

@@ -21,3 +21,5 @@ export declare interface UVerifyCertificate {
   metadata: string;
   issuer: string;
 }
+
+export type UVerifyMetadata = Record<string, string | number | boolean | null>;

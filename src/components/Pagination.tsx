@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDimensions } from '../utils/hooks';
+import { useDimensions, useUVerifyTheme } from '../utils/hooks';
 import {
   BackwardIcon,
   FastBackwardIcon,
   FastForwardIcon,
   ForwardIcon,
 } from './Icons';
+import { twMerge } from 'tailwind-merge';
 
 declare interface PaginationProps {
   page: number;
@@ -15,14 +16,15 @@ declare interface PaginationProps {
 
 const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
   const navigationRef = useRef<HTMLDivElement>(null);
+  const { components } = useUVerifyTheme();
+  const style = components.pagination;
   const { width } = useDimensions(navigationRef);
   const [buttons, setButtons] = useState<JSX.Element[] | null>(null);
   const [sortcutsEnabled, setSortcutsEnabled] = useState(false);
 
-  const activeClasses =
-    'min-w-[3rem] flex items-center justify-center h-10 text-white border border-white/75 bg-white/40 shadow-center shadow-white/50';
-  const inactiveClasses =
-    'min-w-[3rem] flex items-center justify-center h-10 text-white bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]';
+  const sharedClasses = `min-w-[3rem] flex items-center justify-center h-10 border`;
+  const activeClasses = `text-${style?.text.active.color} hover:text-${style?.text.active.hover.color} border-${style?.border.active.color} border-opacity-${style?.border.active.opacity} bg-${style?.background.active.color} bg-opacity-${style?.background.active.opacity} shadow-white-center`;
+  const inactiveClasses = `text-${style?.text.inactive.color} hover:text-${style?.text.inactive.hover.color} border-${style?.border.inactive.color} border-opacity-${style?.border.inactive.opacity} bg-${style?.background.inactive.color} bg-opacity-${style?.background.inactive.opacity} hover:bg-${style?.background.inactive.hover.color} hover:bg-opacity-${style?.background.inactive.hover.opacity} hover:shadow-white-center hover:border-${style?.border.inactive.color} hover:border-opacity-${style?.border.inactive.opacity}`;
 
   useEffect(() => {
     let center = 2;
@@ -70,7 +72,9 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
             <a
               href="#"
               className={
-                (i === page ? activeClasses : inactiveClasses) +
+                (i === page
+                  ? twMerge(sharedClasses, activeClasses)
+                  : twMerge(sharedClasses, inactiveClasses)) +
                 roundedStart +
                 roundedEnd
               }
@@ -97,7 +101,7 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
               <li onClick={() => setPage(1)}>
                 <a
                   href="#"
-                  className="flex items-center justify-center px-2 h-10 ms-0 text-white bg-white/20 border border-e-0 border-white/30 rounded-s-lg hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]"
+                  className={`flex items-center justify-center px-2 h-10 ms-0 text-${style?.text.active.color} bg-white/20 border border-e-0 border-white/30 rounded-s-lg hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-white/40`}
                 >
                   <FastBackwardIcon />
                 </a>
@@ -111,7 +115,7 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
               >
                 <a
                   href="#"
-                  className="flex items-center justify-center px-2 h-10 text-white bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]"
+                  className={`flex items-center justify-center px-2 h-10 text-${style?.text.active.color} bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-white/40`}
                 >
                   <BackwardIcon />
                 </a>
@@ -130,7 +134,7 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
               >
                 <a
                   href="#"
-                  className="flex items-center justify-center px-2 h-10 text-white bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]"
+                  className={`flex items-center justify-center px-2 h-10 text-${style?.text.active.color} bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]`}
                 >
                   <ForwardIcon />
                 </a>
@@ -142,7 +146,7 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
               >
                 <a
                   href="#"
-                  className="flex items-center justify-center px-2 h-10 text-white bg-white/20 border border-white/30 rounded-e-lg hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]"
+                  className={`flex items-center justify-center px-2 h-10 text-${style?.text.active.color} bg-white/20 border border-white/30 rounded-e-lg hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]`}
                 >
                   <FastForwardIcon />
                 </a>

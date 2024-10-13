@@ -6,10 +6,13 @@ import Certificate from './pages/Certificate';
 import { ToastContainer, Zoom } from 'react-toastify';
 import Footer from './components/Footer';
 import ScrollPageWrapper from './utils/ScrollPageWrapper';
+import { useUVerifyTheme } from './utils/hooks';
 
 function App() {
+  const { background } = useUVerifyTheme();
+
   return (
-    <div className="min-w-screen min-h-screen bg-main-gradient flex flex-col">
+    <div className={`min-w-screen min-h-screen ${background} flex flex-col`}>
       <div className="grow flex justify-center">
         <Router>
           <ScrollPageWrapper>

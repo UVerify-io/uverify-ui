@@ -2,6 +2,8 @@ import seedrandom from 'seedrandom';
 import Identicon from './Identicon';
 import Logo from '../assets/uverify.svg';
 import { toast } from 'react-toastify';
+import { twMerge } from 'tailwind-merge';
+import { useUVerifyTheme } from '../utils/hooks';
 
 declare interface IdentityCardProps {
   address: string;
@@ -14,6 +16,8 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
   }
 
   const random = seedrandom(address);
+  const { components } = useUVerifyTheme();
+  const style = components.identityCard;
 
   const mainColors = ['ice', 'blue', 'green', 'cyan', 'pink', 'purple'];
   const getRandomColor = (colors: string[]) =>
@@ -55,7 +59,14 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
     return result;
   };
 
-  className = className ? ' ' + className : '';
+  const background = `bg-${style?.background.color}`;
+  const backgroundOpacity = `bg-opacity-${style?.background.opacity}`;
+  const border = `border-${style?.border.color}`;
+  const borderOpacity = `border-opacity-${style?.border.opacity}`;
+  const hoverBackground = `hover:bg-${style?.background.hover.color}`;
+  const hoverBackgroundOpacity = `hover:bg-opacity-${style?.background.hover.opacity}`;
+  const hoverBorder = `hover:border-${style?.border.hover.color}`;
+  const hoverBorderOpacity = `hover:border-opacity-${style?.border.hover.opacity}`;
 
   return (
     <div
@@ -63,10 +74,21 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
         navigator.clipboard.writeText(address);
         toast.success('Address copied to clipboard!');
       }}
-      className={`bg-no-repeat cursor-pointer relative overflow-hidden bg-white/20 w-80 h-48 rounded-xl p-4 text-white border border-[#ffffff40] transition duration-200 hover:shadow-center hover:shadow-white/50 hover:border-white hover:bg-white/30${className}`}
+      className={twMerge(
+        'bg-no-repeat cursor-pointer relative overflow-hidden w-80 h-48 rounded-xl p-4 text-white border transition duration-200 hover:shadow-center hover:shadow-white/50',
+        background,
+        border,
+        hoverBackground,
+        hoverBorder,
+        backgroundOpacity,
+        borderOpacity,
+        hoverBackgroundOpacity,
+        hoverBorderOpacity,
+        className
+      )}
     >
       <svg
-        className="absolute bottom-0 left-0 z-[-10]"
+        className="absolute bottom-0 left-0 z-[10]"
         viewBox="0 0 1425 300"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +116,7 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
           ></path>
         </g>
       </svg>
-      <div className="absolute left-[-40px] bottom-[-10px]">
+      <div className="absolute left-[-40px] bottom-[-10px] z-[20]">
         <Identicon address={address} />
       </div>
       <div className="flex flex-col">
@@ -112,7 +134,7 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
             <span className="text-xs uppercase font-bold mb-4">
               Certificate Issuer
             </span>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap z-[20]">
               {split(address, 10).map((line, index) => (
                 <span
                   key={index}

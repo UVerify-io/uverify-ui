@@ -1,4 +1,6 @@
 import { toast } from 'react-toastify';
+import { useUVerifyTheme } from '../utils/hooks';
+import { twMerge } from 'tailwind-merge';
 
 declare interface FingerprintProps {
   hash: string;
@@ -7,6 +9,8 @@ declare interface FingerprintProps {
 }
 
 const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
+  const { components } = useUVerifyTheme();
+  const style = components.fingerprint;
   let containerSize = '24';
   let fingerprintSize = '100';
   let fontSize = '0.65rem';
@@ -30,10 +34,10 @@ const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
 
   return (
     <div
-      className={
-        `cursor-pointer relative flex items-center justify-center w-${containerSize} h-${containerSize} text-white/50 ` +
+      className={twMerge(
+        `cursor-pointer relative flex items-center justify-center w-${containerSize} h-${containerSize} text-white/50 `,
         className
-      }
+      )}
       onClick={copyToClipboard}
     >
       <svg
@@ -47,8 +51,8 @@ const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
       >
         <defs>
           <linearGradient id="gradient">
-            <stop offset="50%" stopColor="#00bedc" />
-            <stop offset="100%" stopColor="#05c48b" />
+            <stop offset="50%" stopColor={style?.gradient.color.start} />
+            <stop offset="100%" stopColor={style?.gradient.color.end} />
           </linearGradient>
         </defs>
         <g id="layer1" transform="translate(-156.01726,-149.49232)">
