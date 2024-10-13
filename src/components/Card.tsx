@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge';
+
 declare interface CardProps {
   title?: string;
   description?: string;
@@ -19,9 +21,10 @@ const Card = ({ title, description, children, className, type }: CardProps) => {
 
   return (
     <div
-      className={`overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-lg border-t border-b sm:border ${borderColor} backdrop-blur-sm shadow-sm ${
-        className && ' ' + className
-      }`}
+      className={twMerge(
+        `overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-lg border-t border-b sm:border ${borderColor} backdrop-blur-sm shadow-sm`,
+        className
+      )}
     >
       {title && <h2 className="text-xl font-extrabold">{title}</h2>}
       {description && <p>{description}</p>}

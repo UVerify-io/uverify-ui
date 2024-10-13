@@ -1,3 +1,4 @@
+import { twMerge } from 'tailwind-merge';
 import { IconType, getIcon } from './Icons';
 
 declare interface IconButtonProps {
@@ -28,10 +29,11 @@ const IconButton = ({
       <a
         href={href}
         target="_blank"
-        className={
-          `rounded-full text-center border border-transparent inline-flex items-center ${padding} font-medium text-white transition duration-200 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]` +
+        className={twMerge(
+          'rounded-full text-center border border-transparent inline-flex items-center font-medium text-white transition duration-200 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-white/30',
+          padding,
           className
-        }
+        )}
       >
         <Icon className={'w-4 h-4'} />
       </a>
@@ -46,10 +48,11 @@ const IconButton = ({
           onClick();
         }
       }}
-      className={
-        `rounded-full text-center border border-transparent inline-flex items-center ${padding} font-medium text-white transition duration-200 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-[#FFFFFF40]` +
+      className={twMerge(
+        'rounded-full text-center border border-transparent inline-flex items-center font-medium text-white transition duration-200 hover:bg-white/30 hover:shadow-center hover:shadow-white/50 hover:border-white/30',
+        padding,
         className
-      }
+      )}
     >
       <Icon className={'w-4 h-4'} />
     </button>

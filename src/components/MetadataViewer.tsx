@@ -3,6 +3,7 @@ import { Field } from '../common/types';
 import IconButton from './IconButton';
 import { IconType } from './Icons';
 import { toast } from 'react-toastify';
+import { useUVerifyTheme } from '../utils/hooks';
 
 declare interface JsonViewerProps {
   json: Record<string, string | number | boolean | null>;
@@ -16,6 +17,8 @@ declare interface Row {
 
 const JsonViewer = ({ json, className }: JsonViewerProps) => {
   const [rows, setRows] = useState<Row[]>([]);
+  const { components } = useUVerifyTheme();
+  const style = components.metadataViewer;
 
   useEffect(() => {
     const parsedRows: Row[] = [];
@@ -39,7 +42,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
               toast.success('Copied to clipboard');
             }}
             type="text"
-            className={`cursor-pointer w-full h-10 text-xs px-2 outline-none rounded bg-white/25 border border-[#FFFFFF40] text-white hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
+            className={`cursor-pointer w-full h-10 text-xs px-2 outline-none rounded bg-white/25 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
             value={field.key}
             readOnly
           />
@@ -53,7 +56,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
                   toast.success('Copied to clipboard');
                 }}
                 type="text"
-                className={`cursor-pointer grow h-10 text-xs px-2 outline-none rounded bg-white/25 border border-[#FFFFFF40] text-white hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
+                className={`cursor-pointer grow h-10 text-xs px-2 outline-none rounded bg-white/25 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
                 value={
                   field.value.length > 50
                     ? field.value.slice(0, 50) + '...'
@@ -81,7 +84,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
                   navigator.clipboard.writeText(field.value);
                   toast.success('Copied to clipboard');
                 }}
-                className={`cursor-pointer grow break-all text-left resize-none text-xs text-white p-2.5 outline-none rounded hover:bg-white/30 hover:shadow-center hover:shadow-white/50 bg-white/25 border border-[#FFFFFF40]`}
+                className={`cursor-pointer grow break-all text-left resize-none text-xs p-2.5 outline-none rounded hover:bg-white/30 hover:shadow-center hover:shadow-white/50 bg-white/25 border border-[#FFFFFF40]`}
               >
                 {field.value}
               </div>

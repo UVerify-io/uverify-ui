@@ -6,7 +6,40 @@
     --toastify-icon-color-warning: #FFFFFF;
     --toastify-icon-color-error: #FFFFFF;
     --toastify-icon-color-info: #FFFFFF;
-    --toastify-icon-color-success: #FFFFFF;
+    --toastify-icon-color-success: #FFFFFF;            
+    --color-ice-50: 235, 254, 255;
+    --color-ice-100: 206, 251, 255;
+    --color-ice-200: 162, 246, 255;
+    --color-ice-300: 99, 236, 253;
+    --color-ice-400: 28, 217, 244;
+    --color-ice-500: 0, 190, 220;
+    --color-ice-600: 3, 150, 183;
+    --color-ice-700: 10, 119, 148;
+    --color-ice-800: 18, 96, 120;
+    --color-ice-900: 20, 80, 101;
+    --color-ice-950: 6, 53, 70;
+    --color-green-50: 235, 254, 246;
+    --color-green-100: 206, 253, 231;
+    --color-green-200: 162, 248, 211;
+    --color-green-300: 74, 174, 177;
+    --color-green-400: 45, 221, 162;
+    --color-green-500: 5, 196, 139;
+    --color-green-600: 0, 160, 114;
+    --color-green-700: 0, 128, 94;
+    --color-green-800: 0, 65, 76;
+    --color-green-900: 1, 53, 64;
+    --color-green-950: 0, 47, 37;
+    --color-cyan-50: 239, 255, 253;
+    --color-cyan-100: 199, 255, 251;
+    --color-cyan-200: 159, 255, 249;
+    --color-cyan-300: 80, 248, 243;
+    --color-cyan-400: 29, 227, 228;
+    --color-cyan-500: 4, 196, 200;
+    --color-cyan-600: 0, 154, 161;
+    --color-cyan-700: 5, 122, 128;
+    --color-cyan-800: 10, 95, 101;
+    --color-cyan-900: 13, 80, 84;
+    --color-cyan-950: 0, 45, 51;
 }
 
 /* Firefox */
