@@ -290,7 +290,7 @@ const Creation = () => {
       if (response.status === 200) {
         const transaction = response.data.unsignedTransaction;
         const api = await (window as any).cardano[enabledWallet].enable();
-        const witnessSet = await api.signTx(transaction);
+        const witnessSet = await api.signTx(transaction, true);
         const result = await axios.post(apiUrl + '/api/v1/transaction/submit', {
           transaction: transaction,
           witnessSet: witnessSet,
