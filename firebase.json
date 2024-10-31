@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "dist",
+    "site": "uverify-discovery",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
