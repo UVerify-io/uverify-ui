@@ -10,8 +10,10 @@ const Footer = ({ className }: FooterProps) => {
   const date = new Date();
 
   return (
-    <footer className={'flex flex-col items-center p-1 text-white' + className}>
-      <div>
+    <footer
+      className={'flex flex-col items-center p-1 text-white ' + className}
+    >
+      <div className="mt-6 mb-2">
         <IconButton
           href="mailto:hello@uverify.io"
           iconType={IconType.EmailIcon}
@@ -30,19 +32,22 @@ const Footer = ({ className }: FooterProps) => {
           iconType={IconType.GitHubIcon}
         />
       </div>
-      <div className="flex items-center justify-center my-1 text-xs">
-        Created with{' '}
+      <div className="text-xs flex flex-col justify-center items-center">
+        <div>
+          <a href="https://uverify.io/#terms-of-use">Terms of Use</a>
+          <span className="mx-1">|</span>
+          <a href="https://uverify.io/#privacy-policy">Privacy Policy</a>
+          <span className="mx-1">|</span>
+          <a href="https://uverify.io/#impress">Impress</a>
+        </div>
+      </div>
+      <div className="flex items-center justify-center mt-2 text-xs">
         <a
-          className="flex items-center justify-center my-1 text-xs mr-2"
+          className="flex items-center justify-center"
           href="https://uverify.io/#team"
         >
-          <HeartIcon className="mx-1" /> by UVerify ©{date.getFullYear()}
-        </a>
-        <a
-          className="flex items-center justify-center my-1 pl-2 text-xs border-l border-white"
-          href="https://uverify.io/#impress"
-        >
-          Impress
+          Created with <HeartIcon className="mx-1" />
+          by UVerify © {date.getFullYear()} Fabian Bormann
         </a>
       </div>
     </footer>
