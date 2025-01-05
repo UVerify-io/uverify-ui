@@ -33,10 +33,10 @@ const Certificate = () => {
           if (res.status !== 200) return;
           if (res.data.length === 0) return;
           const certificateList: UVerifyCertificate[] = res.data;
-          certificateList.sort((a, b) => a.creationTime - b.creationTime);
+          certificateList.sort((a, b) => a.creation_time - b.creation_time);
           setCertificates(certificateList);
           setFirstDateTime(
-            timestampToDateTime(certificateList[0].creationTime)
+            timestampToDateTime(certificateList[0].creation_time)
           );
           setTotalPages(res.data.length);
 
@@ -46,7 +46,7 @@ const Certificate = () => {
           } else if (typeof query === 'string') {
             if (query.length === 64) {
               const index = certificateList.findIndex(
-                (item) => item.transactionHash === query
+                (item) => item.transaction_hash === query
               );
               if (index !== -1) {
                 setPage(index + 1);

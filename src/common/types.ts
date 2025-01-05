@@ -13,11 +13,11 @@ export declare interface BearerTokenResponse {
 export declare interface UVerifyCertificate {
   hash: string;
   address: string;
-  blockHash: string;
-  blockNumber: number;
-  transactionHash: string;
+  block_hash: string;
+  block_number: number;
+  transaction_hash: string;
   slot: number;
-  creationTime: number;
+  creation_time: number;
   metadata: string;
   issuer: string;
 }
