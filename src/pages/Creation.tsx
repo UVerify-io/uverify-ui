@@ -85,7 +85,7 @@ const Creation = () => {
       setSearchParams(searchParams);
 
       axios
-        .post(import.meta.env.VITE_BACKEND_URL + '/api/v1/web2/login/paypal', {
+        .post(import.meta.env.VITE_BACKEND_URL + '/api/v1/paypal/login', {
           authorizationCode: authorizationCode,
         })
         .then((response) => {
@@ -165,7 +165,7 @@ const Creation = () => {
                     toast.dismiss();
                   }}
                 >
-                  Your data is now on-chain and verifiable! 🥶 Click on this
+                  Your data is now on-chain and verifiable! Click on this
                   message to access your certificate.
                 </a>
               ),
@@ -282,13 +282,19 @@ const Creation = () => {
     try {
       const hash = activeTab === 0 ? fileHash : sha256(text);
       const response = await axios.post(apiUrl + '/api/v1/transaction/build', {
+        type: 'DEFAULT',
         address: address,
-        hash: hash,
-        metadata: metadata,
+        certificates: [
+          {
+            hash: hash,
+            metadata: metadata,
+            algorithm: 'SHA-256',
+          },
+        ],
       });
 
-      if (response.status === 200) {
-        const transaction = response.data.unsignedTransaction;
+      if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
+        const transaction = response.data.unsigned_transaction;
         const api = await (window as any).cardano[enabledWallet].enable();
         const witnessSet = await api.signTx(transaction, true);
         const result = await axios.post(apiUrl + '/api/v1/transaction/submit', {
@@ -301,6 +307,12 @@ const Creation = () => {
           transactionHash: result.data.value,
         });
       } else {
+        toast.error(
+          'Transaction building failed or has been aborted. Please try again.'
+        );
+        if (response.data.status?.code === 'ERROR') {
+          console.error(response.data.status.message);
+        }
         setButtonState('enabled');
       }
     } catch (error) {

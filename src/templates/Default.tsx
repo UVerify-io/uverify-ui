@@ -18,6 +18,7 @@ class DefaultTemplate extends Template {
     pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
+    console.log(certificate);
     const isVerified = certificate !== undefined;
     const description = isVerified ? (
       <>
@@ -43,13 +44,13 @@ class DefaultTemplate extends Template {
             </p>
             {pagination}
             <p className="font-bold uppercase my-4">
-              {timestampToDateTime(certificate.creationTime)}
+              {timestampToDateTime(certificate.creation_time)}
             </p>
           </>
         )}
 
         <a
-          href={`https://preprod.cexplorer.io/tx/${certificate.transactionHash}/contract#data`}
+          href={`https://preprod.cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
           target="_blank"
           className="my-2 border border-white/30 text-center inline-flex items-center rounded-xl bg-white/30 px-4 py-2 font-medium text-white transition duration-200 hover:bg-white/40 hover:shadow-center hover:shadow-blue-100/50"
         >
