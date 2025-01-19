@@ -19,6 +19,7 @@
     "@stricahq/typhonjs": "^2.0.0",
     "axios": "^1.7.7",
     "bip39": "^3.1.0",
+    "dompurify": "^3.2.3",
     "js-sha256": "^0.11.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",

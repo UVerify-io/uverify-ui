@@ -173,13 +173,13 @@ class MonochromeTemplate extends Template {
             </p>
             {pagination}
             <p className="font-bold uppercase my-4">
-              {timestampToDateTime(certificate.creationTime)}
+              {timestampToDateTime(certificate.creation_time)}
             </p>
           </>
         )}
 
         <a
-          href={`https://preprod.cexplorer.io/tx/${certificate.transactionHash}/contract#data`}
+          href={`https://preprod.cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
           target="_blank"
           className="my-2 text-center text-black inline-flex items-center rounded-xl bg-black px-4 py-2 font-medium text-white transition duration-200 hover:shadow-center hover:shadow-white-100/50"
         >
