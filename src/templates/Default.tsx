@@ -18,7 +18,6 @@ class DefaultTemplate extends Template {
     pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
-    console.log(certificate);
     const isVerified = certificate !== undefined;
     const description = isVerified ? (
       <>
