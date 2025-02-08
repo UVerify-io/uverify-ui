@@ -22,7 +22,7 @@ const Card = ({ title, description, children, className, type }: CardProps) => {
   return (
     <div
       className={twMerge(
-        `overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-lg border-t border-b sm:border ${borderColor} backdrop-blur-sm shadow-sm`,
+        `overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-lg border-t border-b sm:border ${borderColor} backdrop-blur-xs shadow-xs`,
         className
       )}
     >

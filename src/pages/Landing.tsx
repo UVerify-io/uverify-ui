@@ -9,7 +9,7 @@ const Landing = () => {
   const networkIndicator = getCardanoNetworkIndicator();
 
   return (
-    <div className="text-center text-white max-w-screen-md mt-12 px-6 sm:px-0 min-h-full">
+    <div className="text-center text-white max-w-(--breakpoint-md) mt-12 px-6 sm:px-0 min-h-full">
       <img
         src={Logo}
         alt="UVerify Logo"

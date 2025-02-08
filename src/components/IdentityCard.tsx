@@ -88,7 +88,7 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
       )}
     >
       <svg
-        className="absolute bottom-0 left-0 z-[10]"
+        className="absolute bottom-0 left-0 z-10"
         viewBox="0 0 1425 300"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
           ></path>
         </g>
       </svg>
-      <div className="absolute left-[-40px] bottom-[-10px] z-[20]">
+      <div className="absolute left-[-40px] bottom-[-10px] z-20">
         <Identicon address={address} />
       </div>
       <div className="flex flex-col">
@@ -134,7 +134,7 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
             <span className="text-xs uppercase font-bold mb-4">
               Certificate Issuer
             </span>
-            <div className="flex flex-wrap z-[20]">
+            <div className="flex flex-wrap z-20">
               {split(address, 10).map((line, index) => (
                 <span
                   key={index}

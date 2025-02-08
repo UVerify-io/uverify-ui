@@ -1,4 +1,5 @@
-import { IconType, getIcon } from './Icons';
+import { IconType, LoadingIcon, getIcon } from './Icons';
+import { twMerge } from 'tailwind-merge';
 
 declare interface ButtonProps {
   label: string;
@@ -24,21 +25,46 @@ const Button = ({
   disabled,
 }: ButtonProps) => {
   className = typeof className === 'string' ? ' ' + className : '';
+  variant = variant || 'default';
 
-  const backgroundColor = variant === 'glass' ? 'white' : `${color}-400`;
-  const hoverBackgroundColor =
-    variant === 'glass' ? `${color}-200` : backgroundColor;
-  const shadowColor = `${color}-100`;
-  let opacity = '75';
-
-  if (variant === 'glass') {
-    opacity = '30';
-  } else if (variant === 'contained') {
-    opacity = '90';
-  }
-
-  const labelColor = 'white';
-  const LoadingIcon = getIcon(IconType.Loading);
+  const variants = {
+    contained: {
+      blue: 'bg-blue-400 hover:bg-blue-200',
+      pink: 'bg-pink-400 hover:bg-pink-200',
+      cyan: 'bg-cyan-400 hover:bg-cyan-200',
+      purple: 'bg-purple-400 hover:bg-purple-200',
+      ice: 'bg-ice-400 hover:bg-ice-200',
+      green: 'bg-green-400 hover:bg-green-200',
+    },
+    default: {
+      blue: 'bg-blue-400/75 hover:bg-blue-400 hover:shadow-center hover:shadow-blue-100/50',
+      pink: 'bg-pink-400/75 hover:bg-pink-400 hover:shadow-center hover:shadow-pink-100/50',
+      cyan: 'bg-cyan-400/75 hover:bg-cyan-400 hover:shadow-center hover:shadow-cyan-100/50',
+      purple:
+        'bg-purple-400/75 hover:bg-purple-400 hover:shadow-center hover:shadow-purple-100/50',
+      ice: 'bg-ice-400/75 hover:bg-ice-400 hover:shadow-center hover:shadow-ice-100/50',
+      green:
+        'bg-green-400/75 hover:bg-green-400 hover:shadow-center hover:shadow-green-100/50',
+    },
+    glass: {
+      blue: 'bg-white/30 hover:bg-blue-200 hover:shadow-center hover:shadow-blue-100/50 hover:drop-shadow-center-sm',
+      pink: 'bg-white/30 hover:bg-pink-200 hover:shadow-center hover:shadow-pink-100/50 hover:drop-shadow-center-sm',
+      cyan: 'bg-white/30 hover:bg-cyan-200 hover:shadow-center hover:shadow-cyan-100/50 hover:drop-shadow-center-sm',
+      purple:
+        'bg-white/30 hover:bg-purple-200 hover:shadow-center hover:shadow-purple-100/50 hover:drop-shadow-center-sm',
+      ice: 'bg-white/30 hover:bg-ice-200 hover:shadow-center hover:shadow-ice-100/50 hover:drop-shadow-center-sm',
+      green:
+        'bg-white/30 hover:bg-green-200 hover:shadow-center hover:shadow-green-100/50 hover:drop-shadow-center-sm',
+    },
+    disabled: {
+      blue: 'bg-blue-400/15',
+      pink: 'bg-pink-400/15',
+      cyan: 'bg-cyan-400/15',
+      purple: 'bg-purple-400/15',
+      ice: 'bg-ice-400/15',
+      green: 'bg-green-400/15',
+    },
+  };
 
   if (icon) {
     const Icon = getIcon(icon);
@@ -50,7 +76,8 @@ const Button = ({
         <button
           type="button"
           className={
-            `border border-white/20 text-center inline-flex items-center rounded-xl bg-${backgroundColor}/15 px-4 py-2 font-medium text-white/40 cursor-not-allowed` +
+            'border border-white/20 text-center inline-flex items-center rounded-xl px-4 py-2 font-medium text-white/40 cursor-not-allowed ' +
+            variants['disabled'][color] +
             className
           }
         >
@@ -58,11 +85,6 @@ const Button = ({
           {label}
         </button>
       );
-    }
-
-    let activeStyle = ` hover:bg-${backgroundColor}`;
-    if (variant !== 'contained') {
-      activeStyle += ` hover:shadow-center hover:shadow-${shadowColor}/50`;
     }
 
     return (
@@ -74,8 +96,9 @@ const Button = ({
           }
         }}
         className={
-          `border border-[#FFFFFF40] text-center inline-flex items-center rounded-xl bg-${backgroundColor}/${opacity} px-4 py-2 font-medium text-white transition duration-200` +
-          (state === 'loading' ? ' cursor-wait' : activeStyle) +
+          'cursor-pointer border border-[#FFFFFF40] text-center inline-flex items-center rounded-xl px-4 py-2 font-medium text-white transition duration-200 ' +
+          variants[variant][color] +
+          (state === 'loading' ? ' cursor-wait' : '') +
           className
         }
       >
@@ -93,19 +116,15 @@ const Button = ({
     return (
       <button
         type="button"
-        className={
-          `border border-white/20 rounded-xl bg-${backgroundColor}/15 px-4 py-2 text-base font-medium text-white/40 cursor-not-allowed` +
+        className={twMerge(
+          variants.disabled[color],
+          `border border-white/20 rounded-xl px-4 py-2 text-base font-medium text-white/40 cursor-not-allowed`,
           className
-        }
+        )}
       >
         {label}
       </button>
     );
-  }
-
-  let activeStyle = ` hover:bg-${hoverBackgroundColor}`;
-  if (variant !== 'contained') {
-    activeStyle += ` hover:shadow-center hover:shadow-${shadowColor}/50 hover:drop-shadow-center-sm`;
   }
 
   return (
@@ -116,13 +135,12 @@ const Button = ({
           onClick();
         }
       }}
-      className={
-        `border border-[#FFFFFF40] rounded-xl bg-${backgroundColor}/${opacity} px-4 py-2 text-base font-medium text-white transition ${
-          variant === 'glass' ? 'hover:text-' + labelColor : ''
-        } duration-200` +
-        (state === 'loading' ? ' cursor-wait' : activeStyle) +
+      className={twMerge(
+        variants[variant][color],
+        'cursor-pointer border border-[#FFFFFF40] rounded-xl px-4 py-2 text-base font-medium text-white transition duration-200',
+        state === 'loading' && ' cursor-wait',
         className
-      }
+      )}
     >
       {state === 'loading' && (
         <LoadingIcon className={'w-4 h-4 me-2' + iconClassName} />

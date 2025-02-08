@@ -30,7 +30,7 @@ const PaypalCheckoutButton = ({
   };
 
   const creditsSpan = (text: string) => (
-    <span className="bg-white/10 border border-white/30 text-white text-xs font-medium px-2 py-0.5 rounded">
+    <span className="bg-white/10 border border-white/30 text-white text-xs font-medium px-2 py-0.5 rounded-sm">
       {text}
     </span>
   );
@@ -79,7 +79,7 @@ const PaypalCheckoutButton = ({
               type="button"
               id="decrement-button"
               onClick={decrementCredits}
-              className="bg-white/20 hover:bg-white/40 border border-white/50 rounded-s-lg p-3 h-9 focus:outline-none"
+              className="bg-white/20 hover:bg-white/40 border border-white/50 rounded-s-lg p-3 h-9 focus:outline-hidden"
             >
               <svg
                 className="w-3 h-3"
@@ -108,7 +108,7 @@ const PaypalCheckoutButton = ({
               type="button"
               id="increment-button"
               onClick={incrementCredits}
-              className="bg-white/20 hover:bg-white/40 border border-white/50 rounded-e-lg p-3 h-9 focus:outline-none"
+              className="bg-white/20 hover:bg-white/40 border border-white/50 rounded-e-lg p-3 h-9 focus:outline-hidden"
             >
               <svg
                 className="w-3 h-3"

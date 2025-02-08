@@ -69,7 +69,7 @@ const Creation = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const creditsSpan = (text: string) => (
-    <span className="bg-white/10 border border-white/30 text-white text-xs font-medium px-2 py-0.5 rounded">
+    <span className="bg-white/10 border border-white/30 text-white text-xs font-medium px-2 py-0.5 rounded-sm">
       {text}
     </span>
   );
@@ -326,7 +326,7 @@ const Creation = () => {
   };
 
   return (
-    <div className="flex flex-col text-center text-white max-w-screen-sm w-full pt-2 sm:pt-12 lg:max-w-screen-md">
+    <div className="flex flex-col text-center text-white max-w-(--breakpoint-sm) w-full pt-2 sm:pt-12 lg:max-w-(--breakpoint-md)">
       <Header title="Create Verifiable Data" />
       <Card className="mt-2 grow sm:mx-2 sm:mt-12 sm:grow-0 sm:mb-4">
         <h2 className="text-xl font-extrabold uppercase">
@@ -426,11 +426,11 @@ const Creation = () => {
               color="blue"
             />
             <div className="relative flex py-2 items-center w-1/2">
-              <div className="flex-grow border-t border-white/80"></div>
-              <span className="flex-shrink mx-2 text-white/80 uppercase">
+              <div className="grow border-t border-white/80"></div>
+              <span className="shrink mx-2 text-white/80 uppercase">
                 or
               </span>
-              <div className="flex-grow border-t border-white/80"></div>
+              <div className="grow border-t border-white/80"></div>
             </div>
 
             <PaypalConnectButton />

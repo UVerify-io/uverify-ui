@@ -1,6 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.js';
+
+@theme {
+  --shadow-center: 0 0 12px 0 rgb(0 0 0 / 0.1);
+  --shadow-white-center: 0 0 12px 0 rgb(255 255 255 / .5);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 :root {
     --toastify-icon-color-warning: #FFFFFF;
@@ -78,8 +101,8 @@
   @apply text-white;
   @apply border;
   @apply border-white/25;
-  @apply backdrop-blur-sm;
-  @apply shadow-sm;
+  @apply backdrop-blur-xs;
+  @apply shadow-xs;
 }
 
 .Toastify__toast--success {
@@ -87,8 +110,8 @@
   @apply text-white;
   @apply border;
   @apply border-white/25;
-  @apply backdrop-blur-sm;
-  @apply shadow-sm;
+  @apply backdrop-blur-xs;
+  @apply shadow-xs;
 }
 
 .Toastify__toast--warning {
@@ -96,8 +119,8 @@
   @apply text-white;
   @apply border;
   @apply border-white/25;
-  @apply backdrop-blur-sm;
-  @apply shadow-sm;
+  @apply backdrop-blur-xs;
+  @apply shadow-xs;
 }
 
 .Toastify__close-button {
@@ -110,8 +133,8 @@
   @apply text-white;
   @apply border;
   @apply border-white/25;
-  @apply backdrop-blur-sm;
-  @apply shadow-sm;
+  @apply backdrop-blur-xs;
+  @apply shadow-xs;
 }
 
 #paypalConnectButton {

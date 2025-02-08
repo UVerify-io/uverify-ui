@@ -130,7 +130,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
                   setFields(updatedFields);
                 }
               }}
-              className={`placeholder-white/60 w-full h-10 text-xs px-2 outline-none rounded ${
+              className={`placeholder-white/60 w-full h-10 text-xs px-2 outline-hidden rounded ${
                 hasKeyError
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
                   : 'bg-white/25 border border-white/75 text-white'
@@ -175,7 +175,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
                 setFields(updatedFields);
               }}
               placeholder="Value"
-              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-none rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
+              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
                 hasValueError
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
                   : 'bg-white/25 border border-white/75 text-white'

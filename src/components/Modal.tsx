@@ -22,7 +22,7 @@ const Modal = ({ title, children, isOpen, size, onClose }: ModalProps) => {
       <div
         className={`relative sm:p-4 h-full w-full sm:w-auto sm:h-auto sm:max-w-${width} sm:max-h-full`}
       >
-        <div className="relative overflow-hidden h-full sm:h-auto text-white p-6 bg-white/30 sm:rounded-lg sm:border sm:border-[#FFFFFF55] backdrop-blur-sm shadow-sm">
+        <div className="relative overflow-hidden h-full sm:h-auto text-white p-6 bg-white/30 sm:rounded-lg sm:border sm:border-[#FFFFFF55] backdrop-blur-xs shadow-xs">
           <div className="flex items-center justify-between rounded-t">
             <h3 className="text-lg font-semibold">{title}</h3>
             <IconButton iconType={IconType.Close} onClick={() => onClose()} />

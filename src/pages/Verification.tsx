@@ -63,7 +63,7 @@ const Verification = () => {
     );
 
   return (
-    <div className="flex flex-col text-center text-white max-w-screen-sm w-full pt-2 sm:pt-12 lg:max-w-screen-md">
+    <div className="flex flex-col text-center text-white max-w-(--breakpoint-sm) w-full pt-2 sm:pt-12 lg:max-w-(--breakpoint-md)">
       <Header title="Verify Data" />
       <Card className="mt-2 grow sm:mx-2 sm:mt-12 sm:grow-0 sm:mb-4">
         <h2 className="text-xl font-extrabold uppercase">Verify Data</h2>
