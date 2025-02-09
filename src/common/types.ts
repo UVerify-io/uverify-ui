@@ -3,13 +3,6 @@ export declare interface Field {
   value: string;
 }
 
-export declare interface BearerTokenResponse {
-  credits: number;
-  sub: string;
-  iat: number;
-  exp: number;
-}
-
 export declare interface UVerifyCertificate {
   hash: string;
   address: string;

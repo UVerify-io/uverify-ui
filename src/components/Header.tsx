@@ -57,7 +57,7 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
             Verify Data
           </h2>
           <div style={{ minWidth: 32 }}>{RightArrow}</div>
-          <Fingerprint hash={title} size="small" />
+          <Fingerprint hash={title} />
           {getCardanoNetworkIndicator('sm', 'mr-2')}
         </>
       ) : (

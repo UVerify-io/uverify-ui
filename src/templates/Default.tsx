@@ -9,6 +9,7 @@ import MetadataViewer from '../components/MetadataViewer';
 import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
+import { JSX } from 'react';
 
 class DefaultTemplate extends Template {
   public render(

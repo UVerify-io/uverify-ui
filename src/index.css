@@ -136,14 +136,3 @@
   @apply backdrop-blur-xs;
   @apply shadow-xs;
 }
-
-#paypalConnectButton {
-  width: 100%;
-}
-
-#paypalConnectButton > a {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  max-width: unset;
-}

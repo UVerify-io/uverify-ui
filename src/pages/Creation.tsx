@@ -18,15 +18,9 @@ import {
 } from '@cardano-foundation/cardano-connect-with-wallet-core';
 import Modal from '../components/Modal';
 import { toast } from 'react-toastify';
-import { useSearchParams } from 'react-router-dom';
 import SelectedFileArea from '../components/SelectedFileArea';
 import Fingerprint from '../components/Fingerprint';
-import PaypalConnectButton from '../components/PaypalConnectButton';
-import PaypalCheckoutButton from '../components/PaypalCheckoutButton';
-import { useLocalStorage } from '../utils/hooks';
-import { jwtDecode } from 'jwt-decode';
 import MetadataEditor, { MetadataHandle } from '../components/MetadataEditor';
-import { BearerTokenResponse } from '../common/types';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -37,7 +31,6 @@ declare interface TransactionResult {
 const Creation = () => {
   const [text, setText] = useState('');
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
-  const [buyCreditsDialogOpen, setBuyCreditsDialogOpen] = useState(false);
   const metadataEditorRef = useRef<MetadataHandle>(null);
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
@@ -45,16 +38,6 @@ const Creation = () => {
   const { usedAddresses, isConnected, disconnect, enabledWallet } = useCardano({
     limitNetwork: NetworkType.TESTNET,
   });
-  const [paypalBearerToken, setPaypalBearerToken] = useLocalStorage<string>(
-    'uverify-paypal-bearer-token',
-    ''
-  );
-
-  let decodedBearerToken: BearerTokenResponse | undefined;
-  if (paypalBearerToken !== '') {
-    decodedBearerToken = jwtDecode(paypalBearerToken);
-  }
-
   const [fileHash, setFileHash] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [transactionResult, setTransactionResult] =
@@ -65,38 +48,6 @@ const Creation = () => {
     (activeTab === 0 && fileHash !== '') ||
     (activeTab === 1 && text.length > 0);
   const hash = showFingerprint && (activeTab === 0 ? fileHash : sha256(text));
-
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const creditsSpan = (text: string) => (
-    <span className="bg-white/10 border border-white/30 text-white text-xs font-medium px-2 py-0.5 rounded-sm">
-      {text}
-    </span>
-  );
-
-  useEffect(() => {
-    if (searchParams.has('code')) {
-      const authorizationCode = searchParams.get('code');
-      searchParams.delete('code');
-
-      if (searchParams.has('scope')) {
-        searchParams.delete('scope');
-      }
-      setSearchParams(searchParams);
-
-      axios
-        .post(import.meta.env.VITE_BACKEND_URL + '/api/v1/paypal/login', {
-          authorizationCode: authorizationCode,
-        })
-        .then((response) => {
-          setPaypalBearerToken(response.data.bearerToken);
-        })
-        .catch((error) => {
-          toast.error('Paypal login failed. Please try again.');
-          console.error('Error:', error.response.data);
-        });
-    }
-  }, [searchParams]);
 
   const dropArea =
     typeof selectedFile === 'undefined' ? (
@@ -198,66 +149,7 @@ const Creation = () => {
       return;
     }
 
-    if (paypalBearerToken === '') {
-      await freezeDataWithWallet(metadata);
-    } else {
-      await freezeDataWithCredits(metadata);
-    }
-  };
-
-  const freezeDataWithCredits = async (metadata: string) => {
-    if (paypalBearerToken === '' || decodedBearerToken?.credits === 0) {
-      return;
-    }
-
-    if (activeTab === 0 && fileHash === '') {
-      toast.info('Please upload a file');
-      return;
-    }
-
-    if (activeTab === 1 && text.length === 0) {
-      toast.info('Please enter some text');
-      return;
-    }
-
-    const apiUrl = import.meta.env.VITE_BACKEND_URL;
-    const hash = activeTab === 0 ? fileHash : sha256(text);
-    setButtonState('loading');
-    try {
-      const response = await axios.post(
-        apiUrl + '/api/v1/paypal/transaction/submit',
-        {
-          hash: hash,
-          metadata: metadata,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${paypalBearerToken}`,
-          },
-        }
-      );
-
-      if (response.status === 200 && response.data.successful) {
-        const result = {
-          successful: true,
-          hash: hash,
-          transactionHash: response.data.value,
-        };
-        setPaypalBearerToken(response.data.bearerToken);
-        setTransactionResult(result);
-      } else {
-        toast.error(
-          'Transaction building failed or has been aborted. Please try again.'
-        );
-      }
-    } catch (error) {
-      toast.error(
-        'Transaction building failed or has been aborted. Please try again.'
-      );
-      console.error(error);
-    } finally {
-      setButtonState('enabled');
-    }
+    await freezeDataWithWallet(metadata);
   };
 
   const freezeDataWithWallet = async (metadata: string) => {
@@ -415,7 +307,25 @@ const Creation = () => {
             </a>
           </div>
         </Modal>
-        {!(isConnected || paypalBearerToken !== '') ? (
+        {isConnected ? (
+          <div className="flex flex-col items-center">
+            <Button
+              className="mt-4 min-w-[236px]"
+              state={buttonState}
+              label="Create Trust Certificate"
+              variant="glass"
+              onClick={freezeData}
+              color="blue"
+            />
+            <Button
+              color="pink"
+              variant="contained"
+              className="mt-4 min-w-[236px]"
+              label="Disconnect Wallet"
+              onClick={disconnect}
+            />
+          </div>
+        ) : (
           <div className="flex flex-col items-center justify-center">
             <Button
               className="mt-4 min-w-[236px]"
@@ -425,89 +335,6 @@ const Creation = () => {
               onClick={() => setIsWalletDialogOpen(true)}
               color="blue"
             />
-            <div className="relative flex py-2 items-center w-1/2">
-              <div className="grow border-t border-white/80"></div>
-              <span className="shrink mx-2 text-white/80 uppercase">
-                or
-              </span>
-              <div className="grow border-t border-white/80"></div>
-            </div>
-
-            <PaypalConnectButton />
-          </div>
-        ) : (
-          <div className="flex flex-col items-center">
-            <Button
-              className="mt-4 min-w-[236px]"
-              state={buttonState}
-              label="Create Trust Certificate"
-              variant="glass"
-              onClick={() => freezeData()}
-              color="blue"
-              disabled={
-                paypalBearerToken !== '' && decodedBearerToken?.credits === 0
-              }
-            />
-            {paypalBearerToken !== '' && (
-              <p className="my-4 text-xs">
-                Creating a trust certificate will use 1 {creditsSpan('Credit')}.
-                You have {decodedBearerToken?.credits || 0}{' '}
-                {creditsSpan(
-                  (decodedBearerToken?.credits || 0) === 1
-                    ? 'Credit'
-                    : 'Credits'
-                )}
-                .
-              </p>
-            )}
-            {paypalBearerToken !== '' && (
-              <Button
-                label="Buy Credits"
-                variant="glass"
-                className="mt-2 min-w-[236px]"
-                onClick={() => setBuyCreditsDialogOpen(true)}
-                color="blue"
-              />
-            )}
-            <Button
-              color="pink"
-              variant="contained"
-              className="mt-4 min-w-[236px]"
-              label={
-                isConnected ? 'Disconnect Wallet' : 'Disconnect Paypal Account'
-              }
-              onClick={() => {
-                if (isConnected) {
-                  disconnect();
-                } else {
-                  setPaypalBearerToken('');
-                }
-              }}
-            />
-            {paypalBearerToken !== '' && (
-              <Modal
-                title="Buy Credits"
-                size="lg"
-                isOpen={buyCreditsDialogOpen}
-                onClose={() => setBuyCreditsDialogOpen(false)}
-              >
-                <PaypalCheckoutButton
-                  paypalUserId={decodedBearerToken?.sub}
-                  bearerToken={paypalBearerToken}
-                  onPaymentComplete={(amount) => {
-                    setBuyCreditsDialogOpen(false);
-                    toast.success(
-                      `Successfully purchased ${amount} ${
-                        amount === 1 ? 'credit' : 'credits'
-                      }!`
-                    );
-                  }}
-                  updateBearerToken={(bearerToken) =>
-                    setPaypalBearerToken(bearerToken)
-                  }
-                />
-              </Modal>
-            )}
           </div>
         )}
       </Card>
