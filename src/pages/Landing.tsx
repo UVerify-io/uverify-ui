@@ -29,6 +29,7 @@ const Landing = () => {
         <Button
           className="px-8 py-4 font-bold text-lg sm:mr-8 mb-4 sm:mb-0 min-w-[150px] text-center"
           color="cyan"
+          data-testid="verify-button"
           label="Verify"
           onClick={() => navigate('/verify')}
           icon={IconType.RightArrow}
@@ -36,6 +37,7 @@ const Landing = () => {
         <Button
           className="px-8 py-4 font-bold text-lg min-w-[150px] text-center"
           color="ice"
+          data-testid="create-button"
           label="Create"
           onClick={() => navigate('/create')}
           icon={IconType.RightArrow}

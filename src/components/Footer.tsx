@@ -11,6 +11,7 @@ const Footer = ({ className }: FooterProps) => {
 
   return (
     <footer
+      data-testid="footer"
       className={'flex flex-col items-center p-1 text-white ' + className}
     >
       <div className="mt-6 mb-2">
@@ -34,11 +35,23 @@ const Footer = ({ className }: FooterProps) => {
       </div>
       <div className="text-xs flex flex-col justify-center items-center">
         <div>
-          <a href="https://uverify.io/terms-of-use">Terms of Use</a>
+          <a
+            data-testid="terms-of-use-link"
+            href="https://uverify.io/terms-of-use"
+          >
+            Terms of Use
+          </a>
           <span className="mx-1">|</span>
-          <a href="https://uverify.io/privacy-policy">Privacy Policy</a>
+          <a
+            data-testid="privacy-policy-link"
+            href="https://uverify.io/privacy-policy"
+          >
+            Privacy Policy
+          </a>
           <span className="mx-1">|</span>
-          <a href="https://uverify.io/#impress">Impress</a>
+          <a data-testid="impress-link" href="https://uverify.io/#impress">
+            Impress
+          </a>
         </div>
       </div>
       <div className="flex items-center justify-center mt-2 text-xs">

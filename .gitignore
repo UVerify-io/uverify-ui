@@ -31,3 +31,9 @@ firebase-debug.log*
 firebase-debug.*.log*
 .firebaserc
 firebase.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
