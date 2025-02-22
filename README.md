@@ -45,8 +45,8 @@ For more details, check out our [documentation](https://docs.uverify.io).
 
 We welcome all contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before getting started.
 
-- Open a new thread on the [issue tracker](https://github.com/cardano-foundation/cardano-economic-parameter-insights/issues).
-- Start a [discussion](https://github.com/cardano-foundation/cardano-economic-parameter-insights/discussions).
+- Open a new thread on the [issue tracker](https://github.com/UVerify-io/uverify-ui/issues).
+- Start a [discussion](https://github.com/UVerify-io/uverify-ui/discussions).
 - Submit a pull request.
 
 ### Important Notes:
