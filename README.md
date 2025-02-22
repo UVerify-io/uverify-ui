@@ -13,6 +13,7 @@
    <a href="https://discord.gg/Dvqkynn6xc">
     <img src="https://img.shields.io/discord/1263737876743589938" alt="Join our Discord">
   </a>
+  <a href="https://cla-assistant.io/UVerify-io/uverify-ui"><img src="https://cla-assistant.io/readme/badge/UVerify-io/uverify-ui" alt="CLA assistant" /></a>
 </p>
 
 UVerify makes blockchain technology accessible to everyone, regardless of prior experience. Effortlessly secure your file or text hashes on the Cardano blockchain. Want to try it out before diving into the code? Visit [app.uverify.io](app.uverify.io) to explore the app.
