@@ -9,6 +9,7 @@ import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
 import { ThemeSettings } from '../utils/hooks';
+import { JSX } from 'react';
 
 class MonochromeTemplate extends Template {
   public theme: Partial<ThemeSettings> = {

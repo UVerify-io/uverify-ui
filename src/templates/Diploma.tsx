@@ -3,6 +3,7 @@ import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
 import { ThemeSettings } from '../utils/hooks';
 import { timestampToDateTime } from '../utils/tools';
 import DOMPurify from 'dompurify';
+import { JSX } from 'react';
 
 class DiplomaTemplate extends Template {
   public theme: Partial<ThemeSettings> = {

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { UVerifyCertificate, UVerifyMetadata } from '../common/types';
 import { ThemeSettings } from '../utils/hooks';
 
