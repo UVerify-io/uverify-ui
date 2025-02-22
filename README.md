@@ -45,20 +45,17 @@ For more details, check out our [documentation](https://docs.uverify.io).
 
 We welcome all contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before getting started.
 
-- Open a new thread on the [issue tracker](https://github.com/UVerify-io/uverify-ui/issues).
-- Start a [discussion](https://github.com/UVerify-io/uverify-ui/discussions).
-- Submit a pull request.
-
 ### Important Notes:
 
 - Use **semantic commits** for all contributions.
-- Sign the **Contributor License Agreement (CLA)** before committing.
+- Sign the **Contributor License Agreement (CLA)** before committing. You can review the CLA [here](./CLA.md) and sign it via **[CLA Assistant](https://cla-assistant.io/)**. The CLA bot will guide you through the process when you open a pull request.
 - For feature requests or tasks, please open an issue first to align with the project goals.
 
 ## 📚 Additional Documents
 
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Security](SECURITY.md)
+- [Contributor License Agreement (CLA)](./CLA.md)
 
 ## 📜 License
 
