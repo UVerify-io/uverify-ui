@@ -8,7 +8,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/UVerify-io/uverify-ui/release.yml" alt="Release Workflow Status">
   </a>
    <a href="https://conventionalcommits.org">
-    <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square" alt="Conventional Commits">
+    <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white" alt="Conventional Commits">
   </a>
    <a href="https://discord.gg/Dvqkynn6xc">
     <img src="https://img.shields.io/discord/1263737876743589938" alt="Join our Discord">

@@ -18,6 +18,9 @@ Thank you for your interest in contributing to UVerify! We value your input and 
 3. **Sign the CLA**  
    All contributors must sign the **Contributor License Agreement (CLA)** before their contributions can be merged. This ensures that the project remains open and accessible to everyone.
 
+   - You can review the CLA [here](./CLA.md) in the repository.
+   - To sign the CLA, visit **[CLA Assistant](https://cla-assistant.io/)**. The bot will guide you through the signing process when you open a pull request.
+
 4. **Pull Requests**
 
    - Fork the repository and create a new branch for your changes.
