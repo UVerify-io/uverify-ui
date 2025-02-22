@@ -1,5 +1,20 @@
 # 💎 Welcome to UVerify: Your Gateway to Blockchain Simplicity
 
+<p align="center">
+  <a href="https://github.com/UVerify-io/uverify-ui/actions/workflows/test.yaml">
+    <img src="https://img.shields.io/github/actions/workflow/status/UVerify-io/uverify-ui/test.yml" alt="Test Workflow Status">
+  </a>
+   <a href="https://github.com/UVerify-io/uverify-ui/actions/workflows/release.yaml">
+    <img src="https://img.shields.io/github/actions/workflow/status/UVerify-io/uverify-ui/release.yml" alt="Release Workflow Status">
+  </a>
+   <a href="https://conventionalcommits.org">
+    <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square" alt="Conventional Commits">
+  </a>
+   <a href="https://discord.gg/Dvqkynn6xc">
+    <img src="https://img.shields.io/discord/1263737876743589938" alt="Join our Discord">
+  </a>
+</p>
+
 UVerify makes blockchain technology accessible to everyone, regardless of prior experience. Effortlessly secure your file or text hashes on the Cardano blockchain. Want to try it out before diving into the code? Visit [app.uverify.io](app.uverify.io) to explore the app.
 
 ## 🚀 Getting Started
