@@ -1,0 +1,37 @@
+name: Deploy to app.uverify.io
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: "github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'release-please--branches--main')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🫡 Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+
+      - name: 📝 Set environment variables
+        run: |
+          echo 'VITE_VERSION=$npm_package_version' > .env
+          echo 'VITE_BACKEND_URL=https://api.uverify.io' >> .env
+          echo 'VITE_CARDANO_NETWORK=preprod' >> .env
+          echo 'VITE_SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_ACCOUNT }}' >> .env
+
+      - name: 🔨 Download dependencies and build hosting
+        run: npm ci && npm run build
+
+      - name: 🚀 Deploy to Firebase hosting
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
