@@ -1,5 +1,3 @@
-import { twMerge } from 'tailwind-merge';
-
 declare interface TagProps {
   size?: 'sm' | 'md';
   label: string;

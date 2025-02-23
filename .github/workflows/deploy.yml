@@ -1,4 +1,4 @@
-name: Deploy to app.uverify.io
+name: 🥁 Deploy to app.uverify.io
 on:
   push:
     branches: ['main']
@@ -17,7 +17,7 @@ jobs:
       - name: 🫡 Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: lts/*
 
       - name: 📝 Set environment variables
         run: |
@@ -29,9 +29,13 @@ jobs:
       - name: 🔨 Download dependencies and build hosting
         run: npm ci && npm run build
 
+      - name: 🦺 Run Tests
+        run: npm run test
+
       - name: 🚀 Deploy to Firebase hosting
-        uses: w9jds/firebase-action@master
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy --only hosting
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_UVERIFY_477FB }}'
+          channelId: live
+          projectId: uverify-477fb

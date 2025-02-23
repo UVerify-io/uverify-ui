@@ -36,7 +36,6 @@ function App() {
           draggable
           pauseOnHover
           transition={Zoom}
-          bodyClassName="font-sans"
         />
       </div>
       <Footer />

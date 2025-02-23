@@ -43,11 +43,11 @@ function subscribe(callback: (e: Event) => void) {
   };
 }
 
-export function useDimensions(ref: RefObject<HTMLElement>) {
+export function useDimensions(ref: RefObject<HTMLElement | null>) {
   const dimensions = useSyncExternalStore(subscribe, () =>
     JSON.stringify({
-      width: ref.current?.offsetWidth ?? 0,
-      height: ref.current?.offsetHeight ?? 0,
+      width: ref?.current?.offsetWidth ?? 0,
+      height: ref?.current?.offsetHeight ?? 0,
     })
   );
   return useMemo(() => JSON.parse(dimensions), [dimensions]);
