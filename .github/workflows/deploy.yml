@@ -30,7 +30,9 @@ jobs:
         run: npm ci && npm run build
 
       - name: 🦺 Run Tests
-        run: npm run test
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
 
       - name: 🚀 Deploy to Firebase hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
