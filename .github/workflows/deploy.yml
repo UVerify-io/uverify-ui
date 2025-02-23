@@ -25,6 +25,8 @@ jobs:
           echo 'VITE_BACKEND_URL=https://api.uverify.io' >> .env
           echo 'VITE_CARDANO_NETWORK=preprod' >> .env
           echo 'VITE_SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_ACCOUNT }}' >> .env
+          echo ${{ secrets.FIREBASE_JSON }} > firebase.json
+          echo ${{ secrets.FIREBASERC }} > .firebaserc
 
       - name: 🔨 Download dependencies and build hosting
         run: npm ci && npm run build
