@@ -25,8 +25,34 @@ jobs:
           echo 'VITE_BACKEND_URL=https://api.uverify.io' >> .env
           echo 'VITE_CARDANO_NETWORK=preprod' >> .env
           echo 'VITE_SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_ACCOUNT }}' >> .env
-          echo ${{ secrets.FIREBASE_JSON }} > firebase.json
-          echo ${{ secrets.FIREBASERC }} > .firebaserc
+
+      - name: 📝 Create .firebaserc file
+        run: |
+          echo '{
+            "projects": {
+              "default": "${{ secrets.FIREBASE_PROJECT }}"
+            }
+          }' > .firebaserc
+
+      - name: 📝 Create firebase.json file
+        run: |
+          echo '{
+            "hosting": {
+              "public": "dist",
+              "site": "${{ secrets.FIREBASE_SITE }}",
+              "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+              ],
+              "rewrites": [
+                {
+                  "source": "**",
+                  "destination": "/index.html"
+                }
+              ]
+            }
+          }' > firebase.json
 
       - name: 🔨 Download dependencies and build hosting
         run: npm ci && npm run build
