@@ -5,12 +5,16 @@ import { ThemeSettings } from '../utils/hooks';
 export abstract class Template {
   protected whitelist: string[] | '*';
   public theme: Partial<ThemeSettings>;
+  public layoutMetadata: { [key: string]: string };
+  public name: string;
 
   constructor() {
     this.whitelist = '*';
     this.theme = {
       background: 'bg-main-gradient',
     };
+    this.layoutMetadata = {};
+    this.name = 'Default';
   }
 
   public validate(payment_credential: string) {

@@ -6,6 +6,7 @@ import DOMPurify from 'dompurify';
 import { JSX } from 'react';
 
 class DiplomaTemplate extends Template {
+  public name = 'Diploma';
   public theme: Partial<ThemeSettings> = {
     background: 'bg-blue-600',
     colors: {
@@ -131,6 +132,14 @@ class DiplomaTemplate extends Template {
         },
       },
     },
+  };
+
+  public layoutMetadata = {
+    title: 'The issuer name',
+    name: 'The recipient name',
+    description:
+      'Optional description. Default is a sentence includinf the recipient name and the title.',
+    pattern: 'Optional SVG pattern. Default is a diagonal lines pattern.',
   };
 
   public render(

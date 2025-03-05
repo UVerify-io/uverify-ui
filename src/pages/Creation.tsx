@@ -21,6 +21,8 @@ import { toast } from 'react-toastify';
 import SelectedFileArea from '../components/SelectedFileArea';
 import Fingerprint from '../components/Fingerprint';
 import MetadataEditor, { MetadataHandle } from '../components/MetadataEditor';
+import TemplateSelector from '../components/TemplateSelector';
+import IconButton from '../components/IconButton';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -32,6 +34,9 @@ const Creation = () => {
   const [text, setText] = useState('');
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const metadataEditorRef = useRef<MetadataHandle>(null);
+  const [layoutMetadata, setLayoutMetadata] = useState<{
+    [key: string]: string;
+  }>({});
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
@@ -263,10 +268,19 @@ const Creation = () => {
             },
           ]}
         />
+        <div className="flex flex-col items-start w-full mt-4 mb-2">
+          <h3 className="text-sm mr-4">Certificate Template</h3>
+          <div className="flex flex-row w-full items-center mt-2">
+            <TemplateSelector onChange={setLayoutMetadata} />
+            <IconButton iconType={IconType.Eye} className="mx-2" />
+          </div>
+        </div>
         <MetadataEditor
           className={activeTab === 0 ? 'mt-1' : 'mt-2'}
           ref={metadataEditorRef}
+          layoutMetadata={layoutMetadata}
         />
+
         <Modal
           title="Connect Wallet"
           isOpen={isWalletDialogOpen}

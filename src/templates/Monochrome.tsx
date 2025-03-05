@@ -12,6 +12,7 @@ import { ThemeSettings } from '../utils/hooks';
 import { JSX } from 'react';
 
 class MonochromeTemplate extends Template {
+  public name = 'Monochrome';
   public theme: Partial<ThemeSettings> = {
     background: 'bg-black',
     colors: {

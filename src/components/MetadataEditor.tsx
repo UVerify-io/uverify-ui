@@ -1,7 +1,8 @@
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { IconType, PlusIcon } from './Icons';
 import IconButton from './IconButton';
 import { Field } from '../common/types';
+import DynamicInput from './DynamicInput';
 
 type FieldError = 'KEY' | 'VALUE' | 'BOTH';
 type FieldErrors = { [key: number]: FieldError };
@@ -13,19 +14,39 @@ export type MetadataHandle = {
 
 declare interface MetadataEditorProps {
   className?: string;
+  layoutMetadata: { [key: string]: string };
 }
 
 const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
-  ({ className }, ref) => {
+  ({ className, layoutMetadata }, ref) => {
     const [fields, setFields] = useState<Field[]>([]);
+    const [layoutFields, setLayoutFields] = useState<Field[]>([]);
     const [error, setError] = useState<FieldErrors | false>(false);
+
+    const resetLayoutFields = () => {
+      const layoutFields = Object.entries(layoutMetadata).map(
+        ([key, value]) => ({
+          key,
+          value: '',
+          placeholder: value,
+          layoutProp: true,
+        })
+      );
+      setLayoutFields(layoutFields);
+    };
+
+    useEffect(() => {
+      if (layoutMetadata) {
+        resetLayoutFields();
+      }
+    }, [layoutMetadata]);
 
     useImperativeHandle(ref, () => ({
       metadata() {
-        if (fields.length === 0) {
+        if (fields.length === 0 && layoutFields.length === 0) {
           return '{}';
         }
-        const result = tryToParseFields(fields);
+        const result = tryToParseFields([...fields, ...layoutFields]);
         if (result) {
           if (typeof result === 'string') {
             return result;
@@ -38,6 +59,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
       },
       reset() {
         setFields([]);
+        resetLayoutFields();
         setError(false);
       },
     }));
@@ -60,18 +82,25 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
       metadata: Field[]
     ): string | FieldErrors | false => {
       try {
+        console.log('hello:', metadata);
         const data: { [key: string]: any } = {};
         let index = 0;
         const errors: FieldErrors = {};
         for (const field of metadata) {
-          if (!field.key && !field.value) {
-            errors[index] = 'BOTH';
-          } else if (!field.key) {
-            errors[index] = 'KEY';
-          } else if (!field.value) {
-            errors[index] = 'VALUE';
+          if (field.layoutProp) {
+            if (field.key && field.value) {
+              data[field.key] = parseFieldValue(field.value);
+            }
           } else {
-            data[field.key] = parseFieldValue(field.value);
+            if (!field.key && !field.value) {
+              errors[index] = 'BOTH';
+            } else if (!field.key) {
+              errors[index] = 'KEY';
+            } else if (!field.value) {
+              errors[index] = 'VALUE';
+            } else {
+              data[field.key] = parseFieldValue(field.value);
+            }
           }
           index++;
         }
@@ -100,10 +129,13 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
 
     const renderField = (field: Field, index: number) => {
       const hasKeyError =
-        (error && error[index] === 'KEY') || (error && error[index] === 'BOTH');
+        !field.layoutProp &&
+        ((error && error[index] === 'KEY') ||
+          (error && error[index] === 'BOTH'));
       const hasValueError =
-        (error && error[index] === 'VALUE') ||
-        (error && error[index] === 'BOTH');
+        !field.layoutProp &&
+        ((error && error[index] === 'VALUE') ||
+          (error && error[index] === 'BOTH'));
 
       return (
         <div key={index} className="flex items-center my-1">
@@ -115,6 +147,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
                   event.target.placeholder = 'Key';
                 }
               }}
+              readOnly={field.layoutProp}
               onFocus={(event) => {
                 event.target.placeholder = '';
                 if (hasKeyError) {
@@ -133,72 +166,86 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
               className={`placeholder-white/60 w-full h-10 text-xs px-2 outline-hidden rounded ${
                 hasKeyError
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
-                  : 'bg-white/25 border border-white/75 text-white'
+                  : 'bg-white/25 border border-[#FFFFFF40] text-white'
               } focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
               value={hasKeyError ? 'Required field' : field.key}
               placeholder="Key"
+              disabled={field.layoutProp}
               onChange={(e) => {
+                if (field.layoutProp) {
+                  return;
+                }
                 const updatedFields = [...fields];
                 updatedFields[index].key = e.target.value;
                 setFields(updatedFields);
               }}
             />
           </div>
-          <div className="flex w-3/5 flex-col mr-1">
-            <input
-              type="text"
-              onBlur={(event) => {
-                if (event.target.value === '') {
-                  event.target.placeholder = 'Value';
+          <DynamicInput
+            value={hasValueError ? 'Required field' : field.value}
+            placeholder={field.placeholder || 'Value'}
+            className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
+              hasValueError
+                ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
+                : 'bg-white/25 border border-[#FFFFFF40] text-white'
+            }`}
+            onBlur={(event) => {
+              if (event.target.value === '') {
+                event.target.placeholder = field.placeholder || 'Value';
+              }
+            }}
+            onFocus={(event) => {
+              event.target.placeholder = '';
+              if (hasValueError) {
+                const updatedErrors = { ...error };
+                if (updatedErrors[index] === 'BOTH') {
+                  updatedErrors[index] = 'KEY';
+                } else {
+                  delete updatedErrors[index];
                 }
-              }}
-              onFocus={(event) => {
-                event.target.placeholder = '';
-                if (hasValueError) {
-                  const updatedErrors = { ...error };
-                  if (updatedErrors[index] === 'BOTH') {
-                    updatedErrors[index] = 'KEY';
-                  } else {
-                    delete updatedErrors[index];
-                  }
-                  setError(updatedErrors);
+                setError(updatedErrors);
 
-                  const updatedFields = [...fields];
-                  updatedFields[index].value = '';
-                  setFields(updatedFields);
-                }
-              }}
-              value={hasValueError ? 'Required field' : field.value}
-              onChange={(e) => {
                 const updatedFields = [...fields];
-                updatedFields[index].value = e.target.value;
+                updatedFields[index].value = '';
                 setFields(updatedFields);
-              }}
-              placeholder="Value"
-              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
-                hasValueError
-                  ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
-                  : 'bg-white/25 border border-white/75 text-white'
-              }`}
-            />
-          </div>
-          <IconButton
-            iconType={IconType.Minus}
-            onClick={() => {
-              const updatedFields = [...fields];
-              updatedFields.splice(index, 1);
-              setFields(updatedFields);
-              const updatedErrors = { ...error };
-              delete updatedErrors[index];
-              setError(updatedErrors);
+              }
+            }}
+            onChange={(event) => {
+              if (field.layoutProp) {
+                const updatedFields = [...layoutFields];
+                updatedFields[index].value = event.target.value;
+                setLayoutFields(updatedFields);
+              } else {
+                const updatedFields = [...fields];
+                updatedFields[index].value = event.target.value;
+                setFields(updatedFields);
+              }
             }}
           />
+          {field.layoutProp ? (
+            <div className="p-3 border border-transparent">
+              <div className="w-4 h-4"></div>
+            </div>
+          ) : (
+            <IconButton
+              iconType={IconType.Minus}
+              onClick={() => {
+                const updatedFields = [...fields];
+                updatedFields.splice(index, 1);
+                setFields(updatedFields);
+                const updatedErrors = { ...error };
+                delete updatedErrors[index];
+                setError(updatedErrors);
+              }}
+            />
+          )}
         </div>
       );
     };
 
     return (
       <div className={className}>
+        {layoutFields.map((field, index) => renderField(field, index))}
         {fields.map((field, index) => renderField(field, index))}
         {addFieldButton}
       </div>
