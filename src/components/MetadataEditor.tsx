@@ -138,7 +138,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
           (error && error[index] === 'BOTH'));
 
       return (
-        <div key={index} className="flex items-center my-1">
+        <div key={index} className="flex items-start my-1">
           <div className="flex w-2/5 flex-col mr-1">
             <input
               type="text"

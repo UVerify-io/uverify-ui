@@ -23,6 +23,10 @@ import Fingerprint from '../components/Fingerprint';
 import MetadataEditor, { MetadataHandle } from '../components/MetadataEditor';
 import TemplateSelector from '../components/TemplateSelector';
 import IconButton from '../components/IconButton';
+import Preview from '../components/Preview';
+import { timestampToDateTime } from '../utils/tools';
+import { templates } from '../templates';
+import { useUVerifyTheme } from '../utils/hooks';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -33,10 +37,12 @@ declare interface TransactionResult {
 const Creation = () => {
   const [text, setText] = useState('');
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const metadataEditorRef = useRef<MetadataHandle>(null);
   const [layoutMetadata, setLayoutMetadata] = useState<{
     [key: string]: string;
   }>({});
+  const [selectedLayout, setSelectedLayout] = useState('default');
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
@@ -48,6 +54,7 @@ const Creation = () => {
   const [transactionResult, setTransactionResult] =
     useState<TransactionResult>();
   const [activeTab, setActiveTab] = useState(0);
+  const { applyTheme, restoreDefaults } = useUVerifyTheme();
 
   const showFingerprint =
     (activeTab === 0 && fileHash !== '') ||
@@ -176,8 +183,8 @@ const Creation = () => {
     const address = usedAddresses[0];
 
     setButtonState('loading');
+    const hash = activeTab === 0 ? fileHash : sha256(text);
     try {
-      const hash = activeTab === 0 ? fileHash : sha256(text);
       const response = await axios.post(apiUrl + '/api/v1/transaction/build', {
         type: 'DEFAULT',
         address: address,
@@ -268,18 +275,69 @@ const Creation = () => {
             },
           ]}
         />
-        <div className="flex flex-col items-start w-full mt-4 mb-2">
-          <h3 className="text-sm mr-4">Certificate Template</h3>
-          <div className="flex flex-row w-full items-center mt-2">
-            <TemplateSelector onChange={setLayoutMetadata} />
-            <IconButton iconType={IconType.Eye} className="mx-2" />
-          </div>
-        </div>
-        <MetadataEditor
-          className={activeTab === 0 ? 'mt-1' : 'mt-2'}
-          ref={metadataEditorRef}
-          layoutMetadata={layoutMetadata}
-        />
+        {hash && (
+          <>
+            <div className="flex flex-col items-start w-full mt-4 mb-2">
+              <h3 className="text-sm mr-4">Certificate Template</h3>
+              <div className="flex flex-row w-full items-center my-2">
+                <TemplateSelector
+                  onChange={(
+                    layout: string,
+                    metadata: { [key: string]: string }
+                  ) => {
+                    setSelectedLayout(layout);
+                    setLayoutMetadata(metadata);
+                  }}
+                />
+                <IconButton
+                  onClick={() => {
+                    applyTheme(templates[selectedLayout].theme);
+                    setPreviewOpen(true);
+                  }}
+                  iconType={IconType.Eye}
+                  className="mx-2"
+                />
+                <Preview
+                  isOpen={previewOpen}
+                  close={() => {
+                    restoreDefaults();
+                    setPreviewOpen(false);
+                  }}
+                  templateId={selectedLayout}
+                  hash={hash}
+                  metadata={layoutMetadata}
+                  certificate={{
+                    hash: hash,
+                    address: usedAddresses[0],
+                    block_hash:
+                      '71fdd15d024cced315d1a247d158227404936fdbddb2b9b632293032c956051a',
+                    block_number: 11571661,
+                    transaction_hash:
+                      '7151f82b8efc78d56f63a19ddaed1ca36e61533d8b0bddbb19fe5483009a684f',
+                    slot: 149768853,
+                    creation_time: Date.now(),
+                    metadata: '',
+                    issuer: usedAddresses[0],
+                  }}
+                  pagination={<></>}
+                  extra={{
+                    hashedMultipleTimes: false,
+                    firstDateTime: timestampToDateTime(Date.now()),
+                    issuer: usedAddresses[0],
+                    serverError: false,
+                    isLoading: false,
+                  }}
+                />
+              </div>
+            </div>
+
+            <MetadataEditor
+              className={activeTab === 0 ? 'mt-1' : 'mt-2'}
+              ref={metadataEditorRef}
+              layoutMetadata={layoutMetadata}
+            />
+          </>
+        )}
 
         <Modal
           title="Connect Wallet"
