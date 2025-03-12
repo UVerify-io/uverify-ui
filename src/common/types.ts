@@ -1,6 +1,8 @@
 export declare interface Field {
   key: string;
   value: string;
+  placeholder?: string;
+  layoutProp?: boolean;
 }
 
 export declare interface UVerifyCertificate {
