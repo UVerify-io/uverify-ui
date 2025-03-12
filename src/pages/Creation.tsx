@@ -36,6 +36,7 @@ declare interface TransactionResult {
 
 const Creation = () => {
   const [text, setText] = useState('');
+  const pageRef = useRef<HTMLDivElement>(null);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const metadataEditorRef = useRef<MetadataHandle>(null);
@@ -98,6 +99,16 @@ const Creation = () => {
         }}
       />
     );
+
+  useEffect(() => {
+    if (pageRef.current) {
+      if (previewOpen) {
+        pageRef.current.style.overflow = 'hidden';
+      } else {
+        pageRef.current.style.overflow = 'auto';
+      }
+    }
+  }, [previewOpen]);
 
   useEffect(() => {
     if (transactionResult) {
@@ -230,7 +241,12 @@ const Creation = () => {
   };
 
   return (
-    <div className="flex flex-col text-center text-white max-w-(--breakpoint-sm) w-full pt-2 sm:pt-12 lg:max-w-(--breakpoint-md)">
+    <div
+      ref={pageRef}
+      className={`${
+        previewOpen && 'hidden'
+      } flex flex-col text-center text-white max-w-(--breakpoint-sm) w-full pt-2 sm:pt-12 lg:max-w-(--breakpoint-md)`}
+    >
       <Header title="Create Verifiable Data" />
       <Card className="mt-2 grow sm:mx-2 sm:mt-12 sm:grow-0 sm:mb-4">
         <h2 className="text-xl font-extrabold uppercase">
@@ -292,6 +308,15 @@ const Creation = () => {
                 <IconButton
                   onClick={() => {
                     applyTheme(templates[selectedLayout].theme);
+
+                    const metadata = metadataEditorRef.current?.metadata();
+                    if (metadata === undefined) {
+                      toast.error(
+                        'Please fill in all required metadata fields and remove any unnecessary ones from the form.'
+                      );
+                      return;
+                    }
+
                     setPreviewOpen(true);
                   }}
                   iconType={IconType.Eye}
@@ -305,7 +330,7 @@ const Creation = () => {
                   }}
                   templateId={selectedLayout}
                   hash={hash}
-                  metadata={layoutMetadata}
+                  metadata={metadataEditorRef.current?.metadata() || '{}'}
                   certificate={{
                     hash: hash,
                     address: usedAddresses[0],

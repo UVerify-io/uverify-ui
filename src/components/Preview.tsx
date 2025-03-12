@@ -9,7 +9,7 @@ type PreviewProps = {
   close: () => void;
   templateId: string;
   hash: string;
-  metadata: Record<string, string | number | boolean | null>;
+  metadata: string;
   certificate: UVerifyCertificate;
   pagination: JSX.Element;
   extra: UVerifyCertificateExtraData;
@@ -31,23 +31,22 @@ const Preview = ({
     return createPortal(
       <div
         onClick={close}
-        className={`flex ${template.theme.background} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full h-full`}
+        className={`${template.theme.background} overflow-y overflow-x-hidden absolute top-0 left-0 z-50 w-full min-h-full h-full`}
       >
-        <div className="flex items-center justify-center relative h-full w-full">
-          {template.render(hash, metadata, certificate, pagination, extra)}
-          <div className="absolute inset-0 z-1">
-            <div className="w-full h-full grid grid-cols-4 grid-rows-4">
-              {Array.from({ length: 16 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-center rotate-315 opacity-20"
-                >
-                  <p className="text-2xl font-semibold text-white whitespace-nowrap pointer-events-none">
-                    This is a preview. Click to dismiss.
-                  </p>
-                </div>
-              ))}
-            </div>
+        <div className="flex items-center justify-center relative top-0 h-full w-full">
+          {template.render(
+            hash,
+            JSON.parse(metadata),
+            certificate,
+            pagination,
+            extra
+          )}
+
+          <div className="fixed inset-0 flex items-start justify-center z-10">
+            <span className="text-white text-2xl md:text-4xl p-4 bg-black/30 w-full text-center font-bold uppercase backdrop-blur-xl">
+              This is a preview.
+              <br /> Click to dismiss.
+            </span>
           </div>
         </div>
       </div>,

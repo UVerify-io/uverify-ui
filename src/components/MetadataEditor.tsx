@@ -82,7 +82,6 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
       metadata: Field[]
     ): string | FieldErrors | false => {
       try {
-        console.log('hello:', metadata);
         const data: { [key: string]: any } = {};
         let index = 0;
         const errors: FieldErrors = {};

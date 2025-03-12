@@ -135,8 +135,9 @@ class DiplomaTemplate extends Template {
   };
 
   public layoutMetadata = {
-    title: 'The issuer name',
+    issuer: 'The issuer name',
     name: 'The recipient name',
+    title: 'The title of the certificate',
     description:
       'Optional description. Default is a sentence includinf the recipient name and the title.',
     pattern: 'Optional SVG pattern. Default is a diagonal lines pattern.',
@@ -156,7 +157,7 @@ class DiplomaTemplate extends Template {
     const certificateData = {
       title: metadata.issuer,
       recipient: metadata.name,
-      description: (
+      description: metadata.description || (
         <>
           {'This is to certify that ' +
             metadata.name +
@@ -233,8 +234,9 @@ class DiplomaTemplate extends Template {
             </h2>
             <div className="text-lg mb-8">{certificateData.description}</div>
             <p className="text-lg mb-2">Awarded on {certificateData.date}</p>
-            <p className="text-lg mb-8">
-              Certificate NO: {certificateData.certificateNumber}
+            <p className="text-sm font-extrabold">Certificate Number:</p>
+            <p className="text-lg mb-8 break-all">
+              {certificateData.certificateNumber}
             </p>
           </div>
         </div>
