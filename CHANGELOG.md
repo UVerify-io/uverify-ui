@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/UVerify-io/uverify-ui/compare/v1.0.0...v1.1.0) (2025-03-12)
+
+
+### Features
+
+* add preview for different layout types ([01717b3](https://github.com/UVerify-io/uverify-ui/commit/01717b396e7f3631ad552572ebfe8d3332cd96ff))
+* add template selector and dynmaic inputs ([6f64b54](https://github.com/UVerify-io/uverify-ui/commit/6f64b54b38c4e704f041b19cdae4271cf6ddc152))
+* showing a preview of the certificate page ([1d7817d](https://github.com/UVerify-io/uverify-ui/commit/1d7817d25a182bad5a97332838c6c09d2408d60f))
+
 ## 1.0.0 (2025-02-22)
 
 
