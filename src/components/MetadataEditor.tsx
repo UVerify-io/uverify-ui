@@ -8,7 +8,7 @@ type FieldError = 'KEY' | 'VALUE' | 'BOTH';
 type FieldErrors = { [key: number]: FieldError };
 
 export type MetadataHandle = {
-  metadata: () => string | undefined;
+  metadata: (templateId: string) => string | undefined;
   reset: () => void;
 };
 
@@ -42,11 +42,22 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
     }, [layoutMetadata]);
 
     useImperativeHandle(ref, () => ({
-      metadata() {
-        if (fields.length === 0 && layoutFields.length === 0) {
+      metadata(templateId: string) {
+        if (
+          fields.length === 0 &&
+          layoutFields.length === 0 &&
+          templateId !== 'default'
+        ) {
           return '{}';
         }
-        const result = tryToParseFields([...fields, ...layoutFields]);
+
+        const fieldList = [...fields, ...layoutFields];
+        if (templateId !== 'default') {
+          fieldList.push({ key: 'uverify_template_id', value: templateId });
+        }
+
+        const result = tryToParseFields(fieldList);
+
         if (result) {
           if (typeof result === 'string') {
             return result;
@@ -140,6 +151,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
         <div key={index} className="flex items-start my-1">
           <div className="flex w-2/5 flex-col mr-1">
             <input
+              autoFocus={false}
               type="text"
               onBlur={(event) => {
                 if (event.target.value === '') {

@@ -39,18 +39,23 @@ const DynamicInput = ({
   ) => {
     const value = event.target.value;
     setIsMultiline(testMultiline(value, placeholder));
-
     onChange(event);
   };
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus();
       const length = inputRef.current.value.length;
+      // if type changes during typing, keep the focus
+      if (length > 0) {
+        inputRef.current.focus();
+      }
       inputRef.current.setSelectionRange(length, length);
     } else if (textareaRef.current) {
-      textareaRef.current.focus();
       const length = textareaRef.current.value.length;
+      // if type changes during typing, keep the focus
+      if (length > 0) {
+        textareaRef.current.focus();
+      }
       textareaRef.current.setSelectionRange(length, length);
     }
   }, [isMultiline]);
@@ -59,6 +64,7 @@ const DynamicInput = ({
     <div className="flex w-3/5 flex-col mr-1">
       {isMultiline ? (
         <textarea
+          autoFocus={false}
           ref={textareaRef}
           value={value}
           onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -75,6 +81,7 @@ const DynamicInput = ({
         />
       ) : (
         <input
+          autoFocus={false}
           ref={inputRef}
           type="text"
           value={value}

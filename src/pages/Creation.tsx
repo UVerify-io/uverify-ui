@@ -39,6 +39,7 @@ const Creation = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewMetadata, setPreviewMetadata] = useState('{}');
   const metadataEditorRef = useRef<MetadataHandle>(null);
   const [layoutMetadata, setLayoutMetadata] = useState<{
     [key: string]: string;
@@ -163,7 +164,7 @@ const Creation = () => {
   }, [transactionResult]);
 
   const freezeData = async () => {
-    const metadata = metadataEditorRef.current?.metadata();
+    const metadata = metadataEditorRef.current?.metadata(selectedLayout);
 
     if (metadata === undefined) {
       toast.error(
@@ -307,16 +308,16 @@ const Creation = () => {
                 />
                 <IconButton
                   onClick={() => {
-                    applyTheme(templates[selectedLayout].theme);
-
-                    const metadata = metadataEditorRef.current?.metadata();
+                    const metadata =
+                      metadataEditorRef.current?.metadata(selectedLayout);
                     if (metadata === undefined) {
                       toast.error(
                         'Please fill in all required metadata fields and remove any unnecessary ones from the form.'
                       );
                       return;
                     }
-
+                    applyTheme(templates[selectedLayout].theme);
+                    setPreviewMetadata(metadata);
                     setPreviewOpen(true);
                   }}
                   iconType={IconType.Eye}
@@ -327,10 +328,11 @@ const Creation = () => {
                   close={() => {
                     restoreDefaults();
                     setPreviewOpen(false);
+                    setPreviewMetadata('{}');
                   }}
                   templateId={selectedLayout}
                   hash={hash}
-                  metadata={metadataEditorRef.current?.metadata() || '{}'}
+                  metadata={previewMetadata}
                   certificate={{
                     hash: hash,
                     address: usedAddresses[0],
@@ -341,7 +343,7 @@ const Creation = () => {
                       '7151f82b8efc78d56f63a19ddaed1ca36e61533d8b0bddbb19fe5483009a684f',
                     slot: 149768853,
                     creation_time: Date.now(),
-                    metadata: '',
+                    metadata: previewMetadata,
                     issuer: usedAddresses[0],
                   }}
                   pagination={<></>}
