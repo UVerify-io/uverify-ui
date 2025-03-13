@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/UVerify-io/uverify-ui/compare/v1.1.0...v1.1.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* add uverify_template_id in case of using the dropdown ([66693a7](https://github.com/UVerify-io/uverify-ui/commit/66693a7f3c85275df9da85f0d961ec48caea2d1c))
+
 ## [1.1.0](https://github.com/UVerify-io/uverify-ui/compare/v1.0.0...v1.1.0) (2025-03-12)
 
 
