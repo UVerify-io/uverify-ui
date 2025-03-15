@@ -128,12 +128,4 @@ export default {
     },
   },
   plugins: [],
-  safelist: [
-    {
-      pattern: /pink|blue|cyan|purple|ice|green|white|red|yellow|black/,
-      variants: ['hover'],
-    },
-    { pattern: /^bg-opacity-/, variants: ['hover'] },
-    { pattern: /^border-opacity-/, variants: ['hover'] },
-  ],
 };

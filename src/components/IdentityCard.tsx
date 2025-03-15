@@ -4,6 +4,7 @@ import Logo from '../assets/uverify.svg';
 import { toast } from 'react-toastify';
 import { twMerge } from 'tailwind-merge';
 import { useUVerifyTheme } from '../utils/hooks';
+import { applyOpacity } from '../common/helper';
 
 declare interface IdentityCardProps {
   address: string;
@@ -57,13 +58,6 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
       result.push(input.substring(i, i + chunkSize));
     }
     return result;
-  };
-
-  const applyOpacity = (color: string, opacity?: number) => {
-    if (!opacity || opacity === 100) {
-      return color;
-    }
-    return `${color}/${opacity}`;
   };
 
   const background = applyOpacity(

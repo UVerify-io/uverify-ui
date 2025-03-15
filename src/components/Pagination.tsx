@@ -22,9 +22,16 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
   const [buttons, setButtons] = useState<JSX.Element[] | null>(null);
   const [sortcutsEnabled, setSortcutsEnabled] = useState(false);
 
+  const activeBackground = style?.background.active.color;
+  const activeBorder = style?.border.active.color;
+  const inactiveBackground = style?.background.inactive.color;
+  const inactiveBorder = style?.border.inactive.color;
+  const inactiveHoverBackground = style?.background.inactive.hover.color;
+  const inactiveHoverBorder = style?.border.inactive.color;
+
   const sharedClasses = `min-w-[3rem] flex items-center justify-center h-10 border`;
-  const activeClasses = `text-${style?.text.active.color} hover:text-${style?.text.active.hover.color} border-${style?.border.active.color} border-opacity-${style?.border.active.opacity} bg-${style?.background.active.color} bg-opacity-${style?.background.active.opacity} shadow-white-center`;
-  const inactiveClasses = `text-${style?.text.inactive.color} hover:text-${style?.text.inactive.hover.color} border-${style?.border.inactive.color} border-opacity-${style?.border.inactive.opacity} bg-${style?.background.inactive.color} bg-opacity-${style?.background.inactive.opacity} hover:bg-${style?.background.inactive.hover.color} hover:bg-opacity-${style?.background.inactive.hover.opacity} hover:shadow-white-center hover:border-${style?.border.inactive.color} hover:border-opacity-${style?.border.inactive.opacity}`;
+  const activeClasses = `text-${style?.text.active.color} shadow-white-center ${activeBackground} ${activeBorder}`;
+  const inactiveClasses = `text-${style?.text.inactive.color} hover:text-${style?.text.inactive.hover.color} ${inactiveBackground} ${inactiveBorder} ${inactiveHoverBackground} ${inactiveHoverBorder} hover:shadow-white-center`;
 
   useEffect(() => {
     let center = 2;

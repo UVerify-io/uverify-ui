@@ -80,14 +80,11 @@ export type PaginationStyle = {
   border: {
     active: {
       color: string;
-      opacity: number;
     };
     inactive: {
       color: string;
-      opacity: number;
       hover: {
         color: string;
-        opacity: number;
       };
     };
   };
@@ -108,14 +105,11 @@ export type PaginationStyle = {
   background: {
     active: {
       color: string;
-      opacity: number;
     };
     inactive: {
       color: string;
-      opacity: number;
       hover: {
         color: string;
-        opacity: number;
       };
     };
   };
@@ -124,15 +118,12 @@ export type PaginationStyle = {
 export const defaultPaginationStyle: PaginationStyle = {
   border: {
     active: {
-      color: 'white',
-      opacity: 75,
+      color: 'border-white/60',
     },
     inactive: {
-      color: 'white',
-      opacity: 30,
+      color: 'border-white/30',
       hover: {
-        color: 'white',
-        opacity: 40,
+        color: 'border-white/40',
       },
     },
   },
@@ -152,15 +143,12 @@ export const defaultPaginationStyle: PaginationStyle = {
   },
   background: {
     active: {
-      color: 'white',
-      opacity: 40,
+      color: 'bg-white/50',
     },
     inactive: {
-      color: 'white',
-      opacity: 20,
+      color: 'bg-white/20',
       hover: {
-        color: 'white',
-        opacity: 30,
+        color: 'bg-white/30',
       },
     },
   },

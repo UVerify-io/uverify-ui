@@ -62,15 +62,12 @@ class DiplomaTemplate extends Template {
       pagination: {
         border: {
           active: {
-            color: 'black',
-            opacity: 75,
+            color: 'border-black/75',
           },
           inactive: {
-            color: 'black',
-            opacity: 30,
+            color: 'border-black/30',
             hover: {
-              color: '[#00000040]',
-              opacity: 100,
+              color: 'border-black/25',
             },
           },
         },
@@ -90,15 +87,12 @@ class DiplomaTemplate extends Template {
         },
         background: {
           active: {
-            color: 'black',
-            opacity: 100,
+            color: 'bg-black',
           },
           inactive: {
-            color: 'white',
-            opacity: 100,
+            color: 'bg-white',
             hover: {
-              color: 'black',
-              opacity: 100,
+              color: 'bg-black',
             },
           },
         },
