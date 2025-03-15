@@ -46,7 +46,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
         if (
           fields.length === 0 &&
           layoutFields.length === 0 &&
-          templateId !== 'default'
+          templateId === 'default'
         ) {
           return '{}';
         }

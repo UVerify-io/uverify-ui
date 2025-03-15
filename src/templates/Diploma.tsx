@@ -162,7 +162,7 @@ class DiplomaTemplate extends Template {
           {'This is to certify that ' +
             metadata.name +
             '. has been recognized for outstanding contributions and exemplary performance in the field of '}
-          <h3 className="font-bold">{metadata.title}</h3>
+          <h3 className="my-4 sm:my-8 text-2xl font-bold">{metadata.title}</h3>
         </>
       ),
       date: timestampToDateTime(certificate.creation_time),
@@ -170,8 +170,8 @@ class DiplomaTemplate extends Template {
     };
 
     return (
-      <div className="min-h-screen bg-blue-600 flex items-center justify-center p-8">
-        <div className="relative w-3/4 bg-blue-500 text-white rounded-lg shadow-lg p-12 border-4 border-white">
+      <div className="min-h-screen bg-blue-600 flex items-center justify-center sm:p-8">
+        <div className="relative w-full sm:w-3/4 bg-blue-500 text-white sm:rounded-lg shadow-lg p-6 sm:p-12 border-x-0 sm:border-x-4 border-y-4 border-white">
           {typeof metadata.pattern === 'string' ? (
             <div
               className="hidden absolute inset-0 bg-blue-600 opacity-20 pointer-events-none"
@@ -224,18 +224,20 @@ class DiplomaTemplate extends Template {
           )}
 
           <div className="relative z-10 text-center">
-            <h1 className="text-3xl font-bold tracking-widest mb-4">
+            <h1 className="text-xl sm:text-3xl font-bold tracking-widest mb-4">
               {certificateData.title}
             </h1>
             <hr className="border-t-2 border-white w-1/2 mx-auto mb-6" />
             <p className="text-lg mb-4">This certificate is presented to</p>
-            <h2 className="text-5xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-5xl font-bold mb-6">
               {certificateData.recipient}
             </h2>
-            <div className="text-lg mb-8">{certificateData.description}</div>
-            <p className="text-lg mb-2">Awarded on {certificateData.date}</p>
-            <p className="text-sm font-extrabold">Certificate Number:</p>
-            <p className="text-lg mb-8 break-all">
+            <div className="sm:text-lg">{certificateData.description}</div>
+            <p className="sm:text-lg mb-2">Awarded on {certificateData.date}</p>
+            <p className="mt-4 sm:mt-8 mb-2 text-sm font-extrabold">
+              Certificate Number:
+            </p>
+            <p className="sm:text-lg mb-8 break-all">
               {certificateData.certificateNumber}
             </p>
           </div>

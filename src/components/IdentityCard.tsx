@@ -59,14 +59,29 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
     return result;
   };
 
-  const background = `bg-${style?.background.color}`;
-  const backgroundOpacity = `bg-opacity-${style?.background.opacity}`;
-  const border = `border-${style?.border.color}`;
-  const borderOpacity = `border-opacity-${style?.border.opacity}`;
-  const hoverBackground = `hover:bg-${style?.background.hover.color}`;
-  const hoverBackgroundOpacity = `hover:bg-opacity-${style?.background.hover.opacity}`;
-  const hoverBorder = `hover:border-${style?.border.hover.color}`;
-  const hoverBorderOpacity = `hover:border-opacity-${style?.border.hover.opacity}`;
+  const applyOpacity = (color: string, opacity?: number) => {
+    if (!opacity || opacity === 100) {
+      return color;
+    }
+    return `${color}/${opacity}`;
+  };
+
+  const background = applyOpacity(
+    `bg-${style?.background.color}`,
+    style?.background.opacity
+  );
+  const border = applyOpacity(
+    `border-${style?.border.color}`,
+    style?.border.opacity
+  );
+  const hoverBackground = applyOpacity(
+    `hover:bg-${style?.background.hover.color}`,
+    style?.background.hover.opacity
+  );
+  const hoverBorder = applyOpacity(
+    `hover:border-${style?.border.hover.color}`,
+    style?.border.hover.opacity
+  );
 
   return (
     <div
@@ -80,10 +95,6 @@ const IdentityCard = ({ address, className }: IdentityCardProps) => {
         border,
         hoverBackground,
         hoverBorder,
-        backgroundOpacity,
-        borderOpacity,
-        hoverBackgroundOpacity,
-        hoverBorderOpacity,
         className
       )}
     >

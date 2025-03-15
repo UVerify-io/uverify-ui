@@ -33,7 +33,7 @@ const Preview = ({
         onClick={close}
         className={`${template.theme.background} fixed inset-0 z-50 w-full overflow-y-auto`}
       >
-        <div className="sticky inset-0 flex items-start justify-center z-10">
+        <div className="sticky inset-0 flex items-start justify-center z-100">
           <span className="text-white text-2xl md:text-4xl p-4 bg-black/30 w-full text-center font-bold uppercase backdrop-blur-xl">
             This is a preview.
             <br /> Click to dismiss.
