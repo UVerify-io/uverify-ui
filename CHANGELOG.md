@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/UVerify-io/uverify-ui/compare/v1.1.1...v1.1.2) (2025-03-15)
+
+
+### Bug Fixes
+
+* repair identity card for monochrome template. fixes [#16](https://github.com/UVerify-io/uverify-ui/issues/16) ([4be3738](https://github.com/UVerify-io/uverify-ui/commit/4be3738c40f635a48e40ad8dbc8fe245acc1dd34))
+
 ## [1.1.1](https://github.com/UVerify-io/uverify-ui/compare/v1.1.0...v1.1.1) (2025-03-13)
 
 
