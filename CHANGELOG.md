@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/UVerify-io/uverify-ui/compare/v1.1.2...v1.2.0) (2025-04-19)
+
+
+### Features
+
+* add linktree and connected goods extension ([4d283cd](https://github.com/UVerify-io/uverify-ui/commit/4d283cdb6cde988e12f638747fd320b8bb949b83))
+* dynamic cardano network management based on environment variables ([eaa61a9](https://github.com/UVerify-io/uverify-ui/commit/eaa61a96e2245e1a4c8ea59d99d7f2b1d7c828e1))
+
+
+### Bug Fixes
+
+* repair pagination style ([672cfd1](https://github.com/UVerify-io/uverify-ui/commit/672cfd1c0faf4fd0e4a757ab2891a0f8138a04e8))
+
 ## [1.1.2](https://github.com/UVerify-io/uverify-ui/compare/v1.1.1...v1.1.2) (2025-03-15)
 
 
