@@ -141,6 +141,11 @@ class MonochromeTemplate extends Template {
     pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
+    let explorerUrlPrefix = import.meta.env.VITE_CARDANO_NETWORK + '.';
+    if (import.meta.env.VITE_CARDANO_NETWORK === 'mainnet') {
+      explorerUrlPrefix = '';
+    }
+
     if (typeof certificate === 'undefined') {
       return <></>;
     }
@@ -175,7 +180,7 @@ class MonochromeTemplate extends Template {
         )}
 
         <a
-          href={`https://preprod.cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
+          href={`https://${explorerUrlPrefix}cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
           target="_blank"
           className="my-2 text-center text-black inline-flex items-center rounded-xl bg-black px-4 py-2 font-medium text-white transition duration-200 hover:shadow-center hover:shadow-white-100/50"
         >

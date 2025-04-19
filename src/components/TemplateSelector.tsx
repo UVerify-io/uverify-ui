@@ -3,10 +3,15 @@ import { templates } from '../templates';
 
 interface TemplateSelectorProps {
   onChange: (layout: string, metadata: { [key: string]: string }) => void;
+  userAddress?: string;
   className?: string;
 }
 
-const TemplateSelector = ({ onChange, className }: TemplateSelectorProps) => {
+const TemplateSelector = ({
+  onChange,
+  userAddress,
+  className,
+}: TemplateSelectorProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState('default');
   className = className ? ` ${className}` : '';
 
@@ -26,11 +31,13 @@ const TemplateSelector = ({ onChange, className }: TemplateSelectorProps) => {
           );
         }}
       >
-        {Object.keys(templates).map((template) => (
-          <option key={template} value={template}>
-            {templates[template].name}
-          </option>
-        ))}
+        {Object.keys(templates)
+          .filter((template) => templates[template].isWhitelisted(userAddress))
+          .map((template) => (
+            <option key={template} value={template}>
+              {templates[template].name}
+            </option>
+          ))}
       </select>
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
         <svg

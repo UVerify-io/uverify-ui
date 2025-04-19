@@ -67,13 +67,16 @@ export type Shades =
   | '950';
 
 export type Colors = {
-  ice: Partial<{
+  ice?: Partial<{
     [key in Shades]: string;
   }>;
-  green: Partial<{
+  green?: Partial<{
     [key in Shades]: string;
   }>;
   cyan?: Partial<{ [key in Shades]: string }>;
+  red?: Partial<{ [key in Shades]: string }>;
+  blue?: Partial<{ [key in Shades]: string }>;
+  pink?: Partial<{ [key in Shades]: string }>;
 };
 
 export type Components = Partial<{
@@ -87,6 +90,9 @@ export type ThemeSettings = {
   background: string;
   colors: Colors;
   components: Components;
+  footer: {
+    hide: boolean;
+  };
 };
 
 export type ThemeContextType = {
@@ -98,6 +104,8 @@ export type ThemeContextType = {
   setColors: (update: Colors) => void;
   components: Components;
   setComponents: (update: Components) => void;
+  hideFooter: boolean;
+  setHideFooter: (update: boolean) => void;
 };
 
 export const UVerifyThemeContext = createContext<ThemeContextType>(

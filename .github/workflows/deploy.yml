@@ -23,7 +23,7 @@ jobs:
         run: |
           echo 'VITE_VERSION=$npm_package_version' > .env
           echo 'VITE_BACKEND_URL=https://api.uverify.io' >> .env
-          echo 'VITE_CARDANO_NETWORK=preprod' >> .env
+          echo 'VITE_CARDANO_NETWORK=mainnet' >> .env
           echo 'VITE_SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_ACCOUNT }}' >> .env
 
       - name: 📝 Create .firebaserc file
