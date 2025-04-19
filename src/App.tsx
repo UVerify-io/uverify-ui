@@ -9,7 +9,7 @@ import ScrollPageWrapper from './utils/ScrollPageWrapper';
 import { useUVerifyTheme } from './utils/hooks';
 
 function App() {
-  const { background } = useUVerifyTheme();
+  const { background, hideFooter } = useUVerifyTheme();
 
   return (
     <div className={`min-w-screen min-h-screen ${background} flex flex-col`}>
@@ -38,7 +38,7 @@ function App() {
           transition={Zoom}
         />
       </div>
-      <Footer />
+      {!hideFooter && <Footer />}
     </div>
   );
 }

@@ -35,6 +35,10 @@ declare interface TransactionResult {
 }
 
 const Creation = () => {
+  const networkType =
+    import.meta.env.VITE_CARDANO_NETWORK === 'mainnet'
+      ? NetworkType.MAINNET
+      : NetworkType.TESTNET;
   const [text, setText] = useState('');
   const pageRef = useRef<HTMLDivElement>(null);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
@@ -48,8 +52,14 @@ const Creation = () => {
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
-  const { usedAddresses, isConnected, disconnect, enabledWallet } = useCardano({
-    limitNetwork: NetworkType.TESTNET,
+  const {
+    usedAddresses,
+    unusedAddresses,
+    isConnected,
+    disconnect,
+    enabledWallet,
+  } = useCardano({
+    limitNetwork: networkType,
   });
   const [fileHash, setFileHash] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
@@ -62,6 +72,7 @@ const Creation = () => {
     (activeTab === 0 && fileHash !== '') ||
     (activeTab === 1 && text.length > 0);
   const hash = showFingerprint && (activeTab === 0 ? fileHash : sha256(text));
+  const userAddress = usedAddresses[0] || unusedAddresses[0];
 
   const dropArea =
     typeof selectedFile === 'undefined' ? (
@@ -192,14 +203,13 @@ const Creation = () => {
     }
 
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
-    const address = usedAddresses[0];
 
     setButtonState('loading');
     const hash = activeTab === 0 ? fileHash : sha256(text);
     try {
       const response = await axios.post(apiUrl + '/api/v1/transaction/build', {
         type: 'DEFAULT',
-        address: address,
+        address: userAddress,
         certificates: [
           {
             hash: hash,
@@ -298,6 +308,7 @@ const Creation = () => {
               <h3 className="text-sm mr-4">Certificate Template</h3>
               <div className="flex flex-row w-full items-center my-2">
                 <TemplateSelector
+                  userAddress={userAddress}
                   onChange={(
                     layout: string,
                     metadata: { [key: string]: string }
@@ -335,7 +346,7 @@ const Creation = () => {
                   metadata={previewMetadata}
                   certificate={{
                     hash: hash,
-                    address: usedAddresses[0],
+                    address: userAddress,
                     block_hash:
                       '71fdd15d024cced315d1a247d158227404936fdbddb2b9b632293032c956051a',
                     block_number: 11571661,
@@ -344,13 +355,13 @@ const Creation = () => {
                     slot: 149768853,
                     creation_time: Date.now(),
                     metadata: previewMetadata,
-                    issuer: usedAddresses[0],
+                    issuer: userAddress,
                   }}
                   pagination={<></>}
                   extra={{
                     hashedMultipleTimes: false,
                     firstDateTime: timestampToDateTime(Date.now()),
-                    issuer: usedAddresses[0],
+                    issuer: userAddress,
                     serverError: false,
                     isLoading: false,
                   }}
@@ -394,7 +405,7 @@ const Creation = () => {
                 }
               }
             `}
-            limitNetwork={NetworkType.TESTNET}
+            limitNetwork={networkType}
           />
           <div className="mt-4">
             <a

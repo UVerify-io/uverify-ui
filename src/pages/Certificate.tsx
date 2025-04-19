@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { templates } from '../templates';
 import { timestampToDateTime } from '../utils/tools';
 import { useUVerifyTheme } from '../utils/hooks';
+import TemplateWrapper from '../templates/TemplateWrapper';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -133,7 +134,17 @@ const Certificate = () => {
     />
   );
 
-  return template.render(hash, metadata, certificate, pagination, extra);
+  return (
+    <TemplateWrapper
+      key={templateId}
+      template={template}
+      hash={hash}
+      metadata={metadata}
+      certificate={certificate}
+      pagination={pagination}
+      extra={extra}
+    />
+  );
 };
 
 export default Certificate;

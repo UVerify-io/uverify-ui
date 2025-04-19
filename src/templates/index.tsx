@@ -1,6 +1,6 @@
 import DefaultTemplate from './Default';
 import DiplomaTemplate from './Diploma';
-import LinktreeTemplate from './Linktree';
+import LinktreeTemplate from './LinkTree/LinkTreeTemplate';
 import MonochromeTemplate from './Monochrome';
 import { Template } from './Template';
 

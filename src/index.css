@@ -73,6 +73,28 @@
     --color-cyan-800: 10, 95, 101;
     --color-cyan-900: 13, 80, 84;
     --color-cyan-950: 0, 45, 51;
+    --color-pink-50: 254, 241, 248;
+    --color-pink-100: 254, 229, 243;
+    --color-pink-200: 255, 211, 236;
+    --color-pink-300: 255, 161, 214;
+    --color-pink-400: 255, 102, 189;
+    --color-pink-500: 251, 57, 167;
+    --color-pink-600: 235, 23, 143;
+    --color-pink-700: 205, 9, 120;
+    --color-pink-800: 169, 11, 101;
+    --color-pink-900: 141, 14, 86;
+    --color-pink-950: 87, 0, 49;
+    --color-red-50: 255, 243, 241;
+    --color-red-100: 255, 229, 225;
+    --color-red-200: 255, 207, 199;
+    --color-red-300: 255, 174, 160;
+    --color-red-400: 255, 144, 125;
+    --color-red-500: 248, 87, 59;
+    --color-red-600: 229, 58, 29;
+    --color-red-700: 193, 45, 20;
+    --color-red-800: 160, 40, 20;
+    --color-red-900: 132, 40, 24;
+    --color-red-950: 72, 17, 7;
 }
 
 /* Firefox */

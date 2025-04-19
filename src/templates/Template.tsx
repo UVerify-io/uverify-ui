@@ -17,6 +17,18 @@ export abstract class Template {
     this.name = 'Default';
   }
 
+  public isWhitelisted(address?: string) {
+    if (this.whitelist === '*') {
+      return true;
+    }
+
+    if (typeof address !== 'undefined' && this.whitelist.includes(address)) {
+      return true;
+    }
+
+    return false;
+  }
+
   public validate(payment_credential: string) {
     if (this.whitelist === '*') {
       return true;

@@ -49,12 +49,54 @@ const defaultTheme: ThemeSettings = {
       900: '13, 80, 84',
       950: '0, 45, 51',
     },
+    pink: {
+      50: '254, 241, 248',
+      100: '254, 229, 243',
+      200: '255, 211, 236',
+      300: '255, 161, 214',
+      400: '255, 102, 189',
+      500: '251, 57, 167',
+      600: '235, 23, 143',
+      700: '205, 9, 120',
+      800: '169, 11, 101',
+      900: '141, 14, 86',
+      950: '87, 0, 49',
+    },
+    red: {
+      50: '255, 243, 241',
+      100: '255, 229, 225',
+      200: '255, 207, 199',
+      300: '255, 174, 160',
+      400: '255, 144, 125',
+      500: '248, 87, 59',
+      600: '229, 58, 29',
+      700: '193, 45, 20',
+      800: '160, 40, 20',
+      900: '132, 40, 24',
+      950: '72, 17, 7',
+    },
+    blue: {
+      50: '239, 250, 255',
+      100: '223, 243, 255',
+      200: '184, 233, 255',
+      300: '120, 218, 255',
+      400: '83, 208, 255',
+      500: '6, 176, 241',
+      600: '0, 141, 206',
+      700: '0, 113, 167',
+      800: '2, 95, 138',
+      900: '8, 79, 114',
+      950: '6, 49, 75',
+    },
   },
   components: {
     pagination: defaultPaginationStyle,
     identityCard: defaultIdentityCardStyle,
     metadataViewer: defaultMetadataViewerStyle,
     fingerprint: defaultFingerprintStyle,
+  },
+  footer: {
+    hide: false,
   },
 };
 
@@ -72,13 +114,34 @@ export const UVerifyThemeProvider: React.FC<UVerifyThemeProviderProps> = ({
   const [background, setBackground] = useState(defaultTheme.background);
   const [components, setComponents] = useState(defaultTheme.components);
   const [colors, setColors] = useState(defaultTheme.colors);
+  const [hideFooter, setHideFooter] = useState(false);
 
   const restoreDefaults = () => {
     setBackground(defaultTheme.background);
     setColors(defaultTheme.colors);
+    setHideFooter(defaultTheme.footer.hide);
 
-    for (const shade of Object.keys(defaultTheme.colors.ice) as Shades[]) {
-      for (const color of ['ice', 'green', 'cyan'] as (keyof Colors)[]) {
+    for (const shade of [
+      '50',
+      '100',
+      '200',
+      '300',
+      '400',
+      '500',
+      '600',
+      '700',
+      '800',
+      '900',
+      '950',
+    ] as Shades[]) {
+      for (const color of [
+        'ice',
+        'green',
+        'cyan',
+        'blue',
+        'pink',
+        'red',
+      ] as (keyof Colors)[]) {
         if (defaultTheme.colors[color]) {
           setCSSVariable(
             `--color-${color}-${shade}`,
@@ -112,7 +175,27 @@ export const UVerifyThemeProvider: React.FC<UVerifyThemeProviderProps> = ({
           setCSSVariable(`--color-cyan-${key}`, value);
         });
       }
+      if (theme.colors.blue) {
+        Object.entries(theme.colors.blue).forEach(([key, value]) => {
+          setCSSVariable(`--color-blue-${key}`, value);
+        });
+      }
+      if (theme.colors.pink) {
+        Object.entries(theme.colors.pink).forEach(([key, value]) => {
+          setCSSVariable(`--color-pink-${key}`, value);
+        });
+      }
+      if (theme.colors.red) {
+        Object.entries(theme.colors.red).forEach(([key, value]) => {
+          setCSSVariable(`--color-red-${key}`, value);
+        });
+      }
       setColors({ ...colors, ...theme.colors });
+      if (typeof theme.footer?.hide === 'boolean') {
+        setHideFooter(theme.footer.hide);
+      } else {
+        setHideFooter(false);
+      }
     }
 
     if (theme.components) {
@@ -131,6 +214,8 @@ export const UVerifyThemeProvider: React.FC<UVerifyThemeProviderProps> = ({
         setColors,
         components,
         setComponents,
+        hideFooter,
+        setHideFooter,
       }}
     >
       {children}
