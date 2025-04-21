@@ -12,7 +12,7 @@ import {
   YouTubeIcon,
 } from '../../components/Icons';
 
-export declare interface LinktreeData {
+export declare interface SocialHubData {
   picture: string;
   name: string;
   subtitle: string;
@@ -30,10 +30,11 @@ export declare interface LinktreeData {
   itemName: string;
 }
 
-export type LinktreeKey = keyof LinktreeData;
+export type SocialHubKey = keyof SocialHubData;
 export type Social = {
-  key: LinktreeKey;
+  key: SocialHubKey;
   name: string;
+  description: string;
   icon: JSX.Element;
   urlPrefix?: string;
 };
@@ -44,54 +45,74 @@ export const socials: Social[] = [
     name: 'GitHub',
     icon: <GitHubIcon />,
     urlPrefix: 'https://github.com/',
+    description: 'githubuser',
   },
-  { key: 'x', name: 'X', icon: <XIcon />, urlPrefix: 'https://x.com/' },
+  {
+    key: 'x',
+    description: 'johndoe',
+    name: 'X',
+    icon: <XIcon />,
+    urlPrefix: 'https://x.com/',
+  },
   {
     key: 'linkedin',
     name: 'LinkedIn',
     icon: <LinkedInIcon />,
     urlPrefix: 'https://linkedin.com/in/',
+    description: 'john-doe-12345',
   },
   {
     key: 'telegram',
     name: 'Telegram',
+    description: 'johndoe',
     icon: <ChatIcon />,
     urlPrefix: 'https://t.me/',
   },
   {
     key: 'instagram',
     name: 'Instagram',
+    description: 'johndoe',
     icon: <InstagramIcon />,
     urlPrefix: 'https://instagram.com/',
   },
   {
     key: 'discord',
     name: 'Discord',
+    description: 'johndoe#1234',
     icon: <DiscordIcon />,
     urlPrefix: 'https://discordapp.com/users/',
   },
   {
     key: 'reddit',
     name: 'Reddit',
+    description: 'johndoe',
     icon: <RedditIcon />,
     urlPrefix: 'https://reddit.com/u/',
   },
   {
     key: 'youtube',
     name: 'YouTube',
+    description: 'MyChannelName',
     icon: <YouTubeIcon />,
     urlPrefix: 'https://www.youtube.com/c/',
   },
-  { key: 'website', name: 'Website', icon: <GlobeIcon /> },
+  {
+    key: 'website',
+    description: 'app.uverify.io',
+    name: 'Website',
+    icon: <GlobeIcon />,
+  },
   {
     key: 'email',
     name: 'Email',
+    description: 'john@doe.com',
     icon: <InfoIcon />,
     urlPrefix: 'mailto:',
   },
   {
     key: 'adaHandle',
     name: 'ADA Handle',
+    description: 'johndoe',
     icon: <InfoIcon />,
     urlPrefix: 'https://cexplorer.io/',
   },

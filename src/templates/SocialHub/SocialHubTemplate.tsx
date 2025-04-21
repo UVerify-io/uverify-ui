@@ -16,14 +16,14 @@ import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { sha3_256 } from 'js-sha3';
 import ClaimingPage from './ClaimingPage';
-import { LinktreeData } from './common';
-import LinkTree from './LinkTree';
+import { SocialHubData } from './common';
+import SocialHub from './SocialHub';
 import ClaimUpdateDialog from './ClaimUpdateDialog';
 import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
 
-class LinktreeTemplate extends Template {
-  public name = 'Linktree';
+class SocialHubTemplate extends Template {
+  public name = 'SocialHub';
   public whitelist = [
     'addr1qyleluql6elu7sktvncqfufnq675hlt9z922ah9sm45dmp7kjn0vsay0vq28379mczjmglmam3svuxyka0tyw0uchwjqmxmhg3',
     'addr_test1qqleluql6elu7sktvncqfufnq675hlt9z922ah9sm45dmp7kjn0vsay0vq28379mczjmglmam3svuxyka0tyw0uchwjqcsxhyw',
@@ -70,17 +70,26 @@ class LinktreeTemplate extends Template {
     const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
     const [isClaimUpdateItemDialogOpen, setIsClaimUpdateItemDialogOpen] =
       useState(false);
-    const [linktreeData, setLinktreeData] = useState<LinktreeData>();
+    const [socialHubData, setSocialHubData] = useState<SocialHubData>();
     const [claimed, setClaimed] = useState(false);
+    const [owner, setOwner] = useState('');
     const [password, setPassword] = useState('');
     const [searchParams, _setSearchParams] = useSearchParams();
-    const { isConnected, disconnect, usedAddresses, enabledWallet } =
-      useCardano({
-        limitNetwork: networkType,
-      });
+    const {
+      isConnected,
+      disconnect,
+      usedAddresses,
+      unusedAddresses,
+      enabledWallet,
+    } = useCardano({
+      limitNetwork: networkType,
+    });
+
+    const userAddress =
+      usedAddresses.length > 0 ? usedAddresses[0] : unusedAddresses[0];
 
     useEffect(() => {
-      async function fetchLinktree() {
+      async function fetchSocialHub() {
         let item = searchParams.get('item');
         if (item) {
           const response = await axios.get(
@@ -94,7 +103,9 @@ class LinktreeTemplate extends Template {
           setPassword(item);
 
           if (response.status === 200) {
-            setLinktreeData({
+            console.log([...usedAddresses, ...unusedAddresses]);
+            setOwner(response.data.owner || '');
+            setSocialHubData({
               adaHandle: response.data.ada_handle,
               email: response.data.email,
               github: response.data.github,
@@ -116,11 +127,11 @@ class LinktreeTemplate extends Template {
               setClaimed(true);
             }
           } else {
-            console.error('Error fetching linktree data:', response.status);
+            console.error('Error fetching socialHub data:', response.status);
           }
         }
       }
-      fetchLinktree();
+      fetchSocialHub();
     }, []);
 
     const connectButton = isConnected ? (
@@ -130,6 +141,17 @@ class LinktreeTemplate extends Template {
       >
         <p className="ml-2 text-xs font-bold">Disconnect Wallet</p>
       </div>
+    ) : claimed ? (
+      <p className="text-white text-sm text-center mt-8">
+        If you own this item, you can{' '}
+        <span
+          className="text-cyan-400 cursor-pointer hover:underline"
+          onClick={() => setIsWalletDialogOpen(true)}
+        >
+          connect your wallet
+        </span>{' '}
+        to update the social hub.
+      </p>
     ) : (
       <div
         onClick={() => setIsWalletDialogOpen(true)}
@@ -141,15 +163,25 @@ class LinktreeTemplate extends Template {
 
     const renderUserOptions = () => {
       if (isConnected) {
+        if (
+          ![...usedAddresses, ...unusedAddresses].includes(owner) &&
+          claimed
+        ) {
+          return (
+            <p className="text-white text-sm text-center mt-8 mb-4">
+              You are not the owner of this item.
+            </p>
+          );
+        }
         return (
           <div
             onClick={() => {
               setIsClaimUpdateItemDialogOpen(true);
             }}
-            className="m-2 text-blue-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-blue-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
+            className="mt-8 text-blue-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-blue-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
           >
             <p className="ml-2 text-xs font-bold">
-              {claimed ? 'Update Linktree' : 'Claim Shirt'}
+              {claimed ? 'Update Social Hub' : 'Claim Shirt'}
             </p>
           </div>
         );
@@ -179,7 +211,7 @@ class LinktreeTemplate extends Template {
       </footer>
     );
 
-    if (linktreeData?.itemName === undefined) {
+    if (socialHubData?.itemName === undefined) {
       return (
         <div className="min-h-screen text-white w-full flex flex-col justify-center items-center">
           <div className="grow" />
@@ -196,7 +228,7 @@ class LinktreeTemplate extends Template {
     return (
       <div className="min-h-screen text-white w-full flex flex-col justify-center items-center">
         <div className="flex flex-row items-center justify-center mt-8">
-          <h1 className="text-2xl font-bold mr-2">{linktreeData.itemName}</h1>
+          <h1 className="text-2xl font-bold mr-2">{socialHubData.itemName}</h1>
           <Tag label={'#' + metadata.whitelabel} color="cyan" size="sm" />
         </div>
         <video
@@ -208,7 +240,7 @@ class LinktreeTemplate extends Template {
           playsInline
         />
         {claimed ? (
-          <LinkTree linkTreeData={linktreeData} certificate={certificate} />
+          <SocialHub socialHubData={socialHubData} certificate={certificate} />
         ) : (
           <ClaimingPage />
         )}
@@ -222,9 +254,9 @@ class LinktreeTemplate extends Template {
           onClose={() => setIsClaimUpdateItemDialogOpen(false)}
           variant={claimed ? 'update' : 'claim'}
           password={password}
-          userAddress={usedAddresses[0]}
+          userAddress={userAddress}
           batchId={metadata.batch_ids + ''}
-          linkTreeData={linktreeData}
+          socialHubData={socialHubData}
           background={this.theme.background || ''}
           enabledWallet={enabledWallet}
         />
@@ -277,4 +309,4 @@ class LinktreeTemplate extends Template {
   }
 }
 
-export default LinktreeTemplate;
+export default SocialHubTemplate;

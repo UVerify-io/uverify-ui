@@ -1,14 +1,14 @@
 import { JSX } from 'react';
 import { UVerifyCertificate } from '../../common/types';
-import { LinktreeData, socials } from './common';
+import { SocialHubData, socials } from './common';
 
-declare interface LinkTreeProps {
+declare interface SocialHubProps {
   certificate?: UVerifyCertificate;
-  linkTreeData?: LinktreeData;
+  socialHubData?: SocialHubData;
 }
 
-function LinkTree({ certificate, linkTreeData }: LinkTreeProps) {
-  const linkTreeButton = (
+function SocialHub({ certificate, socialHubData }: SocialHubProps) {
+  const socialHubButton = (
     text: string,
     icon: JSX.Element,
     account: string,
@@ -31,28 +31,28 @@ function LinkTree({ certificate, linkTreeData }: LinkTreeProps) {
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      {linkTreeData?.github && linkTreeData?.picture && (
+      {socialHubData?.github && socialHubData?.picture && (
         <img
-          src={`https://avatars.githubusercontent.com/${linkTreeData.github}`}
+          src={`https://avatars.githubusercontent.com/${socialHubData.github}`}
           className="w-40 h-40 rounded-full mt-2"
         />
       )}
-      <h1 className="text-2xl font-bold mt-4">{linkTreeData?.name}</h1>
+      <h1 className="text-2xl font-bold mt-4">{socialHubData?.name}</h1>
       <p className="mx-2 text-center text-cyan-400 text-md mt-1 mb-4">
-        {linkTreeData?.subtitle}
+        {socialHubData?.subtitle}
       </p>
 
       <div className="w-3/5 flex flex-row flex-wrap items-center justify-center mt-2">
         {socials.map((social) => {
           if (
-            linkTreeData &&
-            social.key in linkTreeData &&
-            linkTreeData[social.key]
+            socialHubData &&
+            social.key in socialHubData &&
+            socialHubData[social.key]
           ) {
-            return linkTreeButton(
+            return socialHubButton(
               social.name,
               social.icon,
-              linkTreeData[social.key],
+              socialHubData[social.key],
               social.urlPrefix
             );
           }
@@ -62,4 +62,4 @@ function LinkTree({ certificate, linkTreeData }: LinkTreeProps) {
   );
 }
 
-export default LinkTree;
+export default SocialHub;

@@ -96,12 +96,17 @@ const Certificate = () => {
         setIssuer(certificates[page - 1].issuer);
       }
 
+      const metadataTemplateId =
+        certificateMetadata['uverify_template_id'] === 'linktree'
+          ? 'socialHub'
+          : certificateMetadata['uverify_template_id'];
+
       if (
         certificateMetadata.hasOwnProperty('uverify_template_id') &&
-        templates.hasOwnProperty(certificateMetadata['uverify_template_id'])
+        templates.hasOwnProperty(metadataTemplateId)
       ) {
-        setTemplateId(certificateMetadata['uverify_template_id']);
-        applyTheme(templates[certificateMetadata['uverify_template_id']].theme);
+        setTemplateId(metadataTemplateId);
+        applyTheme(templates[metadataTemplateId].theme);
         return restoreDefaults;
       } else {
         setTemplateId('default');
@@ -112,7 +117,8 @@ const Certificate = () => {
 
   if (!hash) return <div>Invalid hash</div>;
 
-  const template = templates[templateId];
+  const template =
+    templates[templateId === 'linktree' ? 'socialHub' : templateId];
   const hashedMultipleTimes = certificates.length > 1;
 
   const extra = {
@@ -134,9 +140,21 @@ const Certificate = () => {
     />
   );
 
+  if (isLoading) {
+    return (
+      <div className="absolute inset-0 bg-white flex items-center justify-center">
+        <div className="flex space-x-2">
+          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_0ms]"></div>
+          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_200ms]"></div>
+          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_400ms]"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <TemplateWrapper
-      key={templateId}
+      key={templateId === 'linktree' ? 'socialHub' : templateId}
       template={template}
       hash={hash}
       metadata={metadata}

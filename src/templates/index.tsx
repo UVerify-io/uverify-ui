@@ -1,6 +1,6 @@
 import DefaultTemplate from './Default';
 import DiplomaTemplate from './Diploma';
-import LinktreeTemplate from './LinkTree/LinkTreeTemplate';
+import SocialHubTemplate from './SocialHub/SocialHubTemplate';
 import MonochromeTemplate from './Monochrome';
 import { Template } from './Template';
 
@@ -12,5 +12,5 @@ export const templates: Templates = {
   default: new DefaultTemplate(),
   monochrome: new MonochromeTemplate(),
   diploma: new DiplomaTemplate(),
-  linktree: new LinktreeTemplate(),
+  socialHub: new SocialHubTemplate(),
 };
