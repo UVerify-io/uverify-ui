@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/UVerify-io/uverify-ui/compare/v1.2.0...v1.2.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* encypt social hub before submitting it on-chain ([86d9f7e](https://github.com/UVerify-io/uverify-ui/commit/86d9f7e0ce4afb6ef748a62fb67c510dd6e2843a))
+
 ## [1.2.0](https://github.com/UVerify-io/uverify-ui/compare/v1.1.2...v1.2.0) (2025-04-19)
 
 ### Features
