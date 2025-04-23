@@ -78,13 +78,19 @@ function ClaimUpdateDialog({
         <div className="ml-3">
           <h3 className="text-lg font-medium">Important Disclaimer</h3>
           <p className="mt-2 text-sm">
-            Your social hub will be stored on-chain, making it publicly
-            accessible and permanently recorded. While this application may
-            allow you to update the data, previous versions will remain
-            preserved in earlier transactions. Please be mindful when sharing
-            combinations of social media usernames or ADA handles, as this
-            information could potentially link your transactions to your real
-            identity.
+            Your social hub will be <b>stored on-chain in encrypted form</b>. To
+            encrypt and decrypt your data without UVerify, you would need both
+            the dynamic item password from the physical item and a static
+            password. While this application lets you update your information,
+            previous versions will still be preserved in earlier transactions.
+            This means that{' '}
+            <b>
+              if someone manages to break the encryption, your data could be
+              exposed
+            </b>
+            . Please be cautious when sharing combinations of social media
+            usernames or ADA handles, as this information could potentially link
+            your transactions to your real identity.
           </p>
         </div>
       </div>
@@ -93,6 +99,21 @@ function ClaimUpdateDialog({
 
   const changeSocialHub = async () => {
     let response;
+
+    if (
+      updatedSocialHubData?.website &&
+      !(
+        updatedSocialHubData?.website.startsWith('https://') ||
+        updatedSocialHubData?.website.startsWith('http://') ||
+        updatedSocialHubData?.website.startsWith('ipfs://')
+      )
+    ) {
+      toast.warning(
+        'Please make sure to use a valid URL format for the website field that starts with "https://" or "http://" or "ipfs://".'
+      );
+      return;
+    }
+
     try {
       response = await axios.post(
         import.meta.env.VITE_BACKEND_URL +
@@ -101,7 +122,6 @@ function ClaimUpdateDialog({
           social_hub: {
             owner: userAddress,
             item_name: updatedSocialHubData?.itemName,
-            picture: '',
             ...updatedSocialHubData,
           },
           password: password,
@@ -117,8 +137,8 @@ function ClaimUpdateDialog({
         toast.error(
           'Failed to update item. Make sure you connected the correct wallet and try again.'
         );
-        return;
       }
+      return;
     }
     if (response && response.status === 200) {
       const transaction = response.data;
@@ -156,6 +176,7 @@ function ClaimUpdateDialog({
     onClose();
   };
 
+  // TODO: Remove filter for website and fix validator or encryption logic instead
   return (
     <Modal
       title={title}
@@ -180,49 +201,51 @@ function ClaimUpdateDialog({
             description: 'Software Engineer | Global Solutions Inc.',
           } as Social,
           ...socials,
-        ].map((social: Social) => (
-          <div
-            key={social.key}
-            className="flex w-full max-w-[600px] items-start my-1"
-          >
-            <div className="flex w-1/5 flex-col mr-1">
-              <input
-                autoFocus={false}
-                type="text"
-                disabled={true}
-                onBlur={(event) => {
-                  if (event.target.value === '') {
-                    event.target.placeholder = 'Key';
-                  }
-                }}
-                readOnly={true}
-                className={`w-full h-10 text-xs px-2 outline-hidden rounded bg-white/25 border border-[#FFFFFF40] text-white focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
-                value={social.name}
-              />
-            </div>
-            <div className="flex w-4/5 flex-col ml-1">
-              <input
-                autoFocus={false}
-                type="text"
-                placeholder={social.description}
-                className={`focus:placeholder-transparent placeholder-white/60 w-full h-10 text-xs px-2 outline-hidden rounded bg-white/25 border border-[#FFFFFF40] text-white focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
-                value={updatedSocialHubData?.[social.key] || ''}
-                onChange={(event) => {
-                  let update: string | null = event.target.value;
-                  if (update === '') {
-                    update = null;
-                  }
+        ]
+          .filter((social: Social) => social.key != 'website')
+          .map((social: Social) => (
+            <div
+              key={social.key}
+              className="flex w-full max-w-[600px] items-start my-1"
+            >
+              <div className="flex w-1/5 flex-col mr-1">
+                <input
+                  autoFocus={false}
+                  type="text"
+                  disabled={true}
+                  onBlur={(event) => {
+                    if (event.target.value === '') {
+                      event.target.placeholder = 'Key';
+                    }
+                  }}
+                  readOnly={true}
+                  className={`w-full h-10 text-xs px-2 outline-hidden rounded bg-white/25 border border-[#FFFFFF40] text-white focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
+                  value={social.name}
+                />
+              </div>
+              <div className="flex w-4/5 flex-col ml-1">
+                <input
+                  autoFocus={false}
+                  type="text"
+                  placeholder={social.description}
+                  className={`focus:placeholder-transparent placeholder-white/60 w-full h-10 text-xs px-2 outline-hidden rounded bg-white/25 border border-[#FFFFFF40] text-white focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
+                  value={updatedSocialHubData?.[social.key] || ''}
+                  onChange={(event) => {
+                    let update: string | null = event.target.value;
+                    if (update === '') {
+                      update = null;
+                    }
 
-                  const updatedData = {
-                    ...updatedSocialHubData,
-                    [social.key]: update,
-                  };
-                  setUpdatedSocialHubData(updatedData as SocialHubData);
-                }}
-              />
+                    const updatedData = {
+                      ...updatedSocialHubData,
+                      [social.key]: update,
+                    };
+                    setUpdatedSocialHubData(updatedData as SocialHubData);
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
         <div
           onClick={changeSocialHub}

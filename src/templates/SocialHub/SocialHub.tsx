@@ -38,6 +38,18 @@ function SocialHub({ certificate, socialHubData }: SocialHubProps) {
         />
       )}
       <h1 className="text-2xl font-bold mt-4">{socialHubData?.name}</h1>
+      {socialHubData?.ada_handle && (
+        <a
+          className="text-green-400 text-lg text-bolder mt-1 mb-4"
+          key="ada_handle"
+          href={`https://cexplorer.io/${socialHubData.ada_handle}`}
+          target="_blank"
+        >
+          {`${!socialHubData.ada_handle.startsWith('$') ? '$' : ''}${
+            socialHubData.ada_handle
+          }`}
+        </a>
+      )}
       <p className="mx-2 text-center text-cyan-400 text-md mt-1 mb-4">
         {socialHubData?.subtitle}
       </p>
@@ -47,7 +59,8 @@ function SocialHub({ certificate, socialHubData }: SocialHubProps) {
           if (
             socialHubData &&
             social.key in socialHubData &&
-            socialHubData[social.key]
+            socialHubData[social.key] &&
+            social.key !== 'ada_handle'
           ) {
             return socialHubButton(
               social.name,

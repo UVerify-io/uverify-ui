@@ -2,6 +2,7 @@ import { JSX } from 'react';
 import {
   ChatIcon,
   DiscordIcon,
+  EmailIcon,
   GitHubIcon,
   GlobeIcon,
   InfoIcon,
@@ -25,7 +26,7 @@ export declare interface SocialHubData {
   linkedin: string;
   github: string;
   website: string;
-  adaHandle: string;
+  ada_handle: string;
   email: string;
   itemName: string;
 }
@@ -98,7 +99,7 @@ export const socials: Social[] = [
   },
   {
     key: 'website',
-    description: 'app.uverify.io',
+    description: 'https://app.uverify.io',
     name: 'Website',
     icon: <GlobeIcon />,
   },
@@ -106,11 +107,11 @@ export const socials: Social[] = [
     key: 'email',
     name: 'Email',
     description: 'john@doe.com',
-    icon: <InfoIcon />,
+    icon: <EmailIcon />,
     urlPrefix: 'mailto:',
   },
   {
-    key: 'adaHandle',
+    key: 'ada_handle',
     name: 'ADA Handle',
     description: 'johndoe',
     icon: <InfoIcon />,

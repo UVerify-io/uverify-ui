@@ -14,13 +14,13 @@ import {
 import Modal from '../../components/Modal';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
-import { sha3_256 } from 'js-sha3';
 import ClaimingPage from './ClaimingPage';
 import { SocialHubData } from './common';
 import SocialHub from './SocialHub';
 import ClaimUpdateDialog from './ClaimUpdateDialog';
 import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
+import LoadingIndicator from '../../components/LoadingIndicator';
 
 class SocialHubTemplate extends Template {
   public name = 'SocialHub';
@@ -84,7 +84,7 @@ class SocialHubTemplate extends Template {
     } = useCardano({
       limitNetwork: networkType,
     });
-
+    const [isLoading, setIsLoading] = useState(true);
     const userAddress =
       usedAddresses.length > 0 ? usedAddresses[0] : unusedAddresses[0];
 
@@ -92,21 +92,19 @@ class SocialHubTemplate extends Template {
       async function fetchSocialHub() {
         let item = searchParams.get('item');
         if (item) {
-          const response = await axios.get(
-            import.meta.env.VITE_BACKEND_URL +
-              '/api/v1/extension/connected-goods/' +
-              metadata.batch_ids +
-              '/' +
-              sha3_256(item)
-          );
+          try {
+            const response = await axios.get(
+              import.meta.env.VITE_BACKEND_URL +
+                '/api/v1/extension/connected-goods/' +
+                metadata.batch_ids +
+                '/' +
+                item
+            );
 
-          setPassword(item);
-
-          if (response.status === 200) {
-            console.log([...usedAddresses, ...unusedAddresses]);
+            setPassword(item);
             setOwner(response.data.owner || '');
             setSocialHubData({
-              adaHandle: response.data.ada_handle,
+              ada_handle: response.data.ada_handle,
               email: response.data.email,
               github: response.data.github,
               name: response.data.name,
@@ -126,8 +124,10 @@ class SocialHubTemplate extends Template {
             if (response.data.owner) {
               setClaimed(true);
             }
-          } else {
-            console.error('Error fetching socialHub data:', response.status);
+          } catch (error) {
+            console.error('Error fetching socialHub data:', error);
+          } finally {
+            setIsLoading(false);
           }
         }
       }
@@ -155,7 +155,7 @@ class SocialHubTemplate extends Template {
     ) : (
       <div
         onClick={() => setIsWalletDialogOpen(true)}
-        className="m-2 text-blue-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-blue-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
+        className="mt-8 text-blue-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-blue-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
       >
         <p className="ml-2 text-xs font-bold">Connect Wallet</p>
       </div>
@@ -212,6 +212,26 @@ class SocialHubTemplate extends Template {
     );
 
     if (socialHubData?.itemName === undefined) {
+      if (!searchParams.get('item')) {
+        return (
+          <div className="min-h-screen text-white w-full flex flex-col justify-center items-center">
+            <div className="grow" />
+            <p className="text-lg font-bold mt-4 w-3/4 text-center">
+              This is a valid UVerify certificate, but it uses the Social Hub
+              template, which needs a connected item included in your URL.
+              Please make sure your URL ends with ?item=ITEM_ID. Try scanning
+              the QR code again, or ask the sender to resend the correct link.
+            </p>
+            <div className="grow" />
+            {footer}
+          </div>
+        );
+      }
+
+      if (isLoading) {
+        return <LoadingIndicator />;
+      }
+
       return (
         <div className="min-h-screen text-white w-full flex flex-col justify-center items-center">
           <div className="grow" />
@@ -275,6 +295,10 @@ class SocialHubTemplate extends Template {
             supportedWallets={['yoroi', 'lace', 'nami', 'eternl', 'vespr']}
             onConnect={() => setIsWalletDialogOpen(false)}
             gap={6}
+            peerConnectCustomCSS={`
+              color: black;
+              z-index: 1000;
+            `}
             customCSS={`
               width: 100%;
               & > span {
