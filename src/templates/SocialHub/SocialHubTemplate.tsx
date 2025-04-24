@@ -22,6 +22,7 @@ import ClaimUpdateDialog from './ClaimUpdateDialog';
 import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
 import LoadingIndicator from '../../components/LoadingIndicator';
+import { toast } from 'react-toastify';
 
 class SocialHubTemplate extends Template {
   public name = 'SocialHub';
@@ -213,10 +214,34 @@ class SocialHubTemplate extends Template {
           <div className="ml-3">
             <h3 className="text-lg font-medium">Mobile Access Instructions</h3>
             <p className="mt-2 text-sm">
-              If you are accessing this page from a mobile device, please select
-              one of the wallets above that supports mobile, open or install the
-              wallet, and then return to this page using its in-app dApp
-              browser.
+              If you are on a mobile device, tap this copy icon{' '}
+              <span className="inline-flex items-center">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success('URL copied to clipboard');
+                  }}
+                  className="hover:bg-blue-600 rounded-full transition-colors duration-200"
+                  title="Copy URL"
+                >
+                  <svg
+                    className="h-4 w-4 text-blue-300"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                </button>
+              </span>{' '}
+              to copy the URL, then open one of the supported wallets listed
+              above and paste the URL into the wallet's in-app dApp browser.
             </p>
           </div>
         </div>

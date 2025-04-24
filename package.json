@@ -12,7 +12,7 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@cardano-foundation/cardano-connect-with-wallet": "^0.2.12",
+    "@cardano-foundation/cardano-connect-with-wallet": "^0.2.13",
     "@cardano-foundation/cardano-connect-with-wallet-core": "^0.2.7",
     "axios": "^1.8.3",
     "dompurify": "^3.2.4",
