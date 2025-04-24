@@ -2,12 +2,13 @@ import { Template, UVerifyCertificateExtraData } from '../Template';
 import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
 import { ThemeSettings } from '../../utils/hooks';
 import { JSX, useEffect, useState } from 'react';
-import { HeartIcon, InfoIcon } from '../../components/Icons';
+import { HeartIcon } from '../../components/Icons';
 import {
   ConnectWalletList,
   useCardano,
 } from '@cardano-foundation/cardano-connect-with-wallet';
 import {
+  checkIsMobile,
   NetworkType,
   UnavailableWalletVisibility,
 } from '@cardano-foundation/cardano-connect-with-wallet-core';
@@ -189,6 +190,39 @@ class SocialHubTemplate extends Template {
       return null;
     };
 
+    const mobileInfo = (
+      <div className="sm:w-3/4 max-w-[600px] my-4 bg-blue-50 border-l-4 border-blue-500 text-blue-300 bg-blue-700 p-4 rounded-md shadow-md">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg
+              className="h-6 w-6 text-blue-300"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-lg font-medium">Mobile Access Instructions</h3>
+            <p className="mt-2 text-sm">
+              If you are accessing this page from a mobile device, please select
+              one of the wallets above that supports mobile, open or install the
+              wallet, and then return to this page using its in-app dApp
+              browser.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+
     const footer = (
       <footer className="flex flex-col items-center p-1 text-white mt-4 mb-2">
         <div className="flex items-center justify-center mt-2 text-xs">
@@ -292,7 +326,7 @@ class SocialHubTemplate extends Template {
             showUnavailableWallets={
               UnavailableWalletVisibility.SHOW_UNAVAILABLE
             }
-            supportedWallets={['yoroi', 'lace', 'nami', 'eternl', 'vespr']}
+            supportedWallets={['eternl', 'vespr', 'begin', 'yoroi', 'lace']}
             onConnect={() => setIsWalletDialogOpen(false)}
             gap={6}
             peerConnectCustomCSS={`
@@ -300,6 +334,7 @@ class SocialHubTemplate extends Template {
               z-index: 1000;
             `}
             customCSS={`
+              min-width: 240px;
               width: 100%;
               & > span {
                 color: #FFFFFFAA;
@@ -316,15 +351,9 @@ class SocialHubTemplate extends Template {
             `}
             limitNetwork={networkType}
           />
-          <div className="mt-4">
-            <a
-              href="#"
-              className="inline-flex items-center text-xs font-normal hover:underline"
-            >
-              <InfoIcon className="w-3 h-3 me-2" />
-              Why do I need to connect with my wallet?
-            </a>
-          </div>
+          {checkIsMobile() &&
+            typeof (window as any).cardano === 'undefined' &&
+            mobileInfo}
         </Modal>
         <div className="grow" />
         {footer}
