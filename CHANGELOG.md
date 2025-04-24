@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/UVerify-io/uverify-ui/compare/v1.3.0...v1.3.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* correct wrong link to play and app store ([89d686d](https://github.com/UVerify-io/uverify-ui/commit/89d686d3deb651caa6c30937bb9559fa5fff90ba))
+
 ## [1.3.0](https://github.com/UVerify-io/uverify-ui/compare/v1.2.1...v1.3.0) (2025-04-24)
 
 
