@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/UVerify-io/uverify-ui/compare/v1.3.1...v1.3.2) (2025-04-24)
+
+
+### Bug Fixes
+
+* bump connect wallet version to fix eternl url ([970f17e](https://github.com/UVerify-io/uverify-ui/commit/970f17e14a5ed6d665a4f3bb865c2cfa3deb3e5f))
+
 ## [1.3.1](https://github.com/UVerify-io/uverify-ui/compare/v1.3.0...v1.3.1) (2025-04-24)
 
 
