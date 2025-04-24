@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/UVerify-io/uverify-ui/compare/v1.2.1...v1.3.0) (2025-04-24)
+
+
+### Features
+
+* add mobile instructions and support for in-app browsers ([8e12c94](https://github.com/UVerify-io/uverify-ui/commit/8e12c9409d326243351cf60475d305b8ac6e072c))
+
 ## [1.2.1](https://github.com/UVerify-io/uverify-ui/compare/v1.2.0...v1.2.1) (2025-04-23)
 
 
