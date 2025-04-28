@@ -2,12 +2,13 @@ import { Template, UVerifyCertificateExtraData } from '../Template';
 import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
 import { ThemeSettings } from '../../utils/hooks';
 import { JSX, useEffect, useState } from 'react';
-import { HeartIcon, InfoIcon } from '../../components/Icons';
+import { HeartIcon } from '../../components/Icons';
 import {
   ConnectWalletList,
   useCardano,
 } from '@cardano-foundation/cardano-connect-with-wallet';
 import {
+  checkIsMobile,
   NetworkType,
   UnavailableWalletVisibility,
 } from '@cardano-foundation/cardano-connect-with-wallet-core';
@@ -21,6 +22,7 @@ import ClaimUpdateDialog from './ClaimUpdateDialog';
 import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
 import LoadingIndicator from '../../components/LoadingIndicator';
+import { toast } from 'react-toastify';
 
 class SocialHubTemplate extends Template {
   public name = 'SocialHub';
@@ -189,6 +191,63 @@ class SocialHubTemplate extends Template {
       return null;
     };
 
+    const mobileInfo = (
+      <div className="sm:w-3/4 max-w-[600px] my-4 bg-blue-50 border-l-4 border-blue-500 text-blue-300 bg-blue-700 p-4 rounded-md shadow-md">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg
+              className="h-6 w-6 text-blue-300"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-lg font-medium">Mobile Access Instructions</h3>
+            <p className="mt-2 text-sm">
+              If you are on a mobile device, tap this copy icon{' '}
+              <span className="inline-flex items-center">
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success('URL copied to clipboard');
+                  }}
+                  className="hover:bg-blue-600 rounded-full transition-colors duration-200"
+                  title="Copy URL"
+                >
+                  <svg
+                    className="h-4 w-4 text-blue-300"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                </button>
+              </span>{' '}
+              to copy the URL, then open one of the supported wallets listed
+              above and paste the URL into the wallet's in-app dApp browser.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+
     const footer = (
       <footer className="flex flex-col items-center p-1 text-white mt-4 mb-2">
         <div className="flex items-center justify-center mt-2 text-xs">
@@ -292,7 +351,7 @@ class SocialHubTemplate extends Template {
             showUnavailableWallets={
               UnavailableWalletVisibility.SHOW_UNAVAILABLE
             }
-            supportedWallets={['yoroi', 'lace', 'nami', 'eternl', 'vespr']}
+            supportedWallets={['eternl', 'vespr', 'begin', 'yoroi', 'lace']}
             onConnect={() => setIsWalletDialogOpen(false)}
             gap={6}
             peerConnectCustomCSS={`
@@ -300,6 +359,7 @@ class SocialHubTemplate extends Template {
               z-index: 1000;
             `}
             customCSS={`
+              min-width: 240px;
               width: 100%;
               & > span {
                 color: #FFFFFFAA;
@@ -316,15 +376,9 @@ class SocialHubTemplate extends Template {
             `}
             limitNetwork={networkType}
           />
-          <div className="mt-4">
-            <a
-              href="#"
-              className="inline-flex items-center text-xs font-normal hover:underline"
-            >
-              <InfoIcon className="w-3 h-3 me-2" />
-              Why do I need to connect with my wallet?
-            </a>
-          </div>
+          {checkIsMobile() &&
+            typeof (window as any).cardano === 'undefined' &&
+            mobileInfo}
         </Modal>
         <div className="grow" />
         {footer}
