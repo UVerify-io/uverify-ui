@@ -6,7 +6,7 @@ import { UVerifyCertificate, UVerifyMetadata } from '../common/types';
 import { toast } from 'react-toastify';
 import { templates } from '../templates';
 import { timestampToDateTime } from '../utils/tools';
-import { useUVerifyTheme } from '../utils/hooks';
+import { useUVerifyConfig, useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
 
 const Certificate = () => {
@@ -22,13 +22,12 @@ const Certificate = () => {
   const [templateId, setTemplateId] = useState('default');
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
+  const config = useUVerifyConfig();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (certificates.length === 0) {
-      const response = axios.get(
-        import.meta.env.VITE_BACKEND_URL + '/api/v1/verify/' + hash
-      );
+      const response = axios.get(config.backendUrl + '/api/v1/verify/' + hash);
       response
         .then((res) => {
           if (res.status !== 200) return;
@@ -87,8 +86,7 @@ const Certificate = () => {
       setMetadata(certificateMetadata);
 
       if (
-        import.meta.env.VITE_SERVICE_ACCOUNT ===
-          certificates[page - 1].issuer &&
+        config.serviceAccount === certificates[page - 1].issuer &&
         certificateMetadata.hasOwnProperty('original-issuer')
       ) {
         setIssuer(certificateMetadata['original-issuer']);

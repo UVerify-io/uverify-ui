@@ -1,5 +1,6 @@
 import {
   useState,
+  useEffect,
   RefObject,
   useMemo,
   useSyncExternalStore,
@@ -12,6 +13,40 @@ import {
   MetadataViewerStyle,
   PaginationStyle,
 } from '../templates/defaultStyles';
+
+export type UVerifyConfig = {
+  backendUrl: string;
+  cardanoNetwork: string;
+  serviceAccount: string;
+};
+
+export const useUVerifyConfig = () => {
+  const [config, setConfig] = useState<UVerifyConfig>({
+    backendUrl: 'https://api.uvify.io',
+    cardanoNetwork: 'preprod',
+    serviceAccount:
+      'addr1qxqup4lcghajeawjx3faccuewk2k3ztneps8segrcn28ky223ul5q54jq72wps946c5gw8z5mfjhqa9r8znzk4vd4sls8jqsva',
+  });
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/config.json');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch config.json: ${response.status}`);
+        }
+        const data = await response.json();
+        setConfig(data);
+      } catch (err) {
+        console.error('Error fetching config.json using default config:', err);
+      }
+    };
+
+    fetchConfig();
+  }, []);
+
+  return config;
+};
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState(() => {

@@ -10,6 +10,7 @@ import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
 import { JSX } from 'react';
+import { useUVerifyConfig } from '../utils/hooks';
 
 class DefaultTemplate extends Template {
   public render(
@@ -19,9 +20,10 @@ class DefaultTemplate extends Template {
     pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
+    const config = useUVerifyConfig();
     const isVerified = certificate !== undefined;
-    let explorerUrlPrefix = import.meta.env.VITE_CARDANO_NETWORK + '.';
-    if (import.meta.env.VITE_CARDANO_NETWORK === 'mainnet') {
+    let explorerUrlPrefix = config.cardanoNetwork + '.';
+    if (config.cardanoNetwork === 'mainnet') {
       explorerUrlPrefix = '';
     }
     const description = isVerified ? (

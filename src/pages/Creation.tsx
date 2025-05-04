@@ -26,7 +26,7 @@ import IconButton from '../components/IconButton';
 import Preview from '../components/Preview';
 import { timestampToDateTime } from '../utils/tools';
 import { templates } from '../templates';
-import { useUVerifyTheme } from '../utils/hooks';
+import { useUVerifyConfig, useUVerifyTheme } from '../utils/hooks';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -35,11 +35,8 @@ declare interface TransactionResult {
 }
 
 const Creation = () => {
-  const networkType =
-    import.meta.env.VITE_CARDANO_NETWORK === 'mainnet'
-      ? NetworkType.MAINNET
-      : NetworkType.TESTNET;
   const [text, setText] = useState('');
+  const config = useUVerifyConfig();
   const pageRef = useRef<HTMLDivElement>(null);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -52,6 +49,10 @@ const Creation = () => {
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
+  const networkType =
+    config.cardanoNetwork === 'mainnet'
+      ? NetworkType.MAINNET
+      : NetworkType.TESTNET;
   const {
     usedAddresses,
     unusedAddresses,
@@ -137,7 +138,7 @@ const Creation = () => {
         );
         const interval = setInterval(async () => {
           const response = await axios.get(
-            import.meta.env.VITE_BACKEND_URL +
+            config.backendUrl +
               `/api/v1/verify/by-transaction-hash/${transactionResult.transactionHash}/${transactionResult.hash}`
           );
           if (response.status === 200) {
@@ -202,31 +203,35 @@ const Creation = () => {
       return;
     }
 
-    const apiUrl = import.meta.env.VITE_BACKEND_URL;
-
     setButtonState('loading');
     const hash = activeTab === 0 ? fileHash : sha256(text);
     try {
-      const response = await axios.post(apiUrl + '/api/v1/transaction/build', {
-        type: 'DEFAULT',
-        address: userAddress,
-        certificates: [
-          {
-            hash: hash,
-            metadata: metadata,
-            algorithm: 'SHA-256',
-          },
-        ],
-      });
+      const response = await axios.post(
+        config.backendUrl + '/api/v1/transaction/build',
+        {
+          type: 'DEFAULT',
+          address: userAddress,
+          certificates: [
+            {
+              hash: hash,
+              metadata: metadata,
+              algorithm: 'SHA-256',
+            },
+          ],
+        }
+      );
 
       if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
         const transaction = response.data.unsigned_transaction;
         const api = await (window as any).cardano[enabledWallet].enable();
         const witnessSet = await api.signTx(transaction, true);
-        const result = await axios.post(apiUrl + '/api/v1/transaction/submit', {
-          transaction: transaction,
-          witnessSet: witnessSet,
-        });
+        const result = await axios.post(
+          config.backendUrl + '/api/v1/transaction/submit',
+          {
+            transaction: transaction,
+            witnessSet: witnessSet,
+          }
+        );
         setTransactionResult({
           successful: result.data.successful,
           hash: hash,

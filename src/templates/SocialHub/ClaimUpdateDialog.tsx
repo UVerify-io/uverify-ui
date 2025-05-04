@@ -3,6 +3,7 @@ import { SocialHubData, Social, socials } from './common';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useUVerifyConfig } from '../../utils/hooks';
 
 declare interface ClaimUpdateDialogProps {
   open: boolean;
@@ -29,6 +30,7 @@ function ClaimUpdateDialog({
 }: ClaimUpdateDialogProps) {
   const [updatedSocialHubData, setUpdatedSocialHubData] =
     useState<SocialHubData>();
+  const config = useUVerifyConfig();
 
   useEffect(() => {
     setUpdatedSocialHubData(socialHubData);
@@ -116,8 +118,7 @@ function ClaimUpdateDialog({
 
     try {
       response = await axios.post(
-        import.meta.env.VITE_BACKEND_URL +
-          `/api/v1/extension/connected-goods/${variant}/item`,
+        config.backendUrl + `/api/v1/extension/connected-goods/${variant}/item`,
         {
           social_hub: {
             owner: userAddress,
@@ -145,7 +146,7 @@ function ClaimUpdateDialog({
       const api = await (window as any).cardano[enabledWallet!].enable();
       const witnessSet = await api.signTx(transaction, true);
       const result = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + '/api/v1/transaction/submit',
+        config.backendUrl + '/api/v1/transaction/submit',
         {
           transaction: transaction,
           witnessSet: witnessSet,
