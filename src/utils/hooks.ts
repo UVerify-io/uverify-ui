@@ -20,12 +20,16 @@ export type UVerifyConfig = {
   serviceAccount: string;
 };
 
+const mainnetServiceAccount =
+  'addr1qxqup4lcghajeawjx3faccuewk2k3ztneps8segrcn28ky223ul5q54jq72wps946c5gw8z5mfjhqa9r8znzk4vd4sls8jqsva';
+const testnetServiceAccount =
+  'addr_test1vzfw9tj3lvpae32ugu2sdl34hhk6m8pxdvxsns4ch37tg3gn2jpfu';
+
 export const useUVerifyConfig = () => {
   const [config, setConfig] = useState<UVerifyConfig>({
     backendUrl: 'https://api.uvify.io',
-    cardanoNetwork: 'preprod',
-    serviceAccount:
-      'addr1qxqup4lcghajeawjx3faccuewk2k3ztneps8segrcn28ky223ul5q54jq72wps946c5gw8z5mfjhqa9r8znzk4vd4sls8jqsva',
+    cardanoNetwork: 'mainnet',
+    serviceAccount: mainnetServiceAccount,
   });
 
   useEffect(() => {
@@ -35,8 +39,14 @@ export const useUVerifyConfig = () => {
         if (!response.ok) {
           throw new Error(`Failed to fetch config.json: ${response.status}`);
         }
-        const data = await response.json();
-        setConfig(data);
+        const data: UVerifyConfig = await response.json();
+        setConfig({
+          ...data,
+          serviceAccount:
+            data.cardanoNetwork.toLowerCase() === 'mainnet'
+              ? mainnetServiceAccount
+              : testnetServiceAccount,
+        });
       } catch (err) {
         console.error('Error fetching config.json using default config:', err);
       }
