@@ -27,7 +27,7 @@ const testnetServiceAccount =
 
 export const useUVerifyConfig = () => {
   const [config, setConfig] = useState<UVerifyConfig>({
-    backendUrl: 'https://api.uvify.io',
+    backendUrl: 'https://api.uverify.io',
     cardanoNetwork: 'mainnet',
     serviceAccount: mainnetServiceAccount,
   });
