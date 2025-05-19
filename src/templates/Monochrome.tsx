@@ -8,7 +8,7 @@ import MetadataViewer from '../components/MetadataViewer';
 import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
-import { ThemeSettings } from '../utils/hooks';
+import { ThemeSettings, useUVerifyConfig } from '../utils/hooks';
 import { JSX } from 'react';
 
 class MonochromeTemplate extends Template {
@@ -141,8 +141,9 @@ class MonochromeTemplate extends Template {
     pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
-    let explorerUrlPrefix = import.meta.env.VITE_CARDANO_NETWORK + '.';
-    if (import.meta.env.VITE_CARDANO_NETWORK === 'mainnet') {
+    const config = useUVerifyConfig();
+    let explorerUrlPrefix = config.cardanoNetwork + '.';
+    if (config.cardanoNetwork === 'mainnet') {
       explorerUrlPrefix = '';
     }
 

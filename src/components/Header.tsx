@@ -2,6 +2,7 @@ import Logo from '../assets/uverify.svg';
 import { useNavigate } from 'react-router-dom';
 import Fingerprint from './Fingerprint';
 import { getCardanoNetworkIndicator } from '../utils/cardano';
+import { useUVerifyConfig } from '../utils/hooks';
 
 declare interface HeaderProps {
   title: string;
@@ -10,6 +11,7 @@ declare interface HeaderProps {
 
 const Header = ({ title, fingerprint }: HeaderProps) => {
   const navigate = useNavigate();
+  const config = useUVerifyConfig();
 
   const RightArrow = (
     <svg
@@ -58,14 +60,14 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
           </h2>
           <div style={{ minWidth: 32 }}>{RightArrow}</div>
           <Fingerprint hash={title} />
-          {getCardanoNetworkIndicator('sm', 'mr-2')}
+          {getCardanoNetworkIndicator(config, 'sm', 'mr-2')}
         </>
       ) : (
         <div className="flex items-center justify-center">
           <h2 className="select-none text-sm sm:text-md font-bold uppercase me-1 max-w-32">
             {title}
           </h2>
-          {getCardanoNetworkIndicator('sm', 'ml-2')}
+          {getCardanoNetworkIndicator(config, 'sm', 'ml-2')}
         </div>
       )}
     </header>

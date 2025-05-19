@@ -3,10 +3,12 @@ import { IconType } from '../components/Icons';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/uverify.svg';
 import { getCardanoNetworkIndicator } from '../utils/cardano';
+import { useUVerifyConfig } from '../utils/hooks';
 
 const Landing = () => {
   const navigate = useNavigate();
-  const networkIndicator = getCardanoNetworkIndicator();
+  const config = useUVerifyConfig();
+  const networkIndicator = getCardanoNetworkIndicator(config);
 
   return (
     <div className="text-center text-white max-w-(--breakpoint-md) mt-12 px-6 sm:px-0 min-h-full">

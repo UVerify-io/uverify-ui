@@ -1,6 +1,6 @@
 import { Template, UVerifyCertificateExtraData } from '../Template';
 import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
-import { ThemeSettings } from '../../utils/hooks';
+import { ThemeSettings, useUVerifyConfig } from '../../utils/hooks';
 import { JSX, useEffect, useState } from 'react';
 import { HeartIcon } from '../../components/Icons';
 import {
@@ -65,8 +65,9 @@ class SocialHubTemplate extends Template {
     _pagination: JSX.Element,
     _extra: UVerifyCertificateExtraData
   ): JSX.Element {
+    const config = useUVerifyConfig();
     const networkType =
-      import.meta.env.VITE_CARDANO_NETWORK === 'mainnet'
+      config.cardanoNetwork === 'mainnet'
         ? NetworkType.MAINNET
         : NetworkType.TESTNET;
     const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
@@ -96,7 +97,7 @@ class SocialHubTemplate extends Template {
         if (item) {
           try {
             const response = await axios.get(
-              import.meta.env.VITE_BACKEND_URL +
+              config.backendUrl +
                 '/api/v1/extension/connected-goods/' +
                 metadata.batch_ids +
                 '/' +

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.4](https://github.com/UVerify-io/uverify-ui/compare/v1.3.3...v1.3.4) (2025-05-07)
+
+
+### Bug Fixes
+
+* remove typo in fallback url ([7bb9c22](https://github.com/UVerify-io/uverify-ui/commit/7bb9c22fe75a590b22282f39ce1175e6fe40842d))
+
+## [1.3.3](https://github.com/UVerify-io/uverify-ui/compare/v1.3.2...v1.3.3) (2025-05-07)
+
+
+### Bug Fixes
+
+* **docker:** nginx does now resolve deeplinks correctly ([1a305a6](https://github.com/UVerify-io/uverify-ui/commit/1a305a6c3266507b81f145347d65cb5ab69a8795))
+
 ## [1.3.2](https://github.com/UVerify-io/uverify-ui/compare/v1.3.1...v1.3.2) (2025-04-24)
 
 
