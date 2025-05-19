@@ -56,6 +56,7 @@ class DefaultTemplate extends Template {
         )}
 
         <a
+          data-testid="block-explorer-link"
           href={`https://${explorerUrlPrefix}cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
           target="_blank"
           className="my-2 border border-white/30 text-center inline-flex items-center rounded-xl bg-white/30 px-4 py-2 font-medium text-white transition duration-200 hover:bg-white/40 hover:shadow-center hover:shadow-blue-100/50"
@@ -137,7 +138,10 @@ class DefaultTemplate extends Template {
           >
             <div className="flex flex-col justify-center items-center">
               <Icon className="w-24 h-24 text-white" />
-              <h2 className="text-xl font-extrabold uppercase my-4">
+              <h2
+                data-testid="certificate-headline"
+                className="text-xl font-extrabold uppercase my-4"
+              >
                 {headline}
               </h2>
               {description}
