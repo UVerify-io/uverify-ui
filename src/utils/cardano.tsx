@@ -1,5 +1,5 @@
 import Tag from '../components/Tag';
-import { UVerifyConfig } from './hooks';
+import { UVerifyConfig } from './UVerifyConfigProvider';
 
 type NetworkType = 'mainnet' | 'preprod' | 'preview';
 
