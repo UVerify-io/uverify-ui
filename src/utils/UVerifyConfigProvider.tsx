@@ -15,13 +15,11 @@ const testnetServiceAccount =
 export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const defaultConfig: UVerifyConfig = {
-    backendUrl: 'https://api.uverify.io',
-    cardanoNetwork: 'mainnet',
-    serviceAccount: mainnetServiceAccount,
-  };
-
-  const [config, setConfig] = useState<UVerifyConfig>(defaultConfig);
+  const [config, setConfig] = useState<UVerifyConfig>({
+    backendUrl: '',
+    cardanoNetwork: '',
+    serviceAccount: '',
+  });
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -32,18 +30,13 @@ export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
         }
         const data: UVerifyConfig = await response.json();
 
-        if (
-          data.cardanoNetwork !== 'mainnet' ||
-          data.backendUrl !== 'https://api.uverify.io'
-        ) {
-          setConfig({
-            ...data,
-            serviceAccount:
-              data.cardanoNetwork.toLowerCase() === 'mainnet'
-                ? mainnetServiceAccount
-                : testnetServiceAccount,
-          });
-        }
+        setConfig({
+          ...data,
+          serviceAccount:
+            data.cardanoNetwork.toLowerCase() === 'mainnet'
+              ? mainnetServiceAccount
+              : testnetServiceAccount,
+        });
       } catch (err) {
         console.error('Error fetching config.json using default config:', err);
       }
