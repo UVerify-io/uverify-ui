@@ -3,7 +3,7 @@ import { IconType } from '../components/Icons';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/uverify.svg';
 import { getCardanoNetworkIndicator } from '../utils/cardano';
-import { useUVerifyConfig } from '../utils/hooks';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 const Landing = () => {
   const navigate = useNavigate();

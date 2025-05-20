@@ -8,8 +8,9 @@ import MetadataViewer from '../components/MetadataViewer';
 import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
-import { ThemeSettings, useUVerifyConfig } from '../utils/hooks';
+import { ThemeSettings } from '../utils/hooks';
 import { JSX } from 'react';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 class MonochromeTemplate extends Template {
   public name = 'Monochrome';

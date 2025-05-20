@@ -6,8 +6,9 @@ import { UVerifyCertificate, UVerifyMetadata } from '../common/types';
 import { toast } from 'react-toastify';
 import { templates } from '../templates';
 import { timestampToDateTime } from '../utils/tools';
-import { useUVerifyConfig, useUVerifyTheme } from '../utils/hooks';
+import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -72,7 +73,7 @@ const Certificate = () => {
           setIsLoading(false);
         });
     }
-  }, [query]);
+  }, [query, config]);
 
   useEffect(() => {
     if (certificates.length > 0) {

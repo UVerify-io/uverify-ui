@@ -2,6 +2,7 @@ import DefaultTemplate from './Default';
 import DiplomaTemplate from './Diploma';
 import SocialHubTemplate from './SocialHub/SocialHubTemplate';
 import MonochromeTemplate from './Monochrome';
+import TadamonTemplate from './Tadamon/TadamonTemplate';
 import { Template } from './Template';
 
 export type Templates = {
@@ -13,4 +14,5 @@ export const templates: Templates = {
   monochrome: new MonochromeTemplate(),
   diploma: new DiplomaTemplate(),
   socialHub: new SocialHubTemplate(),
+  tadamon: new TadamonTemplate(),
 };

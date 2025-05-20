@@ -1,6 +1,6 @@
 import { Template, UVerifyCertificateExtraData } from '../Template';
 import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
-import { ThemeSettings, useUVerifyConfig } from '../../utils/hooks';
+import { ThemeSettings } from '../../utils/hooks';
 import { JSX, useEffect, useState } from 'react';
 import { HeartIcon } from '../../components/Icons';
 import {
@@ -23,6 +23,7 @@ import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { toast } from 'react-toastify';
+import { useUVerifyConfig } from '../../utils/UVerifyConfigProvider';
 
 class SocialHubTemplate extends Template {
   public name = 'SocialHub';
@@ -135,7 +136,7 @@ class SocialHubTemplate extends Template {
         }
       }
       fetchSocialHub();
-    }, []);
+    }, [config]);
 
     const connectButton = isConnected ? (
       <div
