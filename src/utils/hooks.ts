@@ -1,6 +1,5 @@
 import {
   useState,
-  useEffect,
   RefObject,
   useMemo,
   useSyncExternalStore,
@@ -13,50 +12,6 @@ import {
   MetadataViewerStyle,
   PaginationStyle,
 } from '../templates/defaultStyles';
-
-export type UVerifyConfig = {
-  backendUrl: string;
-  cardanoNetwork: string;
-  serviceAccount: string;
-};
-
-const mainnetServiceAccount =
-  'addr1qxqup4lcghajeawjx3faccuewk2k3ztneps8segrcn28ky223ul5q54jq72wps946c5gw8z5mfjhqa9r8znzk4vd4sls8jqsva';
-const testnetServiceAccount =
-  'addr_test1vzfw9tj3lvpae32ugu2sdl34hhk6m8pxdvxsns4ch37tg3gn2jpfu';
-
-export const useUVerifyConfig = () => {
-  const [config, setConfig] = useState<UVerifyConfig>({
-    backendUrl: 'https://api.uverify.io',
-    cardanoNetwork: 'mainnet',
-    serviceAccount: mainnetServiceAccount,
-  });
-
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const response = await fetch('/config.json');
-        if (!response.ok) {
-          throw new Error(`Failed to fetch config.json: ${response.status}`);
-        }
-        const data: UVerifyConfig = await response.json();
-        setConfig({
-          ...data,
-          serviceAccount:
-            data.cardanoNetwork.toLowerCase() === 'mainnet'
-              ? mainnetServiceAccount
-              : testnetServiceAccount,
-        });
-      } catch (err) {
-        console.error('Error fetching config.json using default config:', err);
-      }
-    };
-
-    fetchConfig();
-  }, []);
-
-  return config;
-};
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState(() => {

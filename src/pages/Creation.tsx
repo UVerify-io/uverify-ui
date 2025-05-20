@@ -26,7 +26,8 @@ import IconButton from '../components/IconButton';
 import Preview from '../components/Preview';
 import { timestampToDateTime } from '../utils/tools';
 import { templates } from '../templates';
-import { useUVerifyConfig, useUVerifyTheme } from '../utils/hooks';
+import { useUVerifyTheme } from '../utils/hooks';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 declare interface TransactionResult {
   successful: boolean;

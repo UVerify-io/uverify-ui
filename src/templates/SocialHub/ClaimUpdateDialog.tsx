@@ -3,7 +3,7 @@ import { SocialHubData, Social, socials } from './common';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useUVerifyConfig } from '../../utils/hooks';
+import { useUVerifyConfig } from '../../utils/UVerifyConfigProvider';
 
 declare interface ClaimUpdateDialogProps {
   open: boolean;

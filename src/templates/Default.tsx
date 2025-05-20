@@ -10,7 +10,7 @@ import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
 import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
 import { JSX } from 'react';
-import { useUVerifyConfig } from '../utils/hooks';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 class DefaultTemplate extends Template {
   public render(

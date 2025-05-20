@@ -2,7 +2,7 @@ import Logo from '../assets/uverify.svg';
 import { useNavigate } from 'react-router-dom';
 import Fingerprint from './Fingerprint';
 import { getCardanoNetworkIndicator } from '../utils/cardano';
-import { useUVerifyConfig } from '../utils/hooks';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 declare interface HeaderProps {
   title: string;
