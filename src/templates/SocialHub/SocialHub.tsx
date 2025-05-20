@@ -13,17 +13,31 @@ function SocialHub({ certificate, socialHubData }: SocialHubProps) {
     icon: JSX.Element,
     account: string,
     urlPrefix?: string
-  ) => (
-    <a
-      key={text.toLocaleLowerCase()}
-      href={account ? urlPrefix + account : ''}
-      target="_blank"
-      className="m-2 text-cyan-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-cyan-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
-    >
-      {icon}
-      <p className="ml-2 text-xs font-bold">{text}</p>
-    </a>
-  );
+  ) => {
+    let link = '';
+    if (typeof urlPrefix !== 'undefined') {
+      if (
+        account.startsWith(urlPrefix) ||
+        account.replace('www.', '').startsWith(urlPrefix)
+      ) {
+        link = account;
+      } else {
+        link = urlPrefix + account;
+      }
+    }
+
+    return (
+      <a
+        key={text.toLocaleLowerCase()}
+        href={link}
+        target="_blank"
+        className="m-2 text-cyan-400 flex items-center justify-center w-full max-w-[200px] h-10 rounded-lg cursor-pointer hover:bg-cyan-200/10 border border-white/80 transition duration-200 hover:shadow-center hover:shadow-white/20"
+      >
+        {icon}
+        <p className="ml-2 text-xs font-bold">{text}</p>
+      </a>
+    );
+  };
 
   if (typeof certificate === 'undefined') {
     return <></>;
