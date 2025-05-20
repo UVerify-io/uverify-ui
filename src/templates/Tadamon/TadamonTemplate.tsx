@@ -4,7 +4,7 @@ import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
 import { JSX } from 'react';
 import tadamonLogo from './assets/tadamon.png';
 import isfdLogo from './assets/ISFD.png';
-import IsDBLogo from './assets/IsDB.png';
+import IsDBLogo from './assets/Isdb.png';
 import undpLogo from './assets/UNDP.png';
 import veridianCertificateLogo from './assets/veridian_certificate.svg';
 import plantsLogo from './assets/bottom_logo.png';
