@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/UVerify-io/uverify-ui/compare/v1.4.0...v1.4.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* handle case when beneficiary_sign_date is not a number nor a string and swap logos ([a8647b3](https://github.com/UVerify-io/uverify-ui/commit/a8647b330c8a98c819877bfa9f9609431a2c140b))
+
 ## [1.4.0](https://github.com/UVerify-io/uverify-ui/compare/v1.3.4...v1.4.0) (2025-05-20)
 
 
