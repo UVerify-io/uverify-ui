@@ -223,7 +223,7 @@ const Creation = () => {
       );
 
       if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
-        const transaction = response.data.unsigned_transaction;
+        const transaction = response.data.unsignedTransaction;
         const api = await (window as any).cardano[enabledWallet].enable();
         const witnessSet = await api.signTx(transaction, true);
         const result = await axios.post(
