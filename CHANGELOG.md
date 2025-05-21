@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.4.0](https://github.com/UVerify-io/uverify-ui/compare/v1.3.4...v1.4.0) (2025-05-20)
+
+
+### Features
+
+* implement tadamon certificate custom ui ([86982bd](https://github.com/UVerify-io/uverify-ui/commit/86982bd1780029490bbb034e9d3c005fd53e7a10))
+
+
+### Bug Fixes
+
+* make config hook an actual provider to prevent the config from being fetched multiple times ([9236d59](https://github.com/UVerify-io/uverify-ui/commit/9236d594a7a150fc24814ead6e15478046a5d58a))
+* make sure the config has been loaded before the app gots injected ([22aed24](https://github.com/UVerify-io/uverify-ui/commit/22aed2460a5ae7de0e29d1fabc8176d8bef2cb5b))
+* **social hub:** use links directly if provided as part of the account name ([079fd24](https://github.com/UVerify-io/uverify-ui/commit/079fd243a5e49a46120a41da90a5ff8284174554))
+
 ## [1.3.4](https://github.com/UVerify-io/uverify-ui/compare/v1.3.3...v1.3.4) (2025-05-07)
 
 
