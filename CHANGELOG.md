@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/UVerify-io/uverify-ui/compare/v1.4.1...v1.4.2) (2025-05-21)
+
+
+### Bug Fixes
+
+* transaction build endpoint response with new schema ([b0a98c4](https://github.com/UVerify-io/uverify-ui/commit/b0a98c4fc4a821346a3290a02d8875f46c900dcb))
+
 ## [1.4.1](https://github.com/UVerify-io/uverify-ui/compare/v1.4.0...v1.4.1) (2025-05-21)
 
 
