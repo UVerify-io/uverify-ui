@@ -9,12 +9,13 @@ import undpLogo from './assets/UNDP.png';
 import veridianCertificateLogo from './assets/veridian_certificate.svg';
 import plantsLogo from './assets/bottom_logo.png';
 import { CircularHash, formatDate } from './utils';
+import { timestampToDateTime } from '../../utils/tools';
 
 class TadamonTemplate extends Template {
   public name = 'Tadamon';
-  public whitelist = [
+  /*public whitelist = [
     'addr_test1qpftcj63cky29z6xq69hm454c4ru0tyq89aqcm5kd65wzsevvxgywp50vfnt0raqf0p6y9rq07y4rsrc4fu3k528rc0q8gvagn',
-  ];
+  ];*/
 
   public theme = {
     background: 'bg-[#1f242b]',
@@ -46,6 +47,21 @@ class TadamonTemplate extends Template {
       ? `Country of Registration: ${metadata.registration_country}`
       : '';
 
+    let beneficiarySignDate = null;
+
+    if (typeof metadata.beneficiary_sign_date === 'number') {
+      beneficiarySignDate = formatDate(
+        timestampToDateTime(metadata.beneficiary_sign_date)
+      );
+    } else if (
+      typeof metadata.beneficiary_sign_date === 'string' &&
+      /^\d+$/.test(metadata.beneficiary_sign_date)
+    ) {
+      beneficiarySignDate = formatDate(
+        timestampToDateTime(parseInt(metadata.beneficiary_sign_date))
+      );
+    }
+
     return (
       <div className="rounded-[25px] sm:rounded-[40px] pt-12 px-12 bg-[#eeeff2] font-['Manrope',sans-serif] text-[#1f242b] w-10/12 md:w-3/4 max-w-[800px] mb-12 md:mb-0">
         <div className="flex flex-col sm:flex-row items-center">
@@ -53,8 +69,8 @@ class TadamonTemplate extends Template {
             <img src={tadamonLogo} alt="Tadamon Logo" width={200} />
           </div>
           <div className="flex w-[200px] sm:w-1/3 mt-4 sm:mt-0 items-center justify-between sm:justify-around">
-            <img src={isfdLogo} alt="ISFD Logo" className="h-12 mx-2" />
             <img src={IsDBLogo} alt="IsDB Logo" className="h-12 mx-2" />
+            <img src={isfdLogo} alt="ISFD Logo" className="h-12 mx-2" />
             <img src={undpLogo} alt="UNDP Logo" className="h-12 mx-2" />
           </div>
         </div>
@@ -119,14 +135,17 @@ class TadamonTemplate extends Template {
                   UNDP Sign Date
                 </p>
               </div>
-              <div className="flex flex-col sm:grow">
-                <h3 className="text-md font-semibold mb-1">
-                  {formatDate(extra.firstDateTime)}
-                </h3>
-                <p className="text-xs mb-4 sm:mb-8 font-medium">
-                  Beneficiary Sign Date
-                </p>
-              </div>
+              {beneficiarySignDate &&
+                beneficiarySignDate !== 'Invalid date' && (
+                  <div className="flex flex-col sm:grow">
+                    <h3 className="text-md font-semibold mb-1">
+                      {beneficiarySignDate}
+                    </h3>
+                    <p className="text-xs mb-4 sm:mb-8 font-medium">
+                      Beneficiary Sign Date
+                    </p>
+                  </div>
+                )}
             </div>
           </div>
           <div className="flex w-full sm:w-2/3 mb-12">
