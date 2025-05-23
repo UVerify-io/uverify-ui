@@ -8,11 +8,11 @@ export declare interface Field {
 export declare interface UVerifyCertificate {
   hash: string;
   address: string;
-  block_hash: string;
-  block_number: number;
-  transaction_hash: string;
+  blockHash: string;
+  blockNumber: number;
+  transactionHash: string;
   slot: number;
-  creation_time: number;
+  creationTime: number;
   metadata: string;
   issuer: string;
 }

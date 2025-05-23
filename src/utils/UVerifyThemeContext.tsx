@@ -191,11 +191,12 @@ export const UVerifyThemeProvider: React.FC<UVerifyThemeProviderProps> = ({
         });
       }
       setColors({ ...colors, ...theme.colors });
-      if (typeof theme.footer?.hide === 'boolean') {
-        setHideFooter(theme.footer.hide);
-      } else {
-        setHideFooter(false);
-      }
+    }
+
+    if (typeof theme.footer?.hide === 'boolean') {
+      setHideFooter(theme.footer.hide);
+    } else {
+      setHideFooter(false);
     }
 
     if (theme.components) {

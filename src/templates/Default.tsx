@@ -50,14 +50,14 @@ class DefaultTemplate extends Template {
             </p>
             {pagination}
             <p className="font-bold uppercase my-4">
-              {timestampToDateTime(certificate.creation_time)}
+              {timestampToDateTime(certificate.creationTime)}
             </p>
           </>
         )}
 
         <a
           data-testid="block-explorer-link"
-          href={`https://${explorerUrlPrefix}cexplorer.io/tx/${certificate.transaction_hash}/contract#data`}
+          href={`https://${explorerUrlPrefix}cexplorer.io/tx/${certificate.transactionHash}/contract#data`}
           target="_blank"
           className="my-2 border border-white/30 text-center inline-flex items-center rounded-xl bg-white/30 px-4 py-2 font-medium text-white transition duration-200 hover:bg-white/40 hover:shadow-center hover:shadow-blue-100/50"
         >

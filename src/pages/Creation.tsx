@@ -353,13 +353,13 @@ const Creation = () => {
                   certificate={{
                     hash: hash,
                     address: userAddress,
-                    block_hash:
+                    blockHash:
                       '71fdd15d024cced315d1a247d158227404936fdbddb2b9b632293032c956051a',
-                    block_number: 11571661,
-                    transaction_hash:
+                    blockNumber: 11571661,
+                    transactionHash:
                       '7151f82b8efc78d56f63a19ddaed1ca36e61533d8b0bddbb19fe5483009a684f',
                     slot: 149768853,
-                    creation_time: Date.now(),
+                    creationTime: Date.now(),
                     metadata: previewMetadata,
                     issuer: userAddress,
                   }}

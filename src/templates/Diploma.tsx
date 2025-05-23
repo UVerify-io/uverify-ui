@@ -159,7 +159,7 @@ class DiplomaTemplate extends Template {
           <h3 className="my-4 sm:my-8 text-2xl font-bold">{metadata.title}</h3>
         </>
       ),
-      date: timestampToDateTime(certificate.creation_time),
+      date: timestampToDateTime(certificate.creationTime),
       certificateNumber: hash,
     };
 

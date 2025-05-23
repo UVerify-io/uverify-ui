@@ -63,7 +63,7 @@ class TadamonTemplate extends Template {
     }
 
     return (
-      <div className="rounded-[25px] sm:rounded-[40px] pt-12 px-12 bg-[#eeeff2] font-['Manrope',sans-serif] text-[#1f242b] w-10/12 md:w-3/4 max-w-[800px] mb-12 md:mb-0">
+      <div className="rounded-[25px] sm:rounded-[40px] my-12 relative pt-12 px-12 bg-[#eeeff2] font-['Manrope',sans-serif] text-[#1f242b] w-10/12 md:w-3/4 max-w-[800px]">
         <div className="flex flex-col sm:flex-row items-center">
           <div className="flex w-full sm:w-2/3 justify-center sm:justify-start">
             <img src={tadamonLogo} alt="Tadamon Logo" width={200} />
@@ -99,7 +99,7 @@ class TadamonTemplate extends Template {
             />
             <a
               href={`https://${explorerUrlPrefix}cexplorer.io/tx/${
-                certificate!.transaction_hash
+                certificate!.transactionHash
               }`}
               target="_blank"
               className="text-center w-full inline-flex justify-center items-center rounded-xl bg-[#1D4D49] py-3 text-[#F9FAFB] text-xs"
