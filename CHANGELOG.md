@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/UVerify-io/uverify-ui/compare/v1.4.2...v1.4.3) (2025-05-23)
+
+
+### Bug Fixes
+
+* **tadamon:** resolve ui issues and remove footer, even if no colors are provided with the theme object ([381a373](https://github.com/UVerify-io/uverify-ui/commit/381a3736727811e99cbe34b088c733390e176ced))
+
 ## [1.4.2](https://github.com/UVerify-io/uverify-ui/compare/v1.4.1...v1.4.2) (2025-05-21)
 
 
