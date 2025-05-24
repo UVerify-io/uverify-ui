@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/UVerify-io/uverify-ui/compare/v1.4.3...v1.4.4) (2025-05-24)
+
+
+### Bug Fixes
+
+* remove logging ([f3a02d9](https://github.com/UVerify-io/uverify-ui/commit/f3a02d9d940957fca1d0581c9567b66a51d06fb4))
+
 ## [1.4.3](https://github.com/UVerify-io/uverify-ui/compare/v1.4.2...v1.4.3) (2025-05-23)
 
 
