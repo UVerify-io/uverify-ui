@@ -13,8 +13,6 @@ function App() {
   const { background, hideFooter } = useUVerifyTheme();
   const config = useUVerifyConfig();
 
-  console.log(hideFooter, background);
-
   return config.backendUrl !== '' ? (
     <div className={`min-w-screen min-h-screen ${background} flex flex-col`}>
       <div className="grow flex justify-center">

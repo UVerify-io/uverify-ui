@@ -13,9 +13,9 @@ import { timestampToDateTime } from '../../utils/tools';
 
 class TadamonTemplate extends Template {
   public name = 'Tadamon';
-  public whitelist = [
+  /*public whitelist = [
     'addr_test1qpftcj63cky29z6xq69hm454c4ru0tyq89aqcm5kd65wzsevvxgywp50vfnt0raqf0p6y9rq07y4rsrc4fu3k528rc0q8gvagn',
-  ];
+  ];*/
 
   public theme = {
     background: 'bg-[#1f242b]',
