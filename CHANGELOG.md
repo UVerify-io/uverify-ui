@@ -6,7 +6,6 @@
 ### Bug Fixes
 
 * **tadamon:** fix config resolution (and therefore, cexplorer links) ([c214b75](https://github.com/UVerify-io/uverify-ui/commit/c214b75184b0547e06068b63f00ae5f77ed34aee))
-* **tadamon:** fix config resolution (and therefore, cexplorer links) ([9f13e63](https://github.com/UVerify-io/uverify-ui/commit/9f13e634a3e1e0701a94e4132ac6c640fd4cedc8))
 
 ## [1.4.4](https://github.com/UVerify-io/uverify-ui/compare/v1.4.3...v1.4.4) (2025-05-24)
 
