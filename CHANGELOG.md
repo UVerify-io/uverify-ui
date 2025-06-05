@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/UVerify-io/uverify-ui/compare/v1.4.5...v1.5.0) (2025-06-05)
+
+
+### Features
+
+* move common parts of core and custom ui interfaces to @uverify/core ([bc6920a](https://github.com/UVerify-io/uverify-ui/commit/bc6920a710160e44ed911d40b51437ef69b47267))
+
 ## [1.4.5](https://github.com/UVerify-io/uverify-ui/compare/v1.4.4...v1.4.5) (2025-06-02)
 
 
