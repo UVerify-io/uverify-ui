@@ -1,16 +1,20 @@
 import { toast } from 'react-toastify';
 import { FileIcon, getIcon, IconType } from '../components/Icons';
-import { Template, UVerifyCertificateExtraData } from './Template';
 import { timestampToDateTime } from '../utils/tools';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import MetadataViewer from '../components/MetadataViewer';
 import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
-import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
-import { ThemeSettings } from '../utils/hooks';
 import { JSX } from 'react';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+  ThemeSettings,
+} from '@uverify/core';
 
 class MonochromeTemplate extends Template {
   public name = 'Monochrome';

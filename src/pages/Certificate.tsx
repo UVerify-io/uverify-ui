@@ -2,13 +2,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Pagination from '../components/Pagination';
-import { UVerifyCertificate, UVerifyMetadata } from '../common/types';
 import { toast } from 'react-toastify';
 import { templates } from '../templates';
 import { timestampToDateTime } from '../utils/tools';
 import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
+import { UVerifyCertificate, UVerifyMetadata } from '@uverify/core';
 
 const Certificate = () => {
   const { hash, query } = useParams();

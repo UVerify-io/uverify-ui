@@ -1,6 +1,10 @@
-import { Template, UVerifyCertificateExtraData } from './Template';
-import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
-import { ThemeSettings } from '../utils/hooks';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+  ThemeSettings,
+} from '@uverify/core';
 import { timestampToDateTime } from '../utils/tools';
 import DOMPurify from 'dompurify';
 import { JSX } from 'react';

@@ -1,13 +1,9 @@
-export type MetadataViewerStyle = {
-  border: {
-    color: string;
-    opacity: number;
-    hover: {
-      color: string;
-      opacity: number;
-    };
-  };
-};
+import {
+  FingerprintStyle,
+  IdentityCardStyle,
+  MetadataViewerStyle,
+  PaginationStyle,
+} from '@uverify/core';
 
 export const defaultMetadataViewerStyle: MetadataViewerStyle = {
   border: {
@@ -18,25 +14,6 @@ export const defaultMetadataViewerStyle: MetadataViewerStyle = {
       opacity: 30,
     },
   },
-};
-
-export type IdentityCardStyle = {
-  border: {
-    color: string;
-    opacity: number;
-    hover: {
-      color: string;
-      opacity: number;
-    };
-  };
-  background: {
-    color: string;
-    opacity: number;
-    hover: {
-      color: string;
-      opacity: number;
-    };
-  };
 };
 
 export const defaultIdentityCardStyle: IdentityCardStyle = {
@@ -58,15 +35,6 @@ export const defaultIdentityCardStyle: IdentityCardStyle = {
   },
 };
 
-export type FingerprintStyle = {
-  gradient: {
-    color: {
-      start: string;
-      end: string;
-    };
-  };
-};
-
 export const defaultFingerprintStyle: FingerprintStyle = {
   gradient: {
     color: {
@@ -74,45 +42,6 @@ export const defaultFingerprintStyle: FingerprintStyle = {
       end: 'rgb(5, 196, 139)',
     },
   },
-};
-
-export type PaginationStyle = {
-  border: {
-    active: {
-      color: string;
-    };
-    inactive: {
-      color: string;
-      hover: {
-        color: string;
-      };
-    };
-  };
-  text: {
-    active: {
-      color: string;
-      hover: {
-        color: string;
-      };
-    };
-    inactive: {
-      color: string;
-      hover: {
-        color: string;
-      };
-    };
-  };
-  background: {
-    active: {
-      color: string;
-    };
-    inactive: {
-      color: string;
-      hover: {
-        color: string;
-      };
-    };
-  };
 };
 
 export const defaultPaginationStyle: PaginationStyle = {

@@ -1,8 +1,7 @@
 import { JSX } from 'react';
-import { UVerifyCertificate } from '../common/types';
 import { templates } from '../templates';
-import { UVerifyCertificateExtraData } from '../templates/Template';
 import { createPortal } from 'react-dom';
+import { UVerifyCertificate, UVerifyCertificateExtraData } from '@uverify/core';
 
 type PreviewProps = {
   isOpen: boolean;

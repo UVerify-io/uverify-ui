@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Field } from '../common/types';
 import IconButton from './IconButton';
 import { IconType } from './Icons';
 import { toast } from 'react-toastify';
 import { useUVerifyTheme } from '../utils/hooks';
+import { Field } from '@uverify/core';
 
 declare interface JsonViewerProps {
   json: Record<string, string | number | boolean | null>;

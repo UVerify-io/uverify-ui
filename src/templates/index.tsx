@@ -3,7 +3,7 @@ import DiplomaTemplate from './Diploma';
 import SocialHubTemplate from './SocialHub/SocialHubTemplate';
 import MonochromeTemplate from './Monochrome';
 import TadamonTemplate from './Tadamon/TadamonTemplate';
-import { Template } from './Template';
+import { Template } from '@uverify/core';
 
 export type Templates = {
   [key: string]: Template;

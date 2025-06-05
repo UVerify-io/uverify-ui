@@ -1,6 +1,10 @@
 import { JSX } from 'react';
-import { UVerifyCertificate, UVerifyMetadata } from '../common/types';
-import { Template, UVerifyCertificateExtraData } from './Template';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+} from '@uverify/core';
 
 interface TemplateWrapperProps {
   template: Template;

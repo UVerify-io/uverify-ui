@@ -1,11 +1,12 @@
 import { ReactNode, useState } from 'react';
-import { Colors, Shades, ThemeSettings, UVerifyThemeContext } from './hooks';
+import { UVerifyThemeContext } from './hooks';
 import {
   defaultFingerprintStyle,
   defaultIdentityCardStyle,
   defaultMetadataViewerStyle,
   defaultPaginationStyle,
 } from '../templates/defaultStyles';
+import { ThemeSettings, Colors, Shades } from '@uverify/core';
 
 const defaultTheme: ThemeSettings = {
   background: 'bg-main-gradient',

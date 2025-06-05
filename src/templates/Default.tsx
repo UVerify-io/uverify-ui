@@ -1,6 +1,11 @@
 import { toast } from 'react-toastify';
 import { FileIcon, getIcon, IconType } from '../components/Icons';
-import { Template, UVerifyCertificateExtraData } from './Template';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+} from '@uverify/core';
 import { timestampToDateTime } from '../utils/tools';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Header from '../components/Header';
@@ -8,7 +13,6 @@ import Card from '../components/Card';
 import MetadataViewer from '../components/MetadataViewer';
 import IconButton from '../components/IconButton';
 import IdentityCard from '../components/IdentityCard';
-import { UVerifyMetadata, UVerifyCertificate } from '../common/types';
 import { JSX } from 'react';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 

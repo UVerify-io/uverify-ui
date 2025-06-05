@@ -1,8 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { IconType, PlusIcon } from './Icons';
 import IconButton from './IconButton';
-import { Field } from '../common/types';
 import DynamicInput from './DynamicInput';
+import { Field } from '@uverify/core';
 
 type FieldError = 'KEY' | 'VALUE' | 'BOTH';
 type FieldErrors = { [key: number]: FieldError };

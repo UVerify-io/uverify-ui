@@ -1,6 +1,10 @@
-import { Template, UVerifyCertificateExtraData } from '../Template';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+} from '@uverify/core';
 import './tadamon.css';
-import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
 import { JSX } from 'react';
 import tadamonLogo from './assets/tadamon.png';
 import isfdLogo from './assets/ISFD.png';

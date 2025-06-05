@@ -1,6 +1,10 @@
-import { Template, UVerifyCertificateExtraData } from '../Template';
-import { UVerifyMetadata, UVerifyCertificate } from '../../common/types';
-import { ThemeSettings } from '../../utils/hooks';
+import {
+  Template,
+  UVerifyCertificate,
+  UVerifyCertificateExtraData,
+  UVerifyMetadata,
+  ThemeSettings,
+} from '@uverify/core';
 import { JSX, useEffect, useState } from 'react';
 import { HeartIcon } from '../../components/Icons';
 import {
