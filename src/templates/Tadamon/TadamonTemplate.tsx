@@ -14,6 +14,7 @@ import veridianCertificateLogo from './assets/veridian_certificate.svg';
 import plantsLogo from './assets/bottom_logo.png';
 import { CircularHash, formatDate } from './utils';
 import { timestampToDateTime } from '../../utils/tools';
+import { useUVerifyConfig } from '../../utils/UVerifyConfigProvider';
 
 class TadamonTemplate extends Template {
   public name = 'Tadamon';
@@ -41,8 +42,9 @@ class TadamonTemplate extends Template {
     _pagination: JSX.Element,
     extra: UVerifyCertificateExtraData
   ): JSX.Element {
-    let explorerUrlPrefix = import.meta.env.VITE_CARDANO_NETWORK + '.';
-    if (import.meta.env.VITE_CARDANO_NETWORK === 'mainnet') {
+    const config = useUVerifyConfig();
+    let explorerUrlPrefix = config.cardanoNetwork + '.';
+    if (config.cardanoNetwork === 'mainnet') {
       explorerUrlPrefix = '';
     }
 
