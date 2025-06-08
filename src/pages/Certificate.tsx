@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Pagination from '../components/Pagination';
 import { toast } from 'react-toastify';
-import { templates } from '../templates';
+import { getTemplates, Templates } from '../templates';
 import { timestampToDateTime } from '../utils/tools';
 import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
@@ -25,6 +25,15 @@ const Certificate = () => {
   const [page, setPage] = useState(1);
   const config = useUVerifyConfig();
   const navigate = useNavigate();
+  const [templates, setTemplates] = useState<Templates>({});
+
+  useEffect(() => {
+    async function loadTemplates() {
+      const loadedTemplates = await getTemplates();
+      setTemplates(loadedTemplates);
+    }
+    loadTemplates();
+  }, []);
 
   useEffect(() => {
     if (certificates.length === 0) {

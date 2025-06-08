@@ -1,5 +1,5 @@
-import { JSX } from 'react';
-import { templates } from '../templates';
+import { JSX, useEffect, useState } from 'react';
+import { getTemplates, Templates } from '../templates';
 import { createPortal } from 'react-dom';
 import { UVerifyCertificate, UVerifyCertificateExtraData } from '@uverify/core';
 
@@ -24,6 +24,16 @@ const Preview = ({
   pagination,
   extra,
 }: PreviewProps) => {
+  const [templates, setTemplates] = useState<Templates>({});
+
+  useEffect(() => {
+    async function loadTemplates() {
+      const loadedTemplates = await getTemplates();
+      setTemplates(loadedTemplates);
+    }
+    loadTemplates();
+  }, []);
+
   if (isOpen) {
     const template = templates[templateId];
 

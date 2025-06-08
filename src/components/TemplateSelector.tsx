@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { templates } from '../templates';
+import { useEffect, useState } from 'react';
+import { getTemplates, Templates } from '../templates';
 
 interface TemplateSelectorProps {
   onChange: (layout: string, metadata: { [key: string]: string }) => void;
@@ -13,6 +13,16 @@ const TemplateSelector = ({
   className,
 }: TemplateSelectorProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState('default');
+  const [templates, setTemplates] = useState<Templates>({});
+
+  useEffect(() => {
+    async function loadTemplates() {
+      const loadedTemplates = await getTemplates();
+      setTemplates(loadedTemplates);
+    }
+    loadTemplates();
+  }, []);
+
   className = className ? ` ${className}` : '';
 
   return (

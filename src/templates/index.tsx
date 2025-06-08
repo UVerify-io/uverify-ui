@@ -17,15 +17,17 @@ const coreTemplates: Templates = {
   tadamon: new TadamonTemplate(),
 };
 
-let dynamicTemplates: Templates = {};
-try {
-  const dynamicModule = await import('./dynamicTemplates');
-  dynamicTemplates = dynamicModule.dynamicTemplates || {};
-} catch (error) {
-  console.warn(
-    'dynamicTemplates.ts not found or failed to load. Using empty dynamicTemplates.',
-    error
-  );
-}
+export async function getTemplates() {
+  let dynamicTemplates: Templates = {};
+  try {
+    const dynamicModule = await import('./dynamicTemplates');
+    dynamicTemplates = dynamicModule.dynamicTemplates || {};
+  } catch (error) {
+    console.warn(
+      'dynamicTemplates.ts not found or failed to load. Using empty dynamicTemplates.',
+      error
+    );
+  }
 
-export const templates: Templates = { ...dynamicTemplates, ...coreTemplates };
+  return { ...dynamicTemplates, ...coreTemplates };
+}

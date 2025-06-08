@@ -25,7 +25,7 @@ import TemplateSelector from '../components/TemplateSelector';
 import IconButton from '../components/IconButton';
 import Preview from '../components/Preview';
 import { timestampToDateTime } from '../utils/tools';
-import { templates } from '../templates';
+import { getTemplates, Templates } from '../templates';
 import { useUVerifyTheme } from '../utils/hooks';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
@@ -69,6 +69,16 @@ const Creation = () => {
     useState<TransactionResult>();
   const [activeTab, setActiveTab] = useState(0);
   const { applyTheme, restoreDefaults } = useUVerifyTheme();
+
+  const [templates, setTemplates] = useState<Templates>({});
+
+  useEffect(() => {
+    async function loadTemplates() {
+      const loadedTemplates = await getTemplates();
+      setTemplates(loadedTemplates);
+    }
+    loadTemplates();
+  }, []);
 
   const showFingerprint =
     (activeTab === 0 && fileHash !== '') ||

@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { UVerifyCertificate } from '../../common/types';
+import { UVerifyCertificate } from '@uverify/core';
 import { SocialHubData, socials } from './common';
 
 declare interface SocialHubProps {
