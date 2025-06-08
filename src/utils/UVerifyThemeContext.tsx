@@ -157,7 +157,6 @@ export const UVerifyThemeProvider: React.FC<UVerifyThemeProviderProps> = ({
 
   const applyTheme = (theme: Partial<ThemeSettings>) => {
     if (theme.background) {
-      console.log('Setting background:', theme.background);
       setBackground(theme.background);
     }
 
