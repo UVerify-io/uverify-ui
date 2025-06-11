@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/UVerify-io/uverify-ui/compare/v1.5.0...v1.6.0) (2025-06-11)
+
+
+### Features
+
+* provide a docker solution for a custom ui container setup ([9bbf400](https://github.com/UVerify-io/uverify-ui/commit/9bbf40019a74c69b68723a7016466cee0b230b6f))
+
 ## [1.5.0](https://github.com/UVerify-io/uverify-ui/compare/v1.4.5...v1.5.0) (2025-06-08)
 
 

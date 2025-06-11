@@ -2,7 +2,7 @@
   "name": "@uverify/ui",
   "license": "AGPL-3.0-only",
   "type": "module",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "scripts": {
     "dev": "node config.js && vite",
     "dev:expose": "node config.js && vite --host",
