@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 🐳 Build and Push Docker Image
+      - name: 🐳 Build and Push Docker Image (uverify-ui)
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -52,3 +52,14 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:${{ env.APP_VERSION }}
+
+      - name: 🐳 Build and Push Docker Image (uverify-custom-ui)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.custom
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-custom-ui:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-custom-ui:${{ env.APP_VERSION }}

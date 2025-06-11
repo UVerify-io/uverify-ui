@@ -1,3 +1,3 @@
 #!/bin/sh
-/config.sh /usr/share/nginx/html
+node /config.js /usr/share/nginx/html
 nginx -g 'daemon off;'
