@@ -30,20 +30,54 @@ npm install
 npm run dev
 ```
 
-# ✨ Features
+### 🌻 Environment Variables
 
-UVerify's main feature is a notary service that enables you to store file or text hashes on the Cardano blockchain. The UI is simple and intuitive, enabling users to define metadata alongside the file or text to be hashed. Some metadata fields can even customize the certificate's appearance.
+To run the application, you need to set up the following environment variables in a `.env` file:
 
-- **`uverify_template_id`:** Use this field to tailor the certificate's look and feel.
-- **Custom Templates:** Contribute by adding new templates or restricting templates to your users only, leveraging the Web3 Partnership System.
+```env
+VITE_ADDITIONAL_TEMPLATES="MyCertificate:../path/to/my-template/src/Certificate.tsx"
+VITE_BACKEND_URL=http://localhost:9090
+VITE_CARDANO_NETWORK=preprod
+```
 
-### Key Features:
+| Variable Name               | Description                                                           | Default Value           |
+|-----------------------------|-----------------------------------------------------------------------|-------------------------|
+| `VITE_ADDITIONAL_TEMPLATES` | Path to additional templates for certificates                         | `""`                    |
+| `VITE_BACKEND_URL`          | URL of the UVerify backend service                                    | `http://localhost:9090` |
+| `VITE_CARDANO_NETWORK`      | Cardano network to connect to (e.g., `preprod`, `preview`, `mainnet`) | `preprod`               |
 
-- **[Custom UI Templates](https://docs.uverify.io/web3-partnership/custom-ui-templates):** Tailor the look and feel to match your brand.
-- **[Web3 Partnership System](https://docs.uverify.io/web3-partnership):** Collaborate and earn with ease.
-- **[API Overview](https://docs.uverify.io/api-docs):** Get started with our comprehensive API.
+## 🚀 Features
 
-For more details, check out our [documentation](https://docs.uverify.io).
+- **Blockchain-Backed Notary Service**: Securely store file or text hashes on the Cardano blockchain for tamper-proof verification.
+- **Intuitive User Interface**: Simple and user-friendly design to streamline the notarization process.
+- **Customizable Metadata**: Add metadata to your hashes to enrich certificate details and personalize their appearance.
+- **Flexible Certificate Templates**: Tailor the look and feel of certificates using predefined or custom templates.
+- **Web3 Partnership System**: Contribute new templates or restrict access to specific templates for your users.
+- **External Custom UI Templates**: Integrate private or external templates from separate repositories for enhanced flexibility.
+
+## 🛠️ Key Configuration Options
+
+### `uverify_template_id`
+Use the `uverify_template_id` metadata field to customize the appearance of your certificates. This field allows you to select or define a template that matches your branding or use case.
+
+### Creating Custom Templates
+You can create and contribute new certificate templates or restrict them to specific users via the **Web3 Partnership System**. Follow these steps to get started:
+
+1. **Generate a Template**:
+   Use the UVerify CLI tool to initialize a new template:
+   ```zsh
+   npx @uverify/cli init my-template
+   ```
+2. **Customize the Template**:
+   Modify the `Certificate.tsx` file in the generated template to suit your needs.
+3. **Deploy the Template**:
+   Add your custom template to the deployment by updating the `.env` file:
+   ```zsh
+   VITE_ADDITIONAL_TEMPLATES="MyCertificate:../path/to/my-template/src/Certificate.tsx"
+   ```
+   This allows you to keep templates private or host them in a separate repository.
+
+For detailed instructions on creating and managing templates, visit the [uverify-ui-template repository](https://github.com/UVerify-io/uverify-ui-template).
 
 ## 💙 Contributing
 
