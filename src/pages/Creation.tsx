@@ -13,6 +13,7 @@ import {
   useCardano,
 } from '@cardano-foundation/cardano-connect-with-wallet';
 import {
+  capitalize,
   NetworkType,
   UnavailableWalletVisibility,
 } from '@cardano-foundation/cardano-connect-with-wallet-core';
@@ -405,6 +406,37 @@ const Creation = () => {
             }
             supportedWallets={['yoroi', 'lace', 'nami', 'eternl', 'vespr']}
             onConnect={() => setIsWalletDialogOpen(false)}
+            onConnectError={(walletname, error) => {
+              const wallet = capitalize(walletname);
+
+              const showWalletConnectError = (message: string) => {
+                const WALLET_TOAST_ID = 'wallet-error';
+                if (toast.isActive(WALLET_TOAST_ID)) {
+                  toast.update(WALLET_TOAST_ID, {
+                    render: message,
+                    type: 'warning',
+                  });
+                } else {
+                  toast.warning(message, {
+                    toastId: WALLET_TOAST_ID,
+                  });
+                }
+              };
+
+              if (error.name === 'WalletNotInstalledError') {
+                showWalletConnectError(
+                  `${wallet} is not installed. Please install the ${wallet} app and try again.`
+                );
+              } else if (error.name === 'WrongNetworkTypeError') {
+                showWalletConnectError(
+                  `You're connected to the wrong network. Please switch to the ${config.cardanoNetwork} network in your ${wallet} app settings and try again.`
+                );
+              } else {
+                showWalletConnectError(
+                  `Unable to connect to ${wallet}. If you didn't cancel the connection manually, please ensure at least one wallet is created in the ${wallet} app and try again.`
+                );
+              }
+            }}
             gap={6}
             customCSS={`
               width: 100%;
@@ -422,6 +454,7 @@ const Creation = () => {
               }
             `}
             limitNetwork={networkType}
+            peerConnectCustomCSS="color: black"
           />
           <div className="mt-4">
             <a
