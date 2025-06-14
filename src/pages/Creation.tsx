@@ -2,22 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import Card from '../components/Card';
 import Dropzone from '../components/Dropzone';
 import Header from '../components/Header';
-import { IconType, InfoIcon } from '../components/Icons';
+import { IconType } from '../components/Icons';
 import Tabs from '../components/Tabs';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
 import { sha256 } from 'js-sha256';
 import axios from 'axios';
-import {
-  ConnectWalletList,
-  useCardano,
-} from '@cardano-foundation/cardano-connect-with-wallet';
-import {
-  capitalize,
-  NetworkType,
-  UnavailableWalletVisibility,
-} from '@cardano-foundation/cardano-connect-with-wallet-core';
-import Modal from '../components/Modal';
+import { useCardano } from '@cardano-foundation/cardano-connect-with-wallet';
+import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 import { toast } from 'react-toastify';
 import SelectedFileArea from '../components/SelectedFileArea';
 import Fingerprint from '../components/Fingerprint';
@@ -29,6 +21,7 @@ import { timestampToDateTime } from '../utils/tools';
 import { getTemplates, Templates } from '../templates';
 import { useUVerifyTheme } from '../utils/hooks';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
+import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -394,78 +387,11 @@ const Creation = () => {
           </>
         )}
 
-        <Modal
-          title="Connect Wallet"
-          isOpen={isWalletDialogOpen}
-          onClose={() => setIsWalletDialogOpen(false)}
-        >
-          <ConnectWalletList
-            borderRadius={5}
-            showUnavailableWallets={
-              UnavailableWalletVisibility.SHOW_UNAVAILABLE
-            }
-            supportedWallets={['yoroi', 'lace', 'nami', 'eternl', 'vespr']}
-            onConnect={() => setIsWalletDialogOpen(false)}
-            onConnectError={(walletname, error) => {
-              const wallet = capitalize(walletname);
-
-              const showWalletConnectError = (message: string) => {
-                const WALLET_TOAST_ID = 'wallet-error';
-                if (toast.isActive(WALLET_TOAST_ID)) {
-                  toast.update(WALLET_TOAST_ID, {
-                    render: message,
-                    type: 'warning',
-                  });
-                } else {
-                  toast.warning(message, {
-                    toastId: WALLET_TOAST_ID,
-                  });
-                }
-              };
-
-              if (error.name === 'WalletNotInstalledError') {
-                showWalletConnectError(
-                  `${wallet} is not installed. Please install the ${wallet} app and try again.`
-                );
-              } else if (error.name === 'WrongNetworkTypeError') {
-                showWalletConnectError(
-                  `You're connected to the wrong network. Please switch to the ${config.cardanoNetwork} network in your ${wallet} app settings and try again.`
-                );
-              } else {
-                showWalletConnectError(
-                  `Unable to connect to ${wallet}. If you didn't cancel the connection manually, please ensure at least one wallet is created in the ${wallet} app and try again.`
-                );
-              }
-            }}
-            gap={6}
-            customCSS={`
-              width: 100%;
-              & > span {
-                color: #FFFFFFAA;
-                background-color: rgb(255 255 255 / 0.2);
-                border: 1px solid #FFFFFF40;
-                transition-duration: 200ms;
-              }
-              & > span:hover {
-                  background-color: rgb(255 255 255 / 0.3);
-                  color: white;
-                  box-shadow: 0 0 12px 0 rgb(255 255 255 / 0.1);
-                }
-              }
-            `}
-            limitNetwork={networkType}
-            peerConnectCustomCSS="color: black"
-          />
-          <div className="mt-4">
-            <a
-              href="#"
-              className="inline-flex items-center text-xs font-normal hover:underline"
-            >
-              <InfoIcon className="w-3 h-3 me-2" />
-              Why do I need to connect with my wallet?
-            </a>
-          </div>
-        </Modal>
+        <ConnectWalletDialog
+          isWalletDialogOpen={isWalletDialogOpen}
+          setIsWalletDialogOpen={setIsWalletDialogOpen}
+          networkType={networkType}
+        />
         {isConnected ? (
           <div className="flex flex-col items-center">
             <Button

@@ -7,16 +7,8 @@ import {
 } from '@uverify/core';
 import { JSX, useEffect, useState } from 'react';
 import { HeartIcon } from '../../components/Icons';
-import {
-  ConnectWalletList,
-  useCardano,
-} from '@cardano-foundation/cardano-connect-with-wallet';
-import {
-  checkIsMobile,
-  NetworkType,
-  UnavailableWalletVisibility,
-} from '@cardano-foundation/cardano-connect-with-wallet-core';
-import Modal from '../../components/Modal';
+import { useCardano } from '@cardano-foundation/cardano-connect-with-wallet';
+import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import ClaimingPage from './ClaimingPage';
@@ -26,8 +18,8 @@ import ClaimUpdateDialog from './ClaimUpdateDialog';
 import videoSrc from './assets/t_shirt_spin.mp4';
 import Tag from '../../components/Tag';
 import LoadingIndicator from '../../components/LoadingIndicator';
-import { toast } from 'react-toastify';
 import { useUVerifyConfig } from '../../utils/UVerifyConfigProvider';
+import { ConnectWalletDialog } from '../../components/ConnectWalletDialog';
 
 class SocialHubTemplate extends Template {
   public name = 'SocialHub';
@@ -197,63 +189,6 @@ class SocialHubTemplate extends Template {
       return null;
     };
 
-    const mobileInfo = (
-      <div className="sm:w-3/4 max-w-[600px] my-4 bg-blue-50 border-l-4 border-blue-500 text-blue-300 bg-blue-700 p-4 rounded-md shadow-md">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg
-              className="h-6 w-6 text-blue-300"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-              />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <h3 className="text-lg font-medium">Mobile Access Instructions</h3>
-            <p className="mt-2 text-sm">
-              If you are on a mobile device, tap this copy icon{' '}
-              <span className="inline-flex items-center">
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success('URL copied to clipboard');
-                  }}
-                  className="hover:bg-blue-600 rounded-full transition-colors duration-200"
-                  title="Copy URL"
-                >
-                  <svg
-                    className="h-4 w-4 text-blue-300"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-              </span>{' '}
-              to copy the URL, then open one of the supported wallets listed
-              above and paste the URL into the wallet's in-app dApp browser.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-
     const footer = (
       <footer className="flex flex-col items-center p-1 text-white mt-4 mb-2">
         <div className="flex items-center justify-center mt-2 text-xs">
@@ -334,6 +269,16 @@ class SocialHubTemplate extends Template {
           {connectButton}
         </div>
 
+        <ConnectWalletDialog
+          isWalletDialogOpen={isWalletDialogOpen}
+          setIsWalletDialogOpen={setIsWalletDialogOpen}
+          networkType={networkType}
+          background={this.theme.background}
+          customWalletExplainer={
+            'Connecting your wallet lets you cover transaction fees and unlocks features like claiming or updating your social hub. It also serves as your secure login, giving you seamless access to the platform.'
+          }
+        />
+
         <ClaimUpdateDialog
           open={isClaimUpdateItemDialogOpen}
           onClose={() => setIsClaimUpdateItemDialogOpen(false)}
@@ -346,46 +291,6 @@ class SocialHubTemplate extends Template {
           enabledWallet={enabledWallet}
         />
 
-        <Modal
-          title="Connect Wallet"
-          isOpen={isWalletDialogOpen}
-          background={this.theme.background}
-          onClose={() => setIsWalletDialogOpen(false)}
-        >
-          <ConnectWalletList
-            borderRadius={5}
-            showUnavailableWallets={
-              UnavailableWalletVisibility.SHOW_UNAVAILABLE
-            }
-            supportedWallets={['eternl', 'vespr', 'begin', 'yoroi', 'lace']}
-            onConnect={() => setIsWalletDialogOpen(false)}
-            gap={6}
-            peerConnectCustomCSS={`
-              color: black;
-              z-index: 1000;
-            `}
-            customCSS={`
-              min-width: 240px;
-              width: 100%;
-              & > span {
-                color: #FFFFFFAA;
-                background-color: rgb(255 255 255 / 0.2);
-                border: 1px solid #FFFFFF40;
-                transition-duration: 200ms;
-              }
-              & > span:hover {
-                  background-color: rgb(255 255 255 / 0.3);
-                  color: white;
-                  box-shadow: 0 0 12px 0 rgb(255 255 255 / 0.1);
-                }
-              }
-            `}
-            limitNetwork={networkType}
-          />
-          {checkIsMobile() &&
-            typeof (window as any).cardano === 'undefined' &&
-            mobileInfo}
-        </Modal>
         <div className="grow" />
         {footer}
       </div>
