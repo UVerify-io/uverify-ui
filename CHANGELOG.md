@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.1](https://github.com/UVerify-io/uverify-ui/compare/v1.7.0...v1.7.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* **docker:** add dotenv depend so config.js from entrypoint works ([5ee72d6](https://github.com/UVerify-io/uverify-ui/commit/5ee72d6a3574fe7fa746f30608805d3c2b0f4589))
+* **docker:** add dotenv depend so config.js from entrypoint works ([ae6b825](https://github.com/UVerify-io/uverify-ui/commit/ae6b825c1d54d18c9b13460743aef11accc340a2))
+
 ## [1.7.0](https://github.com/UVerify-io/uverify-ui/compare/v1.6.0...v1.7.0) (2025-06-14)
 
 
