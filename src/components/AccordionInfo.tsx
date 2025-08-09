@@ -14,10 +14,10 @@ export default function AccordionInfo({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-4 w-full max-w-md">
+    <div className="mt-4 w-full max-w-md flex justify-center items-center flex-col">
       <button
         type="button"
-        className="flex items-center text-left text-xs font-normal hover:underline focus:outline-none justify-self-center"
+        className="flex items-center text-left text-xs font-normal hover:underline focus:outline-none cursor-pointer"
         aria-expanded={open}
         aria-controls="accordion-content"
         onClick={() => setOpen((prev) => !prev)}
