@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.7.1](https://github.com/UVerify-io/uverify-ui/compare/v1.7.0...v1.7.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* **docker:** add dotenv depend so config.js from entrypoint works ([5ee72d6](https://github.com/UVerify-io/uverify-ui/commit/5ee72d6a3574fe7fa746f30608805d3c2b0f4589))
+* **docker:** add dotenv depend so config.js from entrypoint works ([ae6b825](https://github.com/UVerify-io/uverify-ui/commit/ae6b825c1d54d18c9b13460743aef11accc340a2))
+
+## [1.7.0](https://github.com/UVerify-io/uverify-ui/compare/v1.6.0...v1.7.0) (2025-06-14)
+
+
+### Features
+
+* implement proper error messages in case of wallet connect errors. closes [#17](https://github.com/UVerify-io/uverify-ui/issues/17) ([08d3e8a](https://github.com/UVerify-io/uverify-ui/commit/08d3e8abc9a9e18e032e5dbec4d2885bde574b58))
+
+
+### Bug Fixes
+
+* **social hub:** adding connect wallet error messages as well for the social hub template. ([891fee2](https://github.com/UVerify-io/uverify-ui/commit/891fee24d17e73c916e8825036c5c24c906d7c62))
+
 ## [1.6.0](https://github.com/UVerify-io/uverify-ui/compare/v1.5.0...v1.6.0) (2025-06-11)
 
 
