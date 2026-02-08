@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/UVerify-io/uverify-ui/compare/v1.7.1...v1.8.0) (2026-02-08)
+
+
+### Features
+
+* add product verification template ([e753f49](https://github.com/UVerify-io/uverify-ui/commit/e753f49eda7646751f80ad5d43a7bc828549d738))
+
 ## [1.7.1](https://github.com/UVerify-io/uverify-ui/compare/v1.7.0...v1.7.1) (2025-07-16)
 
 
