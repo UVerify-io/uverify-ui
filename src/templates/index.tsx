@@ -3,6 +3,7 @@ import DiplomaTemplate from './Diploma';
 import SocialHubTemplate from './SocialHub/SocialHubTemplate';
 import MonochromeTemplate from './Monochrome';
 import TadamonTemplate from './Tadamon/TadamonTemplate';
+import ProductVerificationTemplate from './ProductVerification/ProductVerificationTemplate';
 import { Template } from '@uverify/core';
 
 export type Templates = {
@@ -15,6 +16,7 @@ const coreTemplates: Templates = {
   diploma: new DiplomaTemplate(),
   socialHub: new SocialHubTemplate(),
   tadamon: new TadamonTemplate(),
+  productVerification: new ProductVerificationTemplate(),
 };
 
 export async function getTemplates() {
@@ -25,7 +27,7 @@ export async function getTemplates() {
   } catch (error) {
     console.warn(
       'dynamicTemplates.ts not found or failed to load. Using empty dynamicTemplates.',
-      error
+      error,
     );
   }
 
