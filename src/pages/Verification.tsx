@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Dropzone from '../components/Dropzone';
@@ -6,7 +6,7 @@ import Tabs from '../components/Tabs';
 import { IconType } from '../components/Icons';
 import TextArea from '../components/TextArea';
 import Header from '../components/Header';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
 import { toast } from 'react-toastify';
 import SelectedFileArea from '../components/SelectedFileArea';
@@ -18,6 +18,14 @@ const Verification = () => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [activeTab, setActiveTab] = useState(0);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message) {
+      navigate(`/verify/${sha256(message)}`, { replace: true });
+    }
+  }, [searchParams]);
 
   const showFingerprint =
     (activeTab === 0 && fileHash !== '') ||
@@ -45,7 +53,7 @@ const Verification = () => {
           };
           reader.onerror = (event) => {
             toast.error(
-              'There was an error reading the file. Please try again.'
+              'There was an error reading the file. Please try again.',
             );
             console.error(event);
           };

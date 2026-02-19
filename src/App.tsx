@@ -22,6 +22,7 @@ function App() {
               <Route path="/" element={<Landing />} />
               <Route path="/verify" element={<Verification />} />
               <Route path="/verify/:hash" element={<Certificate />} />
+              <Route path="/verify/raw/:data" element={<Certificate />} />
               <Route path="/verify/:hash/:query" element={<Certificate />} />
               <Route path="/create" element={<Creation />} />
             </Routes>

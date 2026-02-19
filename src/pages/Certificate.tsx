@@ -46,7 +46,7 @@ const Certificate = () => {
           certificateList.sort((a, b) => a.creationTime - b.creationTime);
           setCertificates(certificateList);
           setFirstDateTime(
-            timestampToDateTime(certificateList[0].creationTime)
+            timestampToDateTime(certificateList[0].creationTime),
           );
           setTotalPages(res.data.length);
 
@@ -56,14 +56,14 @@ const Certificate = () => {
           } else if (typeof query === 'string') {
             if (query.length === 64) {
               const index = certificateList.findIndex(
-                (item) => item.transactionHash === query
+                (item) => item.transactionHash === query,
               );
               if (index !== -1) {
                 setPage(index + 1);
                 navigate(`/verify/${hash}/${index + 1}`, { replace: true });
               } else {
                 toast.error(
-                  'Unable to resolve the deeplink: Transaction hash not found or does not match the provided data. Please exercise caution if someone sent you this URL.'
+                  'Unable to resolve the deeplink: Transaction hash not found or does not match the provided data. Please exercise caution if someone sent you this URL.',
                 );
                 setPage(1);
                 navigate(`/verify/${hash}/1`, { replace: true });

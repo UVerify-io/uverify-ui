@@ -32,11 +32,13 @@ const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
     toast.success('Copied to clipboard');
   };
 
+  const isHash = (text: string) => /^[a-fA-F0-9]{32,128}$/.test(text.trim());
+
   return (
     <div
       className={twMerge(
         `cursor-pointer relative flex items-center justify-center w-${containerSize} h-${containerSize} text-white/50 `,
-        className
+        className,
       )}
       onClick={copyToClipboard}
     >
@@ -68,8 +70,12 @@ const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
         className={`absolute ${width} h-${containerSize} text-white text-justify break-words`}
       >
         {chunkSize === 2
-          ? hash.replace(/.{2}/g, '$& ')
-          : hash.replace(/.{8}/g, '$& ')}
+          ? isHash(hash)
+            ? hash.replace(/.{2}/g, '$& ')
+            : '00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00'
+          : isHash(hash)
+            ? hash.replace(/.{8}/g, '$& ')
+            : '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000'}
       </span>
     </div>
   );
