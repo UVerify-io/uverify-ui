@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/UVerify-io/uverify-ui/compare/v1.8.0...v1.9.0) (2026-02-19)
+
+
+### Features
+
+* allow users to provide the data in deeplinks instead of the hash. Fix certification page with invalid hash. ([974bdaf](https://github.com/UVerify-io/uverify-ui/commit/974bdaf7c5e6cb7196370e42f0dc59823ab1d5e1))
+
 ## [1.8.0](https://github.com/UVerify-io/uverify-ui/compare/v1.7.1...v1.8.0) (2026-02-08)
 
 
