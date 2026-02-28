@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getTemplates, Templates } from '../templates';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 interface TemplateSelectorProps {
   onChange: (layout: string, metadata: { [key: string]: string }) => void;
@@ -12,16 +13,21 @@ const TemplateSelector = ({
   userAddress,
   className,
 }: TemplateSelectorProps) => {
+  const config = useUVerifyConfig();
   const [selectedTemplate, setSelectedTemplate] = useState('default');
   const [templates, setTemplates] = useState<Templates>({});
 
   useEffect(() => {
     async function loadTemplates() {
-      const loadedTemplates = await getTemplates();
+      const loadedTemplates = await getTemplates({
+        backendUrl: config.backendUrl,
+        networkType: config.cardanoNetwork,
+        searchParams: new URLSearchParams(window.location.search),
+      });
       setTemplates(loadedTemplates);
     }
     loadTemplates();
-  }, []);
+  }, [config]);
 
   className = className ? ` ${className}` : '';
 

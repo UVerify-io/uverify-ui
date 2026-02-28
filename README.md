@@ -35,16 +35,14 @@ npm run dev
 To run the application, you need to set up the following environment variables in a `.env` file:
 
 ```env
-VITE_ADDITIONAL_TEMPLATES="MyCertificate:../path/to/my-template/src/Certificate.tsx"
 VITE_BACKEND_URL=http://localhost:9090
 VITE_CARDANO_NETWORK=preprod
 ```
 
-| Variable Name               | Description                                                           | Default Value           |
-|-----------------------------|-----------------------------------------------------------------------|-------------------------|
-| `VITE_ADDITIONAL_TEMPLATES` | Path to additional templates for certificates                         | `""`                    |
-| `VITE_BACKEND_URL`          | URL of the UVerify backend service                                    | `http://localhost:9090` |
-| `VITE_CARDANO_NETWORK`      | Cardano network to connect to (e.g., `preprod`, `preview`, `mainnet`) | `preprod`               |
+| Variable Name          | Description                                                           | Default Value           |
+|------------------------|-----------------------------------------------------------------------|-------------------------|
+| `VITE_BACKEND_URL`     | URL of the UVerify backend service                                    | `http://localhost:9090` |
+| `VITE_CARDANO_NETWORK` | Cardano network to connect to (e.g., `preprod`, `preview`, `mainnet`) | `preprod`               |
 
 ## 🚀 Features
 
@@ -70,12 +68,42 @@ You can create and contribute new certificate templates or restrict them to spec
    ```
 2. **Customize the Template**:
    Modify the `Certificate.tsx` file in the generated template to suit your needs.
-3. **Deploy the Template**:
-   Add your custom template to the deployment by updating the `.env` file:
-   ```zsh
-   VITE_ADDITIONAL_TEMPLATES="MyCertificate:../path/to/my-template/src/Certificate.tsx"
-   ```
-   This allows you to keep templates private or host them in a separate repository.
+3. **Register the Template**:
+   Add an entry to `additional-templates.json` in the project root.
+
+#### `additional-templates.json`
+
+This file is the primary way to register additional certificate templates. It is read at build time by `config.js` and supports two entry types.
+
+**Local file** — a template located relative to the `uverify-ui` directory:
+
+```json
+[
+  {
+    "type": "file",
+    "name": "MyCertificate",
+    "path": "../path/to/my-template/src/Certificate.tsx"
+  }
+]
+```
+
+**External repository** — a template fetched from a git repository at a pinned commit (cloned into `.template-cache/` during the build):
+
+```json
+[
+  {
+    "type": "repository",
+    "name": "PartnerTemplate",
+    "url": "https://github.com/some-org/partner-template",
+    "commit": "a3f1c2d4e5b6...",
+    "path": "src/Certificate.tsx"
+  }
+]
+```
+
+> **Security note**: The `commit` field pins the exact revision that will be used. This makes external templates fully auditable and prevents unexpected upstream changes from affecting your build. To update an external template, change the `commit` hash and open a pull request for review.
+
+`additional-templates.json` is committed to this repository. To have your template included in the standard deployment at [app.uverify.io](https://app.uverify.io), open a pull request adding a `repository` entry. All proposed templates undergo a security review before being merged.
 
 For detailed instructions on creating and managing templates, visit the [uverify-ui-template repository](https://github.com/UVerify-io/uverify-ui-template).
 

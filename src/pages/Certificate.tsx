@@ -29,11 +29,15 @@ const Certificate = () => {
 
   useEffect(() => {
     async function loadTemplates() {
-      const loadedTemplates = await getTemplates();
+      const loadedTemplates = await getTemplates({
+        backendUrl: config.backendUrl,
+        networkType: config.cardanoNetwork,
+        searchParams: new URLSearchParams(window.location.search),
+      });
       setTemplates(loadedTemplates);
     }
     loadTemplates();
-  }, []);
+  }, [config]);
 
   useEffect(() => {
     if (certificates.length === 0) {

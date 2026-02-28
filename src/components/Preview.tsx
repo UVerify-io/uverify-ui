@@ -2,6 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { getTemplates, Templates } from '../templates';
 import { createPortal } from 'react-dom';
 import { UVerifyCertificate, UVerifyCertificateExtraData } from '@uverify/core';
+import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
 type PreviewProps = {
   isOpen: boolean;
@@ -24,15 +25,20 @@ const Preview = ({
   pagination,
   extra,
 }: PreviewProps) => {
+  const config = useUVerifyConfig();
   const [templates, setTemplates] = useState<Templates>({});
 
   useEffect(() => {
     async function loadTemplates() {
-      const loadedTemplates = await getTemplates();
+      const loadedTemplates = await getTemplates({
+        backendUrl: config.backendUrl,
+        networkType: config.cardanoNetwork,
+        searchParams: new URLSearchParams(window.location.search),
+      });
       setTemplates(loadedTemplates);
     }
     loadTemplates();
-  }, []);
+  }, [config]);
 
   if (isOpen) {
     const template = templates[templateId];

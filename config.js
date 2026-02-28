@@ -2,7 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { fileURLToPath } from 'url';
+import { spawnSync } from 'child_process';
 import dotenv from 'dotenv';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function resolvePath(filePath) {
   if (filePath.startsWith('~')) {
@@ -10,12 +14,9 @@ function resolvePath(filePath) {
   } else if (path.isAbsolute(filePath)) {
     return filePath;
   } else {
-    return path.resolve(filePath);
+    return path.resolve(__dirname, filePath);
   }
 }
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const args = process.argv.slice(2);
 let OUTPUT_DIR = path.resolve(__dirname, 'public');
@@ -44,8 +45,6 @@ fs.writeFileSync(
   JSON.stringify(configJson, null, 2)
 );
 
-const VITE_ADDITIONAL_TEMPLATES = process.env.VITE_ADDITIONAL_TEMPLATES || '';
-
 const TEMPLATE_DIR = path.resolve(__dirname, 'src/templates');
 if (!fs.existsSync(TEMPLATE_DIR)) {
   console.log(
@@ -63,14 +62,167 @@ const DYNAMIC_TEMPLATES_CSS_FILE = path.resolve(
   'dynamicTemplates.css'
 );
 
-let dynamicTemplatesContent = `// Auto-generated file - do not edit manually\n\n`;
-dynamicTemplatesContent += `import { Templates } from './index';\n\n`;
+const TEMPLATE_CACHE_DIR = path.resolve(__dirname, '.template-cache');
+
+// Track repos already cloned/fetched in this run to avoid redundant git operations
+// Key: repository URL — multiple templates from the same repo share one clone
+const clonedRepos = new Map();
 
 const templateImports = [];
 const templateEntries = [];
 const cssSourceDirectives = [];
 
+function addTemplate(name, absolutePath) {
+  const relativePath = path.relative(TEMPLATE_DIR, absolutePath);
+
+  let importPath = relativePath.replace(/\\/g, '/');
+  if (!importPath.startsWith('.')) {
+    importPath = './' + importPath;
+  }
+  importPath = importPath.replace(/\.(tsx?|jsx?)$/, '');
+
+  const importId = `Template_${name.replace(/[^a-zA-Z0-9_]/g, '_')}`;
+
+  const key = name.charAt(0).toLowerCase() + name.slice(1);
+
+  templateImports.push(`import ${importId} from '${importPath}';`);
+  templateEntries.push(`  ${key}: new ${importId}(config),`);
+
+  const parentDir = path.dirname(absolutePath);
+  const relativeParentDir = path
+    .relative(TEMPLATE_DIR, parentDir)
+    .replace(/\\/g, '/');
+  const sourcePath = relativeParentDir.startsWith('.')
+    ? `${relativeParentDir}/**/*.{jsx,tsx}`
+    : `./${relativeParentDir}/**/*.{jsx,tsx}`;
+  cssSourceDirectives.push(`@source "${sourcePath}";`);
+}
+
+function runGit(cwd, ...gitArgs) {
+  const result = spawnSync('git', gitArgs, {
+    cwd,
+    stdio: 'inherit',
+    encoding: 'utf-8',
+  });
+  if (result.status !== 0) {
+    throw new Error(
+      `git ${gitArgs.join(' ')} failed with exit code ${result.status}`
+    );
+  }
+}
+
+// --- Process additional-templates.json ---
+const additionalTemplatesFile = path.resolve(
+  __dirname,
+  'additional-templates.json'
+);
+
+if (fs.existsSync(additionalTemplatesFile)) {
+  let templates;
+  try {
+    templates = JSON.parse(fs.readFileSync(additionalTemplatesFile, 'utf-8'));
+  } catch (err) {
+    console.error('Failed to parse additional-templates.json:', err.message);
+    process.exit(1);
+  }
+
+  if (!Array.isArray(templates)) {
+    console.error('additional-templates.json must be a JSON array.');
+    process.exit(1);
+  }
+
+  for (const template of templates) {
+    const { type, name } = template;
+
+    if (!name) {
+      console.warn('Skipping template entry without a name:', template);
+      continue;
+    }
+
+    if (type === 'file') {
+      if (!template.path) {
+        console.warn(`Skipping file template "${name}": missing "path" field.`);
+        continue;
+      }
+
+      const absolutePath = resolvePath(template.path);
+
+      if (!fs.existsSync(absolutePath)) {
+        console.warn(
+          `Skipping file template "${name}": file not found at ${absolutePath}`
+        );
+        continue;
+      }
+
+      console.log(`Adding local template "${name}" from ${absolutePath}`);
+      addTemplate(name, absolutePath);
+    } else if (type === 'repository') {
+      const { url, commit, path: repoPath } = template;
+
+      if (!url || !commit || !repoPath) {
+        console.warn(
+          `Skipping repository template "${name}": missing "url", "commit", or "path".`
+        );
+        continue;
+      }
+
+      // Derive clone directory from the repo URL so multiple templates from
+      // the same repository share a single clone.
+      const repoName = url.replace(/\.git$/, '').split('/').pop();
+      const cacheDir = path.join(TEMPLATE_CACHE_DIR, repoName);
+
+      if (!fs.existsSync(TEMPLATE_CACHE_DIR)) {
+        fs.mkdirSync(TEMPLATE_CACHE_DIR, { recursive: true });
+      }
+
+      if (!clonedRepos.has(url)) {
+        try {
+          if (!fs.existsSync(cacheDir)) {
+            console.log(`Cloning ${url} into ${cacheDir} ...`);
+            runGit(__dirname, 'clone', url, cacheDir);
+          } else {
+            console.log(`Fetching updates for ${url} ...`);
+            runGit(cacheDir, 'fetch', '--all');
+          }
+
+          console.log(`Checking out commit ${commit} ...`);
+          runGit(cacheDir, 'checkout', commit);
+        } catch (err) {
+          console.error(
+            `Failed to fetch repository template "${name}":`,
+            err.message
+          );
+          process.exit(1);
+        }
+        clonedRepos.set(url, cacheDir);
+      }
+
+      const absolutePath = path.join(cacheDir, repoPath);
+
+      if (!fs.existsSync(absolutePath)) {
+        console.error(
+          `Repository template "${name}": file not found at path "${repoPath}" in commit ${commit}.`
+        );
+        process.exit(1);
+      }
+
+      console.log(
+        `Adding repository template "${name}" from ${url} at commit ${commit}`
+      );
+      addTemplate(name, absolutePath);
+    } else {
+      console.warn(
+        `Skipping template "${name}": unknown type "${type}". Supported types: "file", "repository".`
+      );
+    }
+  }
+}
+
+// --- Legacy: VITE_ADDITIONAL_TEMPLATES env var (backwards compatibility) ---
+const VITE_ADDITIONAL_TEMPLATES = process.env.VITE_ADDITIONAL_TEMPLATES || '';
+
 if (VITE_ADDITIONAL_TEMPLATES) {
+  console.log('Processing VITE_ADDITIONAL_TEMPLATES (legacy fallback) ...');
   const templatePairs = VITE_ADDITIONAL_TEMPLATES.split(',');
   templatePairs.forEach((pair) => {
     const [name, filePath] = pair.split(':');
@@ -80,39 +232,26 @@ if (VITE_ADDITIONAL_TEMPLATES) {
     if (!trimmedName || !trimmedFilePath) return;
 
     const absolutePath = resolvePath(trimmedFilePath);
-    const relativePath = path.relative(TEMPLATE_DIR, absolutePath);
-
-    let importPath = relativePath.replace(/\\/g, '/');
-    if (!importPath.startsWith('.')) {
-      importPath = './' + importPath;
-    }
-
-    importPath = importPath.replace(/\.(tsx?|jsx?)$/, '');
-
-    const importId = `Template_${trimmedName.replace(/[^a-zA-Z0-9_]/g, '_')}`;
-
-    templateImports.push(`import ${importId} from '${importPath}';`);
-    templateEntries.push(`  ${trimmedName}: new ${importId}(),`);
-
-    const parentDir = path.dirname(absolutePath);
-    const relativeParentDir = path
-      .relative(TEMPLATE_DIR, parentDir)
-      .replace(/\\/g, '/');
-    const sourcePath = relativeParentDir.startsWith('.')
-      ? `${relativeParentDir}/**/*.{jsx,tsx}`
-      : `./${relativeParentDir}/**/*.{jsx,tsx}`;
-    cssSourceDirectives.push(`@source "${sourcePath}";`);
+    console.log(`Adding legacy template "${trimmedName}" from ${absolutePath}`);
+    addTemplate(trimmedName, absolutePath);
   });
 }
 
+// --- Generate dynamicTemplates.ts ---
+let dynamicTemplatesContent = `// Auto-generated file - do not edit manually\n\n`;
+dynamicTemplatesContent += `import { Templates } from './index';\n`;
+dynamicTemplatesContent += `import { UVerifyConfig } from '@uverify/core';\n\n`;
 dynamicTemplatesContent += templateImports.join('\n');
 dynamicTemplatesContent += '\n';
-dynamicTemplatesContent += `export const dynamicTemplates: Templates = {\n`;
+dynamicTemplatesContent += `export function getDynamicTemplates(config: UVerifyConfig): Templates {\n`;
+dynamicTemplatesContent += `  return {\n`;
 dynamicTemplatesContent += templateEntries.join('\n');
-dynamicTemplatesContent += `\n};\n`;
+dynamicTemplatesContent += `\n  };\n`;
+dynamicTemplatesContent += `}\n`;
 
 fs.writeFileSync(DYNAMIC_TEMPLATES_FILE, dynamicTemplatesContent);
 
+// --- Generate dynamicTemplates.css ---
 const dynamicTemplatesCssContent = `/* Auto-generated file - do not edit manually */\n${cssSourceDirectives.join(
   '\n'
 )}\n`;

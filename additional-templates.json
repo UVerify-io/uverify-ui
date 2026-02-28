@@ -1,0 +1,16 @@
+[
+  {
+    "type": "repository",
+    "name": "SocialHub",
+    "url": "https://github.com/UVerify-io/uverify-additional-templates",
+    "commit": "20561655fb4cf6714b8ae02d6aa2d24b0ee88770",
+    "path": "social-hub/src/Certificate.tsx"
+  },
+  {
+    "type": "repository",
+    "name": "Tadamon",
+    "url": "https://github.com/UVerify-io/uverify-additional-templates",
+    "commit": "20561655fb4cf6714b8ae02d6aa2d24b0ee88770",
+    "path": "tadamon/src/Certificate.tsx"
+  }
+]

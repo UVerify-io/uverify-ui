@@ -1,0 +1,78 @@
+name: ⬆️ Upgrade External Template
+description: Propose upgrading an existing external UI template to a newer commit in additional-templates.json
+title: "[⬆️ Template Upgrade]: <Template Name>"
+labels: ["template"]
+
+body:
+  - type: input
+    attributes:
+      label: Template Name
+      description: The name of the template as it appears in additional-templates.json.
+      placeholder: MyCertificate
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Repository URL
+      description: The repository URL (for reference).
+      placeholder: https://github.com/some-org/my-template
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Current Commit Hash
+      description: The full commit hash currently pinned in additional-templates.json.
+      placeholder: a3f1c2d4e5b67890abcdef1234567890abcdef12
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: New Commit Hash
+      description: The full commit hash to upgrade to. No branch names or tags.
+      placeholder: b7e9f1a2c3d45678901234abcdef5678901234ab
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What Changed?
+      description: Summarize what changed between the two commits — bug fixes, visual updates, new features, dependency bumps, etc.
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Local Testing Checklist
+      description: Please confirm each item before submitting.
+      options:
+        - label: I have updated the commit hash in `additional-templates.json` locally and run `node config.js` successfully
+          required: true
+        - label: The template still renders correctly at the new commit
+          required: true
+        - label: No visual regressions were introduced
+          required: true
+        - label: There are no new errors or warnings in the browser developer console
+          required: true
+        - label: The repository is publicly accessible at the new commit hash provided above
+          required: true
+        - label: The update does not introduce any new external network requests without user awareness
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Screenshots or Recording
+      description: |
+        Attach before/after screenshots if there are any visual changes, or a recording confirming the template still renders correctly.
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: Additional context, migration notes, or known breaking changes.
+    validations:
+      required: false

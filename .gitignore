@@ -37,3 +37,6 @@ firebase.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Cloned external template repositories (fetched during build)
+.template-cache/

@@ -1,0 +1,93 @@
+name: 📦 Add External Template
+description: Propose adding a new external UI template to additional-templates.json for inclusion in the standard app.uverify.io deployment
+title: "[📦 Template]: Add <Template Name>"
+labels: ["template"]
+
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for this template.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: input
+    attributes:
+      label: Template Name
+      description: The name of the template as it will appear in additional-templates.json (PascalCase, e.g. `MyCertificate`).
+      placeholder: MyCertificate
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Repository URL
+      description: The public GitHub repository containing the template.
+      placeholder: https://github.com/some-org/my-template
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Commit Hash
+      description: The exact full commit hash to pin. This is required — no branch names or tags.
+      placeholder: a3f1c2d4e5b67890abcdef1234567890abcdef12
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Path to Certificate.tsx
+      description: The relative path within the repository to the Certificate.tsx file.
+      placeholder: src/Certificate.tsx
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Template Description
+      description: Describe the use case this template serves, who it is intended for, and why it should be available in the standard deployment.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Whitelist Addresses (if applicable)
+      description: If this template uses a `whitelist`, list the Cardano addresses here. Leave blank if the template is accessible to all issuers via `uverify_template_id`.
+    validations:
+      required: false
+
+  - type: checkboxes
+    attributes:
+      label: Local Testing Checklist
+      description: Please confirm each item before submitting. Incomplete submissions will not be reviewed.
+      options:
+        - label: I have added the template entry to `additional-templates.json` locally and run `node config.js` successfully
+          required: true
+        - label: The template renders correctly in the dev environment (`npm run dev`)
+          required: true
+        - label: I have tested the template at multiple viewport sizes (mobile and desktop)
+          required: true
+        - label: There are no errors or warnings in the browser developer console
+          required: true
+        - label: The repository is publicly accessible at the exact commit hash provided above
+          required: true
+        - label: The template does not make requests to any external services without user awareness
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Screenshots or Recording
+      description: |
+        Attach screenshots or a screen recording showing the template rendering correctly on both mobile and desktop.
+        Tip: You can attach images by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: Additional context, licensing notes, dependencies, or known limitations.
+    validations:
+      required: false
