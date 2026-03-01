@@ -24,7 +24,7 @@ export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await fetch('/config.json');
+        const response = await fetch('/config.json', { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`Failed to fetch config.json: ${response.status}`);
         }

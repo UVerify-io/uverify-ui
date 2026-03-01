@@ -28,6 +28,7 @@ const Certificate = () => {
   const [templates, setTemplates] = useState<Templates>({});
 
   useEffect(() => {
+    if (!config.backendUrl) return;
     async function loadTemplates() {
       const loadedTemplates = await getTemplates({
         backendUrl: config.backendUrl,
@@ -40,6 +41,7 @@ const Certificate = () => {
   }, [config]);
 
   useEffect(() => {
+    if (!config.backendUrl) return;
     if (certificates.length === 0) {
       const response = axios.get(config.backendUrl + '/api/v1/verify/' + hash);
       response
@@ -125,7 +127,7 @@ const Certificate = () => {
         restoreDefaults();
       }
     }
-  }, [page, certificates]);
+  }, [page, certificates, templates]);
 
   if (!hash) return <div>Invalid hash</div>;
 
