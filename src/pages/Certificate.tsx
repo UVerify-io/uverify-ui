@@ -129,8 +129,13 @@ const Certificate = () => {
 
   if (!hash) return <div>Invalid hash</div>;
 
-  const template =
+  let template =
     templates[templateId === 'linktree' ? 'socialHub' : templateId];
+
+  if (!templates.hasOwnProperty(templateId)) {
+    template = templates['default'];
+  }
+
   const hashedMultipleTimes = certificates.length > 1;
 
   const extra = {
@@ -162,6 +167,12 @@ const Certificate = () => {
         </div>
       </div>
     );
+  }
+
+  console.log('Template ID:', templateId);
+  console.log('Template Object:', template);
+  if (!template) {
+    return null;
   }
 
   return (

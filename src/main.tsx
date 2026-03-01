@@ -13,5 +13,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <App />
       </UVerifyThemeProvider>
     </UVerifyConfigProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

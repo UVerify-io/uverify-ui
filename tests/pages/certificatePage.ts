@@ -9,13 +9,15 @@ export class CertificatePage {
 
   async navigateToCertificatePage() {
     await this.page.goto(
-      '/verify/a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e/1'
+      '/verify/a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e/1',
+      { waitUntil: 'networkidle' },
     );
   }
 
   async isCertificateVaild() {
-    await expect(
-      await this.page.getByTestId('certificate-headline')
-    ).toContainText('You Can Trust the Issuer!');
+    await expect(this.page.getByTestId('certificate-headline')).toContainText(
+      'You Can Trust the Issuer!',
+      { timeout: 5000 },
+    );
   }
 }

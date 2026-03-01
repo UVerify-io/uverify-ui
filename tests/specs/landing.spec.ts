@@ -26,4 +26,29 @@ test.describe('Landing Tests', () => {
   test('Footer is visible', async () => {
     await landingPage.isFooterVisible();
   });
+
+  test('Footer Terms of Use link points to the correct URL', async ({
+    page,
+  }) => {
+    await expect(page.getByTestId('terms-of-use-link')).toHaveAttribute(
+      'href',
+      'https://uverify.io/terms-of-use',
+    );
+  });
+
+  test('Footer Privacy Policy link points to the correct URL', async ({
+    page,
+  }) => {
+    await expect(page.getByTestId('privacy-policy-link')).toHaveAttribute(
+      'href',
+      'https://uverify.io/privacy-policy',
+    );
+  });
+
+  test('Footer Impress link points to the correct URL', async ({ page }) => {
+    await expect(page.getByTestId('impress-link')).toHaveAttribute(
+      'href',
+      'https://uverify.io/#impress',
+    );
+  });
 });

@@ -36,6 +36,7 @@ const Fingerprint = ({ hash, className, size }: FingerprintProps) => {
 
   return (
     <div
+      data-testid="fingerprint"
       className={twMerge(
         `cursor-pointer relative flex items-center justify-center w-${containerSize} h-${containerSize} text-white/50 `,
         className,

@@ -7,13 +7,11 @@ import { ToastContainer, Zoom } from 'react-toastify';
 import Footer from './components/Footer';
 import ScrollPageWrapper from './utils/ScrollPageWrapper';
 import { useUVerifyTheme } from './utils/hooks';
-import { useUVerifyConfig } from './utils/UVerifyConfigProvider';
 
 function App() {
   const { background, hideFooter } = useUVerifyTheme();
-  const config = useUVerifyConfig();
 
-  return config.backendUrl !== '' ? (
+  return (
     <div className={`min-w-screen min-h-screen ${background} flex flex-col`}>
       <div className="grow flex justify-center">
         <Router>
@@ -43,8 +41,6 @@ function App() {
       </div>
       {!hideFooter && <Footer />}
     </div>
-  ) : (
-    <></>
   );
 }
 
