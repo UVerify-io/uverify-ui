@@ -23,21 +23,17 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: 📝 Set mainnet secrets
+      - name: 📝 Set mainnet site
         if: inputs.network == 'mainnet'
         run: |
           echo "BACKEND_URL=https://api.uverify.io" >> $GITHUB_ENV
-          echo "FIREBASE_PROJECT=${{ secrets.FIREBASE_PROJECT_MAINNET }}" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_MAINNET }}" >> $GITHUB_ENV
-          echo "FIREBASE_SA=${{ secrets.FIREBASE_SERVICE_ACCOUNT_MAINNET }}" >> $GITHUB_ENV
 
-      - name: 📝 Set preprod secrets
+      - name: 📝 Set preprod site
         if: inputs.network == 'preprod'
         run: |
           echo "BACKEND_URL=https://api.preprod.uverify.io" >> $GITHUB_ENV
-          echo "FIREBASE_PROJECT=${{ secrets.FIREBASE_PROJECT_PREPROD }}" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_PREPROD }}" >> $GITHUB_ENV
-          echo "FIREBASE_SA=${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREPROD }}" >> $GITHUB_ENV
 
       - name: 📝 Write .env file
         run: |
@@ -49,7 +45,7 @@ jobs:
         run: |
           echo '{
             "projects": {
-              "default": "${{ env.FIREBASE_PROJECT }}"
+              "default": "${{ secrets.FIREBASE_PROJECT }}"
             }
           }' > .firebaserc
 
@@ -85,6 +81,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ env.FIREBASE_SA }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelId: live
-          projectId: ${{ env.FIREBASE_PROJECT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT }}
