@@ -1,6 +1,15 @@
-name: 🥁 Deploy to app.uverify.io
+name: 🥁 Deploy uverify-ui
 on:
   workflow_dispatch:
+    inputs:
+      network:
+        description: 'Target network'
+        required: true
+        default: 'mainnet'
+        type: choice
+        options:
+          - mainnet
+          - preprod
 
 jobs:
   deploy:
@@ -14,18 +23,36 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: 📝 Set environment variables
+      - name: 📝 Set mainnet secrets
+        if: inputs.network == 'mainnet'
+        run: |
+          echo "BACKEND_URL=https://api.uverify.io" >> $GITHUB_ENV
+          echo "SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_MAINNET_ACCOUNT }}" >> $GITHUB_ENV
+          echo "FIREBASE_PROJECT=${{ secrets.FIREBASE_PROJECT_MAINNET }}" >> $GITHUB_ENV
+          echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_MAINNET }}" >> $GITHUB_ENV
+          echo "FIREBASE_SA=${{ secrets.FIREBASE_SERVICE_ACCOUNT_MAINNET }}" >> $GITHUB_ENV
+
+      - name: 📝 Set preprod secrets
+        if: inputs.network == 'preprod'
+        run: |
+          echo "BACKEND_URL=https://api.preprod.uverify.io" >> $GITHUB_ENV
+          echo "SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_PREPROD_ACCOUNT }}" >> $GITHUB_ENV
+          echo "FIREBASE_PROJECT=${{ secrets.FIREBASE_PROJECT_PREPROD }}" >> $GITHUB_ENV
+          echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_PREPROD }}" >> $GITHUB_ENV
+          echo "FIREBASE_SA=${{ secrets.FIREBASE_SERVICE_ACCOUNT_PREPROD }}" >> $GITHUB_ENV
+
+      - name: 📝 Write .env file
         run: |
           echo 'VITE_VERSION=$npm_package_version' > .env
-          echo 'VITE_BACKEND_URL=https://api.uverify.io' >> .env
-          echo 'VITE_CARDANO_NETWORK=mainnet' >> .env
-          echo 'VITE_SERVICE_ACCOUNT=${{ secrets.UVERIFY_SERVICE_MAINNET_ACCOUNT }}' >> .env
+          echo "VITE_BACKEND_URL=${{ env.BACKEND_URL }}" >> .env
+          echo "VITE_CARDANO_NETWORK=${{ inputs.network }}" >> .env
+          echo "VITE_SERVICE_ACCOUNT=${{ env.SERVICE_ACCOUNT }}" >> .env
 
       - name: 📝 Create .firebaserc file
         run: |
           echo '{
             "projects": {
-              "default": "${{ secrets.FIREBASE_PROJECT }}"
+              "default": "${{ env.FIREBASE_PROJECT }}"
             }
           }' > .firebaserc
 
@@ -34,7 +61,7 @@ jobs:
           echo '{
             "hosting": {
               "public": "dist",
-              "site": "${{ secrets.FIREBASE_SITE }}",
+              "site": "${{ env.FIREBASE_SITE }}",
               "ignore": [
                 "firebase.json",
                 "**/.*",
@@ -52,7 +79,7 @@ jobs:
       - name: 🔨 Download dependencies and build hosting
         run: npm ci && npm run build
 
-      - name: 🦺 Run Tests
+      - name: 🦺 Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npx playwright test
@@ -61,6 +88,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_UVERIFY_477FB }}'
+          firebaseServiceAccount: '${{ env.FIREBASE_SA }}'
           channelId: live
-          projectId: uverify-477fb
+          projectId: ${{ env.FIREBASE_PROJECT }}
