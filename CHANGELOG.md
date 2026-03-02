@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/UVerify-io/uverify-ui/compare/v1.9.0...v2.0.0) (2026-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* additional templates are now maintained in a json file and tadamon and social hub have been moved to an external repository closes #47 closes #45 closes #41
+
+### Features
+
+* additional templates are now maintained in a json file and tadamon and social hub have been moved to an external repository closes [#47](https://github.com/UVerify-io/uverify-ui/issues/47) closes [#45](https://github.com/UVerify-io/uverify-ui/issues/45) closes [#41](https://github.com/UVerify-io/uverify-ui/issues/41) ([2c3c081](https://github.com/UVerify-io/uverify-ui/commit/2c3c08117514b36539f590b2dcab797801ada620))
+
+
+### Bug Fixes
+
+* prevent the ui from showing the default template for one second before loading the actual one ([3b8b82d](https://github.com/UVerify-io/uverify-ui/commit/3b8b82dba318c8c93da20c15c0fef4a094e9d62a))
+
 ## [1.9.0](https://github.com/UVerify-io/uverify-ui/compare/v1.8.0...v1.9.0) (2026-02-19)
 
 
