@@ -2,6 +2,7 @@ import DefaultTemplate from './Default';
 import DiplomaTemplate from './Diploma';
 import MonochromeTemplate from './Monochrome';
 import ProductVerificationTemplate from './ProductVerification/ProductVerificationTemplate';
+import PetNecklaceTemplate from './PetNecklace';
 import { Template, UVerifyConfig } from '@uverify/core';
 
 export type Templates = {
@@ -14,6 +15,7 @@ export async function getTemplates(config: UVerifyConfig) {
     monochrome: new MonochromeTemplate(config),
     diploma: new DiplomaTemplate(config),
     productVerification: new ProductVerificationTemplate(config),
+    petNecklace: new PetNecklaceTemplate(config),
   };
 
   let dynamicTemplates: Templates = {};

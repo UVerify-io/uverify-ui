@@ -57,9 +57,10 @@ const Certificate = () => {
           );
           setTotalPages(res.data.length);
 
+          const search = window.location.search;
           if (typeof query === 'undefined') {
             setPage(1);
-            navigate(`/verify/${hash}/1`, { replace: true });
+            navigate(`/verify/${hash}/1${search}`, { replace: true });
           } else if (typeof query === 'string') {
             if (query.length === 64) {
               const index = certificateList.findIndex(
@@ -67,13 +68,13 @@ const Certificate = () => {
               );
               if (index !== -1) {
                 setPage(index + 1);
-                navigate(`/verify/${hash}/${index + 1}`, { replace: true });
+                navigate(`/verify/${hash}/${index + 1}${search}`, { replace: true });
               } else {
                 toast.error(
                   'Unable to resolve the deeplink: Transaction hash not found or does not match the provided data. Please exercise caution if someone sent you this URL.',
                 );
                 setPage(1);
-                navigate(`/verify/${hash}/1`, { replace: true });
+                navigate(`/verify/${hash}/1${search}`, { replace: true });
               }
             } else if (!isNaN(parseInt(query))) {
               setPage(parseInt(query));
@@ -182,7 +183,7 @@ const Certificate = () => {
       totalPages={totalPages}
       setPage={(newPage) => {
         setPage(newPage);
-        navigate(`/verify/${hash}/${newPage}`, { replace: true });
+        navigate(`/verify/${hash}/${newPage}${window.location.search}`, { replace: true });
       }}
     />
   );
