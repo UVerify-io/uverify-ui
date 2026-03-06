@@ -61,7 +61,7 @@ const DynamicInput = ({
   }, [isMultiline]);
 
   return (
-    <div className="flex w-3/5 flex-col mr-1">
+    <div className="flex w-full flex-col">
       {isMultiline ? (
         <textarea
           autoFocus={false}

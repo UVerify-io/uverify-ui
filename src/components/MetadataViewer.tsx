@@ -33,6 +33,8 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
 
   const renderRow = (row: Row, index: number) => {
     const field = row.content;
+    const isUrlParam = field.key.startsWith('uv_url_');
+    const displayKey = isUrlParam ? field.key.slice(7) : field.key;
     return (
       <div key={index} className="flex my-1">
         <div className="flex w-3/12 flex-col mr-1">
@@ -43,9 +45,14 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
             }}
             type="text"
             className={`cursor-pointer w-full h-10 text-xs px-2 outline-hidden rounded-sm bg-white/25 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
-            value={field.key}
+            value={displayKey}
             readOnly
           />
+          {isUrlParam && (
+            <span className="mt-0.5 self-start text-[9px] font-bold uppercase tracking-wider bg-white/30 border border-white/40 text-white rounded px-1.5 py-0.5 select-none shadow-center shadow-white/50">
+              URL
+            </span>
+          )}
         </div>
         <div className="flex w-9/12 flex-col mr-1">
           {row.collapsed ? (

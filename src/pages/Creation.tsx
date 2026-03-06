@@ -61,6 +61,9 @@ const Creation = () => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [transactionResult, setTransactionResult] =
     useState<TransactionResult>();
+  // Captures uv_url_* plain values before the editor is reset so they can be
+  // appended to the deep link after on-chain confirmation.
+  const capturedUrlParamsRef = useRef('');
   const [activeTab, setActiveTab] = useState(0);
   const { applyTheme, restoreDefaults } = useUVerifyTheme();
 
@@ -135,6 +138,10 @@ const Creation = () => {
   useEffect(() => {
     if (transactionResult) {
       if (transactionResult.successful) {
+        // Capture uv_url_* plain values BEFORE the editor resets them.
+        capturedUrlParamsRef.current =
+          metadataEditorRef.current?.urlParams().toString() ?? '';
+
         setText('');
         setFileHash('');
         metadataEditorRef.current?.reset();
@@ -152,10 +159,12 @@ const Creation = () => {
           );
           if (response.status === 200) {
             clearInterval(interval);
+            const paramStr = capturedUrlParamsRef.current;
+            const deepLink = `/verify/${transactionResult.hash}/${transactionResult.transactionHash}${paramStr ? '?' + paramStr : ''}`;
             toast.update(toastId, {
               render: (
                 <a
-                  href={`/verify/${transactionResult.hash}/${transactionResult.transactionHash}`}
+                  href={deepLink}
                   target="_blank"
                   onClick={() => {
                     toast.dismiss();
@@ -242,9 +251,9 @@ const Creation = () => {
           }
         );
         setTransactionResult({
-          successful: result.data.successful,
+          successful: result.status === 200,
           hash: hash,
-          transactionHash: result.data.value,
+          transactionHash: result.data.transactionHash,
         });
       } else {
         toast.error(

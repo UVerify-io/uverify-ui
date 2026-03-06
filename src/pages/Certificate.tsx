@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { sha256 } from 'js-sha256';
 import axios from 'axios';
 import Pagination from '../components/Pagination';
 import { toast } from 'react-toastify';
@@ -99,7 +100,34 @@ const Certificate = () => {
       setCertificate(certificates[page - 1]);
 
       const certificateMetadata = JSON.parse(certificates[page - 1].metadata);
-      setMetadata(certificateMetadata);
+
+      // Resolve uv_url_* fields: values are stored as SHA-256 hashes on-chain.
+      // If the matching URL param is present and its hash matches, replace the
+      // stored hash with the plain value so templates can display it directly.
+      const searchParams = new URLSearchParams(window.location.search);
+      const resolvedMetadata = { ...certificateMetadata };
+      let urlParamMismatch = false;
+      for (const key of Object.keys(resolvedMetadata)) {
+        if (key.startsWith('uv_url_')) {
+          const plainKey = key.slice(7);
+          const urlValue = searchParams.get(plainKey);
+          if (urlValue !== null) {
+            if (sha256(urlValue) === resolvedMetadata[key]) {
+              resolvedMetadata[key] = urlValue;
+            } else {
+              urlParamMismatch = true;
+            }
+          }
+        }
+      }
+      if (urlParamMismatch) {
+        toast.error(
+          'Certificate URL parameter validation failed and one or more provided values do not match the on-chain hashes. This certificate may have been tampered with.',
+          { autoClose: false },
+        );
+      }
+
+      setMetadata(resolvedMetadata);
 
       if (
         config.serviceAccount === certificates[page - 1].issuer &&

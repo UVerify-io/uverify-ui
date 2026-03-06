@@ -3,6 +3,7 @@ import { IconType, PlusIcon } from './Icons';
 import IconButton from './IconButton';
 import DynamicInput from './DynamicInput';
 import { Field } from '@uverify/core';
+import { sha256 } from 'js-sha256';
 
 type FieldError = 'KEY' | 'VALUE' | 'BOTH';
 type FieldErrors = { [key: number]: FieldError };
@@ -10,12 +11,20 @@ type FieldErrors = { [key: number]: FieldError };
 export type MetadataHandle = {
   metadata: (templateId: string) => string | undefined;
   reset: () => void;
+  /** Returns the plain (un-hashed) values of all uv_url_* fields as URLSearchParams. */
+  urlParams: () => URLSearchParams;
 };
 
 declare interface MetadataEditorProps {
   className?: string;
   layoutMetadata: { [key: string]: string };
 }
+
+const UrlParamBadge = () => (
+  <span className="inline-flex items-center text-[9px] font-bold uppercase tracking-wider bg-white/30 border border-white/40 text-white rounded px-1.5 py-0.5 select-none whitespace-nowrap shadow-center shadow-white/50">
+    URL
+  </span>
+);
 
 const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
   ({ className, layoutMetadata }, ref) => {
@@ -73,6 +82,15 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
         resetLayoutFields();
         setError(false);
       },
+      urlParams() {
+        const params = new URLSearchParams();
+        for (const field of [...layoutFields, ...fields]) {
+          if (field.key.startsWith('uv_url_') && field.value) {
+            params.set(field.key.slice(7), field.value);
+          }
+        }
+        return params;
+      },
     }));
 
     const parseFieldValue = (value: string) => {
@@ -99,7 +117,10 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
         for (const field of metadata) {
           if (field.layoutProp) {
             if (field.key && field.value) {
-              data[field.key] = parseFieldValue(field.value);
+              // uv_url_* layout fields: store the SHA-256 hash on-chain
+              data[field.key] = field.key.startsWith('uv_url_')
+                ? sha256(field.value)
+                : parseFieldValue(field.value);
             }
           } else {
             if (!field.key && !field.value) {
@@ -109,7 +130,10 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
             } else if (!field.value) {
               errors[index] = 'VALUE';
             } else {
-              data[field.key] = parseFieldValue(field.value);
+              // uv_url_* custom fields: store the SHA-256 hash on-chain
+              data[field.key] = field.key.startsWith('uv_url_')
+                ? sha256(field.value)
+                : parseFieldValue(field.value);
             }
           }
           index++;
@@ -138,6 +162,9 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
     );
 
     const renderField = (field: Field, index: number) => {
+      const isUrlParam = field.key.startsWith('uv_url_');
+      const displayKey = isUrlParam ? field.key.slice(7) : field.key;
+
       const hasKeyError =
         !field.layoutProp &&
         ((error && error[index] === 'KEY') ||
@@ -148,8 +175,9 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
           (error && error[index] === 'BOTH'));
 
       return (
-        <div key={index} className="flex items-start my-1">
-          <div className="flex w-2/5 flex-col mr-1">
+        <div key={index} className="flex items-center my-1 gap-1">
+          {/* Key — fixed width */}
+          <div className="flex-none w-28">
             <input
               autoFocus={false}
               type="text"
@@ -179,77 +207,107 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
                   : 'bg-white/25 border border-[#FFFFFF40] text-white'
               } focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
-              value={hasKeyError ? 'Required field' : field.key}
+              value={hasKeyError ? 'Required field' : displayKey}
               placeholder="Key"
               disabled={field.layoutProp}
               onChange={(e) => {
-                if (field.layoutProp) {
-                  return;
-                }
+                if (field.layoutProp) return;
                 const updatedFields = [...fields];
-                updatedFields[index].key = e.target.value;
+                // Preserve uv_url_ prefix while user edits the display name
+                updatedFields[index].key = isUrlParam
+                  ? 'uv_url_' + e.target.value
+                  : e.target.value;
                 setFields(updatedFields);
               }}
             />
           </div>
-          <DynamicInput
-            value={hasValueError ? 'Required field' : field.value}
-            placeholder={field.placeholder || 'Value'}
-            className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
-              hasValueError
-                ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
-                : 'bg-white/25 border border-[#FFFFFF40] text-white'
-            }`}
-            onBlur={(event) => {
-              if (event.target.value === '') {
-                event.target.placeholder = field.placeholder || 'Value';
-              }
-            }}
-            onFocus={(event) => {
-              event.target.placeholder = '';
-              if (hasValueError) {
-                const updatedErrors = { ...error };
-                if (updatedErrors[index] === 'BOTH') {
-                  updatedErrors[index] = 'KEY';
-                } else {
-                  delete updatedErrors[index];
+          {/* Value — fills remaining space */}
+          <div className="flex-1 min-w-0">
+            <DynamicInput
+              value={hasValueError ? 'Required field' : field.value}
+              placeholder={field.placeholder || 'Value'}
+              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
+                hasValueError
+                  ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
+                  : 'bg-white/25 border border-[#FFFFFF40] text-white'
+              }`}
+              onBlur={(event) => {
+                if (event.target.value === '') {
+                  event.target.placeholder = field.placeholder || 'Value';
                 }
-                setError(updatedErrors);
+              }}
+              onFocus={(event) => {
+                event.target.placeholder = '';
+                if (hasValueError) {
+                  const updatedErrors = { ...error };
+                  if (updatedErrors[index] === 'BOTH') {
+                    updatedErrors[index] = 'KEY';
+                  } else {
+                    delete updatedErrors[index];
+                  }
+                  setError(updatedErrors);
 
-                const updatedFields = [...fields];
-                updatedFields[index].value = '';
-                setFields(updatedFields);
-              }
-            }}
-            onChange={(event) => {
-              if (field.layoutProp) {
-                const updatedFields = [...layoutFields];
-                updatedFields[index].value = event.target.value;
-                setLayoutFields(updatedFields);
-              } else {
-                const updatedFields = [...fields];
-                updatedFields[index].value = event.target.value;
-                setFields(updatedFields);
-              }
-            }}
-          />
-          {field.layoutProp ? (
-            <div className="p-3 border border-transparent">
-              <div className="w-4 h-4"></div>
-            </div>
-          ) : (
-            <IconButton
-              iconType={IconType.Minus}
-              onClick={() => {
-                const updatedFields = [...fields];
-                updatedFields.splice(index, 1);
-                setFields(updatedFields);
-                const updatedErrors = { ...error };
-                delete updatedErrors[index];
-                setError(updatedErrors);
+                  const updatedFields = [...fields];
+                  updatedFields[index].value = '';
+                  setFields(updatedFields);
+                }
+              }}
+              onChange={(event) => {
+                if (field.layoutProp) {
+                  const updatedFields = [...layoutFields];
+                  updatedFields[index].value = event.target.value;
+                  setLayoutFields(updatedFields);
+                } else {
+                  const updatedFields = [...fields];
+                  updatedFields[index].value = event.target.value;
+                  setFields(updatedFields);
+                }
               }}
             />
-          )}
+          </div>
+          {/* Right actions — fixed width so all rows align */}
+          <div className="flex-none w-20 flex items-center justify-start gap-1">
+            {field.layoutProp ? (
+              isUrlParam ? <UrlParamBadge /> : null
+            ) : (
+              <>
+                <button
+                  type="button"
+                  title={
+                    isUrlParam
+                      ? 'Value is stored as a hash on-chain and revealed via a URL parameter. Click to disable.'
+                      : 'Click to store the value as a hash on-chain and share it via a URL parameter (GDPR-friendly).'
+                  }
+                  onClick={() => {
+                    const updatedFields = [...fields];
+                    const current = updatedFields[index].key;
+                    updatedFields[index].key = isUrlParam
+                      ? current.slice(7)
+                      : 'uv_url_' + current;
+                    setFields(updatedFields);
+                  }}
+                  className={`text-[9px] uppercase tracking-wider rounded px-1.5 py-1 select-none whitespace-nowrap border transition-all duration-150 ${
+                    isUrlParam
+                      ? 'font-bold bg-white/30 border-white/40 text-white shadow-center shadow-white/50 hover:shadow-white/70'
+                      : 'font-normal bg-white/25 border-[#FFFFFF40] text-white hover:shadow-center hover:shadow-white/20'
+                  }`}
+                >
+                  URL
+                </button>
+                <IconButton
+                  iconType={IconType.Minus}
+                  onClick={() => {
+                    const updatedFields = [...fields];
+                    updatedFields.splice(index, 1);
+                    setFields(updatedFields);
+                    const updatedErrors = { ...error };
+                    delete updatedErrors[index];
+                    setError(updatedErrors);
+                  }}
+                />
+              </>
+            )}
+          </div>
         </div>
       );
     };
