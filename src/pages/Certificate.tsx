@@ -148,9 +148,22 @@ const Certificate = () => {
         certificateMetadata.hasOwnProperty('uverify_template_id') &&
         templates.hasOwnProperty(metadataTemplateId)
       ) {
-        setTemplateId(metadataTemplateId);
-        applyTheme(templates[metadataTemplateId].theme);
-        return restoreDefaults;
+        const candidateTemplate = templates[metadataTemplateId];
+        const bootstrapWhitelist: string[] | undefined = (candidateTemplate as any).bootstrapWhitelist;
+        const certBootstrapToken: string | undefined = (certificates[page - 1] as any).bootstrapTokenName;
+
+        if (
+          bootstrapWhitelist &&
+          bootstrapWhitelist.length > 0 &&
+          (!certBootstrapToken || !bootstrapWhitelist.includes(certBootstrapToken))
+        ) {
+          setTemplateId('default');
+          restoreDefaults();
+        } else {
+          setTemplateId(metadataTemplateId);
+          applyTheme(candidateTemplate.theme);
+          return restoreDefaults;
+        }
       } else {
         setTemplateId('default');
         restoreDefaults();

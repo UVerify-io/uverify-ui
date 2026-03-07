@@ -41,6 +41,7 @@ const Creation = () => {
     [key: string]: string;
   }>({});
   const [selectedLayout, setSelectedLayout] = useState('default');
+  const [requiredBootstrapToken, setRequiredBootstrapToken] = useState<string | undefined>(undefined);
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
@@ -224,19 +225,23 @@ const Creation = () => {
     setButtonState('loading');
     const hash = activeTab === 0 ? fileHash : sha256(text);
     try {
+      const requestBody: Record<string, unknown> = {
+        type: requiredBootstrapToken ? 'CUSTOM' : 'DEFAULT',
+        address: userAddress,
+        certificates: [
+          {
+            hash: hash,
+            metadata: metadata,
+            algorithm: 'SHA-256',
+          },
+        ],
+      };
+      if (requiredBootstrapToken) {
+        requestBody.bootstrapDatum = { name: requiredBootstrapToken };
+      }
       const response = await axios.post(
         config.backendUrl + '/api/v1/transaction/build',
-        {
-          type: 'DEFAULT',
-          address: userAddress,
-          certificates: [
-            {
-              hash: hash,
-              metadata: metadata,
-              algorithm: 'SHA-256',
-            },
-          ],
-        },
+        requestBody,
       );
 
       if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
@@ -335,9 +340,11 @@ const Creation = () => {
                   onChange={(
                     layout: string,
                     metadata: { [key: string]: string },
+                    bootstrapTokenName?: string,
                   ) => {
                     setSelectedLayout(layout);
                     setLayoutMetadata(metadata);
+                    setRequiredBootstrapToken(bootstrapTokenName);
                   }}
                 />
                 <IconButton
