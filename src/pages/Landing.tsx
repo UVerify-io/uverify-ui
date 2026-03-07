@@ -15,21 +15,21 @@ const Landing = () => {
       <img
         src={Logo}
         alt="UVerify Logo"
-        className="w-32 h-32 mx-auto sm:w-48 sm:h-48"
+        className="w-32 h-32 mx-auto sm:w-48 sm:h-48 animate-logo-glow"
       />
-      <h1 className="mt-6 mb-2 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl">
+      <h1 className="mt-6 mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl">
         UVerify {networkIndicator}
       </h1>
-      <h2 className="mb-6 text-xl font-bold uppercase">
+      <span className="inline-flex items-center mb-6 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border border-ice-400/35 bg-ice-600/20 text-ice-200 backdrop-blur-sm">
         Where Trust Meets Technology
-      </h2>
-      <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 ">
-        Building trust with immutable data. UVerify isn't a storage — it's a
-        tool empowering everyone to verify your data
+      </span>
+      <p className="mb-8 text-lg font-light text-white/75 lg:text-xl sm:px-16">
+        Building trust with immutable data. UVerify empowers everyone to verify
+        the authenticity of their data without a central authority
       </p>
-      <div className="flex justify-center flex-col sm:flex-row items-center">
+      <div className="flex justify-center flex-col sm:flex-row items-center gap-4">
         <Button
-          className="px-8 py-4 font-bold text-lg sm:mr-8 mb-4 sm:mb-0 min-w-[150px] text-center"
+          className="px-8 py-4 font-bold text-lg min-w-[150px] text-center"
           color="cyan"
           data-testid="verify-button"
           label="Verify"
@@ -38,7 +38,7 @@ const Landing = () => {
         />
         <Button
           className="px-8 py-4 font-bold text-lg min-w-[150px] text-center"
-          color="ice"
+          color="green"
           data-testid="create-button"
           label="Create"
           onClick={() => navigate('/create')}

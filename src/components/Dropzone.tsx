@@ -32,7 +32,7 @@ const Dropzone = ({ onDrop, className }: DropzoneProps) => {
     >
       <label
         htmlFor="dropzone-file"
-        className="flex flex-col items-center justify-center w-full h-48 sm:h-32 border-2 border-white border-dashed rounded-lg cursor-pointer bg-white/25"
+        className="flex flex-col items-center justify-center w-full h-48 sm:h-32 border-2 border-white/40 border-dashed rounded-xl cursor-pointer bg-white/10 hover:bg-white/15 hover:border-white/60 transition-colors duration-200"
       >
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
           <svg

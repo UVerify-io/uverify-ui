@@ -17,7 +17,7 @@ export default function AccordionInfo({
     <div className="mt-4 w-full max-w-md flex justify-center items-center flex-col">
       <button
         type="button"
-        className="flex items-center text-left text-xs font-normal hover:underline focus:outline-none cursor-pointer"
+        className="flex items-center text-left text-xs font-normal text-white/55 hover:text-white/90 transition-colors duration-200 focus:outline-none cursor-pointer"
         aria-expanded={open}
         aria-controls="accordion-content"
         onClick={() => setOpen((prev) => !prev)}
@@ -39,7 +39,7 @@ export default function AccordionInfo({
 
       <div
         id="accordion-content"
-        className={`max-w-72 mt-2 p-4 border border-white rounded text-xs text-white
+        className={`max-w-72 mt-2 p-4 border border-white/15 rounded-xl bg-white/5 backdrop-blur-sm text-xs text-white/75
             ${open ? 'opacity-100' : 'opacity-0 hidden'}`}
       >
         {answer}

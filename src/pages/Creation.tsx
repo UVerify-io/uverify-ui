@@ -108,7 +108,7 @@ const Creation = () => {
           };
           reader.onerror = (event) => {
             toast.error(
-              'There was an error reading the file. Please try again.'
+              'There was an error reading the file. Please try again.',
             );
             console.error(event);
           };
@@ -150,12 +150,12 @@ const Creation = () => {
           'Your transaction has been submitted, and your data will now be distributed worldwide. We just need to wait for a few confirmations (no longer than 2 minutes) until it is verified.',
           {
             type: 'info',
-          }
+          },
         );
         const interval = setInterval(async () => {
           const response = await axios.get(
             config.backendUrl +
-              `/api/v1/verify/by-transaction-hash/${transactionResult.transactionHash}/${transactionResult.hash}`
+              `/api/v1/verify/by-transaction-hash/${transactionResult.transactionHash}/${transactionResult.hash}`,
           );
           if (response.status === 200) {
             clearInterval(interval);
@@ -187,7 +187,7 @@ const Creation = () => {
       } else {
         setTransactionResult(undefined);
         toast.error(
-          'Transaction submission failed. Please try again or contact our support if the issue persists.'
+          'Transaction submission failed. Please try again or contact our support if the issue persists.',
         );
       }
     }
@@ -198,7 +198,7 @@ const Creation = () => {
 
     if (metadata === undefined) {
       toast.error(
-        'Please fill in all required metadata fields and remove any unnecessary ones from the form.'
+        'Please fill in all required metadata fields and remove any unnecessary ones from the form.',
       );
       return;
     }
@@ -236,7 +236,7 @@ const Creation = () => {
               algorithm: 'SHA-256',
             },
           ],
-        }
+        },
       );
 
       if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
@@ -248,7 +248,7 @@ const Creation = () => {
           {
             transaction: transaction,
             witnessSet: witnessSet,
-          }
+          },
         );
         setTransactionResult({
           successful: result.status === 200,
@@ -257,7 +257,7 @@ const Creation = () => {
         });
       } else {
         toast.error(
-          'Transaction building failed or has been aborted. Please try again.'
+          'Transaction building failed or has been aborted. Please try again.',
         );
         if (response.data.status?.code === 'ERROR') {
           console.error(response.data.status.message);
@@ -266,7 +266,7 @@ const Creation = () => {
       }
     } catch (error) {
       toast.error(
-        'Transaction building failed or has been aborted. Please try again.'
+        'Transaction building failed or has been aborted. Please try again.',
       );
       console.error(error);
     } finally {
@@ -334,7 +334,7 @@ const Creation = () => {
                   userAddress={userAddress}
                   onChange={(
                     layout: string,
-                    metadata: { [key: string]: string }
+                    metadata: { [key: string]: string },
                   ) => {
                     setSelectedLayout(layout);
                     setLayoutMetadata(metadata);
@@ -346,7 +346,7 @@ const Creation = () => {
                       metadataEditorRef.current?.metadata(selectedLayout);
                     if (metadata === undefined) {
                       toast.error(
-                        'Please fill in all required metadata fields and remove any unnecessary ones from the form.'
+                        'Please fill in all required metadata fields and remove any unnecessary ones from the form.',
                       );
                       return;
                     }

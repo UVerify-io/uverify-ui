@@ -32,13 +32,13 @@ class DefaultTemplate extends Template {
     }
     const description = isVerified ? (
       <>
-        <p>
+        <p className="text-white/80">
           {`This document has not been altered since we froze its fingerprint ${
             extra.hashedMultipleTimes && 'for the first time '
           } on`}
         </p>
         <p className="font-bold uppercase my-4">{extra.firstDateTime}</p>
-        <p className="text-justify w-3/4 pb-4">
+        <p className="text-justify w-3/4 pb-4 text-white/75">
           If this date aligns with your expectations for when the document
           should not have been modified, you can have complete confidence in the
           integrity of this document and the reliability of the issuer.
@@ -63,7 +63,7 @@ class DefaultTemplate extends Template {
           data-testid="block-explorer-link"
           href={`https://${explorerUrlPrefix}cexplorer.io/tx/${certificate.transactionHash}/contract#data`}
           target="_blank"
-          className="my-2 border border-white/30 text-center inline-flex items-center rounded-xl bg-white/30 px-4 py-2 font-medium text-white transition duration-200 hover:bg-white/40 hover:shadow-center hover:shadow-blue-100/50"
+          className="my-2 border border-ice-400/40 text-center inline-flex items-center rounded-xl bg-ice-500/25 px-4 py-2 font-medium text-white transition duration-200 hover:bg-ice-400/40 hover:shadow-center hover:shadow-ice-300/30"
         >
           View on Block Explorer
           <svg
@@ -87,11 +87,11 @@ class DefaultTemplate extends Template {
     ) : extra.serverError ? (
       <>
         <p className="font-bold uppercase my-4">What does this mean for you?</p>
-        <p className="text-justify w-3/4 pb-4">
+        <p className="text-justify w-3/4 pb-4 text-white/75">
           It's most likely an issue with UVerify rather than the information,
           but proceed with caution.
         </p>
-        <p className="text-justify w-3/4 pb-4">
+        <p className="text-justify w-3/4 pb-4 text-white/75">
           Currently you will not be able to verify the integrity of this
           document. Please try again later or reach out to the UVerify team, if
           the issue persists.
@@ -100,10 +100,10 @@ class DefaultTemplate extends Template {
     ) : (
       <>
         <p className="font-bold uppercase my-4">What does this mean for you?</p>
-        <p className="text-center w-3/4 pb-4">
+        <p className="text-center w-3/4 pb-4 text-white/80">
           Be careful when proceeding with this information.
         </p>
-        <p className="text-justify w-3/4 pb-4">
+        <p className="text-justify w-3/4 pb-4 text-white/75">
           This document or the text data has not been verified in the past, or
           the content has been altered over time, changing its fingerprint.
           Please reach out to the issuer and ask for the original document or

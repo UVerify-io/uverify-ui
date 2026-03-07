@@ -34,7 +34,7 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
   );
 
   return (
-    <header className="flex items-center">
+    <header className="flex items-center w-full py-1">
       <div
         onClick={() => navigate('/')}
         className="flex items-center cursor-pointer group min-w-[92px] min-[410px]:min-w-[164px]"
@@ -42,9 +42,9 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
         <img
           src={Logo}
           alt="UVerify Logo"
-          className="w-12 h-12 ml-2 mr-1 group-hover:drop-shadow-center"
+          className="w-12 h-12 ml-2 mr-1 transition-[filter] duration-300 group-hover:animate-logo-glow"
         />
-        <h1 className="text-xl font-extrabold group-hover:drop-shadow-center hidden min-[410px]:block">
+        <h1 className="text-xl font-extrabold group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.7)] transition-[filter] duration-300 hidden min-[410px]:block">
           UVerify
         </h1>
         <div style={{ minWidth: 32 }}>{RightArrow}</div>
@@ -54,7 +54,7 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
         <>
           <h2
             onClick={() => navigate('/verify')}
-            className="cursor-pointer text-sm sm:text-md font-bold uppercase text-ellipsis overflow-hidden hover:drop-shadow-center"
+            className="cursor-pointer text-sm sm:text-md font-bold uppercase text-ellipsis overflow-hidden text-white/90 hover:text-white hover:drop-shadow-center transition-colors duration-200"
           >
             Verify Data
           </h2>
@@ -64,7 +64,7 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
         </>
       ) : (
         <div className="flex items-center justify-center">
-          <h2 className="select-none text-sm sm:text-md font-bold uppercase me-1 max-w-32">
+          <h2 className="select-none text-sm sm:text-md font-bold uppercase me-1 max-w-32 text-white/90">
             {title}
           </h2>
           {getCardanoNetworkIndicator(config, 'sm', 'ml-2')}

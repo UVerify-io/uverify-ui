@@ -4,6 +4,21 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      keyframes: {
+        'logo-glow': {
+          '0%, 100%': {
+            filter:
+              'drop-shadow(0 0 6px rgba(34, 211, 238, 0.4)) drop-shadow(0 0 18px rgba(34, 211, 238, 0.15))',
+          },
+          '50%': {
+            filter:
+              'drop-shadow(0 0 14px rgba(34, 211, 238, 0.9)) drop-shadow(0 0 36px rgba(34, 211, 238, 0.4))',
+          },
+        },
+      },
+      animation: {
+        'logo-glow': 'logo-glow 3s ease-in-out infinite',
+      },
       boxShadow: {
         center: '0 0 12px 0 rgb(0 0 0 / 0.1)',
         'white-center': '0 0 12px 0 rgb(255 255 255 / .5)',
@@ -16,8 +31,8 @@ export default {
       },
       backgroundImage: {
         'main-gradient':
-          'linear-gradient(to right bottom, #ff66bd, #e378dc, #bd8af2, #9099fe, #5fa5fe, #3facfa, #1eb2f3, #00b6ea, #00bae4, #00bedc, #00c1d2, #04c4c8);',
-        'card-gradient': 'linear-gradient(to bottom, #ffffff, #ffffff55);',
+          'radial-gradient(ellipse at 20% 40%, rgba(6, 182, 212, 0.35) 0%, transparent 60%), linear-gradient(160deg, rgb(8, 20, 55) 0%, rgb(10, 26, 65) 100%)',
+        'card-gradient': 'linear-gradient(to bottom, #ffffff, #ffffff55)',
       },
       colors: {
         pink: {

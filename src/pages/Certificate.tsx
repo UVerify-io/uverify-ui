@@ -190,12 +190,12 @@ const Certificate = () => {
 
   if (isLoading) {
     return (
-      <div className="absolute inset-0 bg-white flex items-center justify-center">
-        <div className="flex space-x-2">
-          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_0ms]"></div>
-          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_200ms]"></div>
-          <div className="w-4 h-4 bg-black/80 rounded-full animate-[bounce_1.5s_infinite_400ms]"></div>
+      <div className="fixed inset-0 bg-main-gradient flex flex-col items-center justify-center gap-6">
+        <div className="relative flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin"></div>
+          <div className="absolute w-10 h-10 rounded-full border-2 border-cyan-300/15 border-t-cyan-300 animate-spin [animation-direction:reverse] [animation-duration:1.2s]"></div>
         </div>
+        <p className="text-white/70 text-sm tracking-widest uppercase">Verifying</p>
       </div>
     );
   }

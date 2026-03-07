@@ -23,13 +23,13 @@ const Modal = ({
 
   let containerClasses = `relative sm:p-4 h-full w-full sm:w-auto sm:h-auto sm:max-w-${width} sm:max-h-full`;
   let innerClasses = `relative overflow-hidden h-full sm:h-auto text-white p-6 ${
-    !background ? 'bg-white/30' : ''
-  } sm:rounded-lg sm:border sm:border-[#FFFFFF55] backdrop-blur-xs shadow-xs`;
+    !background ? 'bg-white/10' : ''
+  } sm:rounded-2xl sm:border sm:border-white/15 backdrop-blur-sm shadow-center`;
   if (size === 'full') {
     containerClasses = 'relative h-full w-full';
     innerClasses = `relative h-full text-white p-6 ${
-      !background ? 'bg-white/30' : ''
-    } backdrop-blur-xs shadow-xs`;
+      !background ? 'bg-white/10' : ''
+    } backdrop-blur-sm`;
   }
 
   if (!background) {
@@ -48,7 +48,7 @@ const Modal = ({
             <h3 className="text-lg font-semibold">{title}</h3>
             <IconButton iconType={IconType.Close} onClick={() => onClose()} />
           </div>
-          <div className="border-b border-white mt-2 mb-2"></div>
+          <div className="border-b border-white/15 mt-2 mb-4"></div>
           <div className="flex p-4 items-center flex-col">{children}</div>
         </div>
       </div>

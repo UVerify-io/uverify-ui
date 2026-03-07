@@ -9,20 +9,20 @@ declare interface CardProps {
 }
 
 const Card = ({ title, description, children, className, type }: CardProps) => {
-  let backgroundColor = 'bg-white/30';
-  let borderColor = 'border-[#FFFFFF55]';
+  let backgroundColor = 'bg-white/10';
+  let borderColor = 'border-white/20';
   if (type === 'error') {
-    backgroundColor = 'bg-pink-400/50';
-    borderColor = 'border-pink-500/60';
+    backgroundColor = 'bg-pink-500/20';
+    borderColor = 'border-pink-400/45';
   } else if (type === 'warning') {
-    backgroundColor = 'bg-yellow-300/50';
-    borderColor = 'border-yellow-400/60';
+    backgroundColor = 'bg-yellow-500/15';
+    borderColor = 'border-yellow-400/40';
   }
 
   return (
     <div
       className={twMerge(
-        `overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-lg border-t border-b sm:border ${borderColor} backdrop-blur-xs shadow-xs`,
+        `overflow-hidden text-white p-6 ${backgroundColor} sm:rounded-2xl border-t border-b sm:border ${borderColor} backdrop-blur-sm shadow-center`,
         className
       )}
     >

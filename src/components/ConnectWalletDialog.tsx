@@ -32,56 +32,54 @@ export function ConnectWalletDialog({
     : 'Connecting your wallet is required to pay for certificate creation and cover transaction costs. It also serves as your authentication, enabling access to different UI templates and personalized features.';
 
   const mobileInfo = (
-    <div className="sm:w-3/4 max-w-[600px] my-4 bg-blue-50 border-l-4 border-blue-500 text-blue-300 bg-blue-700 p-4 rounded-md shadow-md">
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <svg
-            className="h-6 w-6 text-blue-300"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-            />
-          </svg>
-        </div>
-        <div className="ml-3">
-          <h3 className="text-lg font-medium">Mobile Access Instructions</h3>
-          <p className="mt-2 text-sm">
-            If you are on a mobile device, tap this copy icon{' '}
-            <span className="inline-flex items-center">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast.success('URL copied to clipboard');
-                }}
-                className="hover:bg-blue-600 rounded-full transition-colors duration-200"
-                title="Copy URL"
+    <div className="w-full mt-4 p-4 bg-cyan-500/10 border border-cyan-400/25 rounded-xl backdrop-blur-sm text-white/80">
+      <div className="flex gap-3">
+        <svg
+          className="h-5 w-5 text-cyan-300 flex-shrink-0 mt-0.5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+          />
+        </svg>
+        <div>
+          <h3 className="text-sm font-semibold text-white mb-1">
+            Mobile Access Instructions
+          </h3>
+          <p className="text-xs text-white/70 leading-relaxed">
+            On mobile, tap the copy icon{' '}
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast.success('URL copied to clipboard');
+              }}
+              className="inline-flex items-center align-middle mx-0.5 p-1 rounded-lg bg-white/10 border border-white/20 hover:bg-cyan-500/25 hover:border-cyan-400/40 transition-colors duration-200"
+              title="Copy URL"
+            >
+              <svg
+                className="h-3 w-3 text-cyan-300"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  className="h-4 w-4 text-blue-300"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-              </button>
-            </span>{' '}
-            to copy the URL, then open one of the supported wallets listed above
-            and paste the URL into the wallet's in-app dApp browser.
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            </button>{' '}
+            to copy the URL, then open a supported wallet and paste it into the
+            in-app dApp browser.
           </p>
         </div>
       </div>
@@ -97,8 +95,17 @@ export function ConnectWalletDialog({
     >
       <ConnectWalletList
         borderRadius={5}
+        peerConnectEnabled={false}
         showUnavailableWallets={UnavailableWalletVisibility.SHOW_UNAVAILABLE}
-        supportedWallets={['eternl', 'vespr', 'begin', 'yoroi', 'lace']}
+        supportedWallets={[
+          'eternl',
+          'vespr',
+          'yoroi',
+          'lace',
+          'begin',
+          'typhon',
+          'gerowallet',
+        ]}
         onConnect={() => setIsWalletDialogOpen(false)}
         onConnectError={(walletname, error) => {
           const wallet = capitalize(walletname);
@@ -119,15 +126,15 @@ export function ConnectWalletDialog({
 
           if (error.name === 'WalletNotInstalledError') {
             showWalletConnectError(
-              `${wallet} is not installed. Please install the ${wallet} app and try again.`
+              `${wallet} is not installed. Please install the ${wallet} app and try again.`,
             );
           } else if (error.name === 'WrongNetworkTypeError') {
             showWalletConnectError(
-              `You're connected to the wrong network. Please switch to the ${config.cardanoNetwork} network in your ${wallet} app settings and try again.`
+              `You're connected to the wrong network. Please switch to the ${config.cardanoNetwork} network in your ${wallet} app settings and try again.`,
             );
           } else {
             showWalletConnectError(
-              `Unable to connect to ${wallet}. If you didn't cancel the connection manually, please ensure at least one wallet is created in the ${wallet} app and try again.`
+              `Unable to connect to ${wallet}. If you didn't cancel the connection manually, please ensure at least one wallet is created in the ${wallet} app and try again.`,
             );
           }
         }}
@@ -139,17 +146,18 @@ export function ConnectWalletDialog({
         customCSS={`
             min-width: 240px;
             width: 100%;
-            & > span {
-              color: #FFFFFFAA;
-              background-color: rgb(255 255 255 / 0.2);
-              border: 1px solid #FFFFFF40;
-              transition-duration: 200ms;
+            & > button {
+              color: rgba(255, 255, 255, 0.85) !important;
+              background: rgba(255, 255, 255, 0.07) !important;
+              border: 1px solid rgba(255, 255, 255, 0.15) !important;
+              border-radius: 12px !important;
+              transition: background 200ms, border-color 200ms, box-shadow 200ms !important;
             }
-            & > span:hover {
-                background-color: rgb(255 255 255 / 0.3);
-                color: white;
-                box-shadow: 0 0 12px 0 rgb(255 255 255 / 0.1);
-              }
+            & > button:hover {
+              background: rgba(6, 182, 212, 0.2) !important;
+              border-color: rgba(34, 211, 238, 0.35) !important;
+              color: white !important;
+              box-shadow: 0 0 14px 0 rgba(34, 211, 238, 0.15) !important;
             }
           `}
         limitNetwork={networkType}

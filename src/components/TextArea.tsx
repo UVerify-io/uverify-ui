@@ -13,7 +13,7 @@ const TextArea = ({ value, onChange, className, rows }: TextAreaProps) => {
     <textarea
       rows={rows}
       className={
-        'block pl-2.5 py-2.5 pr-4 w-full text-sm text-white bg-white/25 outline-hidden rounded-lg border border-white/75 resize-none focus:bg-white/30 focus:shadow-center focus:shadow-white/50' +
+        'block pl-2.5 py-2.5 pr-4 w-full text-sm text-white bg-white/10 outline-hidden rounded-xl border border-white/30 resize-none focus:bg-white/15 focus:border-white/50 focus:shadow-center focus:shadow-white/30 transition-colors duration-200' +
         className
       }
       value={value}

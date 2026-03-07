@@ -8,15 +8,15 @@ const SelectedFileArea = ({
   onRemove,
 }: SelectedFileAreaProps) => {
   return (
-    <div className="h-48 sm:h-32 bg-white/25 border-2 border-white border-dashed rounded-lg flex flex-col items-center justify-center w-full min-h-[140px]">
+    <div className="h-48 sm:h-32 bg-white/10 border-2 border-white/40 border-dashed rounded-xl flex flex-col items-center justify-center w-full min-h-[140px]">
       <span
         id="badge-dismiss-default"
-        className="inline-flex items-center px-2 py-1 me-2 text-sm font-medium text-blue-800 bg-blue-100 rounded-sm shadow-center shadow-white/50"
+        className="inline-flex items-center px-3 py-1.5 me-2 text-sm font-medium text-white bg-white/20 rounded-lg border border-white/30 shadow-center shadow-white/20 backdrop-blur-sm"
       >
         {selectedFile.name}
         <button
           type="button"
-          className="inline-flex items-center p-1 ms-2 text-sm text-blue-400 bg-transparent rounded-xs hover:bg-blue-200 hover:text-blue-900"
+          className="inline-flex items-center p-1 ms-2 text-sm text-white/60 bg-transparent rounded-xs hover:bg-white/20 hover:text-white"
           data-dismiss-target="#badge-dismiss-default"
           aria-label="Remove"
           onClick={() => {

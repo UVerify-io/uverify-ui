@@ -37,24 +37,24 @@ const Button = ({
       green: 'bg-green-400 hover:bg-green-200',
     },
     default: {
-      blue: 'bg-blue-400/75 hover:bg-blue-400 hover:shadow-center hover:shadow-blue-100/50',
-      pink: 'bg-pink-400/75 hover:bg-pink-400 hover:shadow-center hover:shadow-pink-100/50',
-      cyan: 'bg-cyan-400/75 hover:bg-cyan-400 hover:shadow-center hover:shadow-cyan-100/50',
+      blue: 'bg-blue-500/40 border-blue-400/40 hover:bg-blue-500/60 hover:shadow-center hover:shadow-blue-400/35',
+      pink: 'bg-pink-500/40 border-pink-400/40 hover:bg-pink-500/60 hover:shadow-center hover:shadow-pink-400/35',
+      cyan: 'bg-cyan-500/40 border-cyan-400/40 hover:bg-cyan-500/60 hover:shadow-center hover:shadow-cyan-400/35',
       purple:
-        'bg-purple-400/75 hover:bg-purple-400 hover:shadow-center hover:shadow-purple-100/50',
-      ice: 'bg-ice-400/75 hover:bg-ice-400 hover:shadow-center hover:shadow-ice-100/50',
+        'bg-purple-500/40 border-purple-400/40 hover:bg-purple-500/60 hover:shadow-center hover:shadow-purple-400/35',
+      ice: 'bg-ice-500/40 border-ice-400/40 hover:bg-ice-500/60 hover:shadow-center hover:shadow-ice-400/35',
       green:
-        'bg-green-400/75 hover:bg-green-400 hover:shadow-center hover:shadow-green-100/50',
+        'bg-green-500/40 border-green-400/40 hover:bg-green-500/60 hover:shadow-center hover:shadow-green-400/35',
     },
     glass: {
-      blue: 'bg-white/30 hover:bg-blue-200 hover:shadow-center hover:shadow-blue-100/50 hover:drop-shadow-center-sm',
-      pink: 'bg-white/30 hover:bg-pink-200 hover:shadow-center hover:shadow-pink-100/50 hover:drop-shadow-center-sm',
-      cyan: 'bg-white/30 hover:bg-cyan-200 hover:shadow-center hover:shadow-cyan-100/50 hover:drop-shadow-center-sm',
+      blue: 'bg-white/10 hover:bg-blue-500/35 hover:shadow-center hover:shadow-blue-400/30 hover:drop-shadow-center-sm',
+      pink: 'bg-white/10 hover:bg-pink-500/35 hover:shadow-center hover:shadow-pink-400/30 hover:drop-shadow-center-sm',
+      cyan: 'bg-white/10 hover:bg-cyan-500/35 hover:shadow-center hover:shadow-cyan-400/30 hover:drop-shadow-center-sm',
       purple:
-        'bg-white/30 hover:bg-purple-200 hover:shadow-center hover:shadow-purple-100/50 hover:drop-shadow-center-sm',
-      ice: 'bg-white/30 hover:bg-ice-200 hover:shadow-center hover:shadow-ice-100/50 hover:drop-shadow-center-sm',
+        'bg-white/10 hover:bg-purple-500/35 hover:shadow-center hover:shadow-purple-400/30 hover:drop-shadow-center-sm',
+      ice: 'bg-white/10 hover:bg-ice-500/35 hover:shadow-center hover:shadow-ice-400/30 hover:drop-shadow-center-sm',
       green:
-        'bg-white/30 hover:bg-green-200 hover:shadow-center hover:shadow-green-100/50 hover:drop-shadow-center-sm',
+        'bg-white/10 hover:bg-green-500/35 hover:shadow-center hover:shadow-green-400/30 hover:drop-shadow-center-sm',
     },
     disabled: {
       blue: 'bg-blue-400/15',
@@ -96,7 +96,7 @@ const Button = ({
           }
         }}
         className={
-          'cursor-pointer border border-[#FFFFFF40] text-center inline-flex items-center rounded-xl px-4 py-2 font-medium text-white transition duration-200 ' +
+          'cursor-pointer border text-center inline-flex items-center rounded-xl px-4 py-2 font-medium text-white backdrop-blur-sm transition duration-200 ' +
           variants[variant][color] +
           (state === 'loading' ? ' cursor-wait' : '') +
           className
@@ -137,7 +137,7 @@ const Button = ({
       }}
       className={twMerge(
         variants[variant][color],
-        'cursor-pointer border border-[#FFFFFF40] rounded-xl px-4 py-2 text-base font-medium text-white transition duration-200',
+        'cursor-pointer border rounded-xl px-4 py-2 text-base font-medium text-white backdrop-blur-sm transition duration-200',
         state === 'loading' && ' cursor-wait',
         className
       )}

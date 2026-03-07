@@ -176,7 +176,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
 
       return (
         <div key={index} className="flex items-center my-1 gap-1">
-          {/* Key — fixed width */}
+          {/* Key - fixed width */}
           <div className="flex-none w-28">
             <input
               autoFocus={false}
@@ -221,7 +221,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
               }}
             />
           </div>
-          {/* Value — fills remaining space */}
+          {/* Value - fills remaining space */}
           <div className="flex-1 min-w-0">
             <DynamicInput
               value={hasValueError ? 'Required field' : field.value}
@@ -265,7 +265,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
               }}
             />
           </div>
-          {/* Right actions — fixed width so all rows align */}
+          {/* Right actions - fixed width so all rows align */}
           <div className="flex-none w-20 flex items-center justify-start gap-1">
             {field.layoutProp ? (
               isUrlParam ? <UrlParamBadge /> : null

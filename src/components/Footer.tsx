@@ -12,7 +12,7 @@ const Footer = ({ className }: FooterProps) => {
   return (
     <footer
       data-testid="footer"
-      className={'flex flex-col items-center p-1 text-white ' + className}
+      className={'flex flex-col items-center p-1 text-white mt-4 ' + className}
     >
       <div className="mt-6 mb-2">
         <IconButton
@@ -33,30 +33,36 @@ const Footer = ({ className }: FooterProps) => {
           iconType={IconType.GitHubIcon}
         />
       </div>
-      <div className="text-xs flex flex-col justify-center items-center">
+      <div className="text-xs flex flex-col justify-center items-center text-white/55">
         <div>
           <a
             data-testid="terms-of-use-link"
             href="https://uverify.io/terms-of-use"
+            className="hover:text-white/90 transition-colors duration-200"
           >
             Terms of Use
           </a>
-          <span className="mx-1">|</span>
+          <span className="mx-1 text-white/30">|</span>
           <a
             data-testid="privacy-policy-link"
             href="https://uverify.io/privacy-policy"
+            className="hover:text-white/90 transition-colors duration-200"
           >
             Privacy Policy
           </a>
-          <span className="mx-1">|</span>
-          <a data-testid="impress-link" href="https://uverify.io/#impress">
+          <span className="mx-1 text-white/30">|</span>
+          <a
+            data-testid="impress-link"
+            href="https://uverify.io/#impress"
+            className="hover:text-white/90 transition-colors duration-200"
+          >
             Impress
           </a>
         </div>
       </div>
-      <div className="flex items-center justify-center mt-2 text-xs">
+      <div className="flex items-center justify-center mt-2 text-xs text-white/45">
         <a
-          className="flex items-center justify-center"
+          className="flex items-center justify-center hover:text-white/70 transition-colors duration-200"
           href="https://uverify.io/#team"
         >
           Created with <HeartIcon className="mx-1" />
