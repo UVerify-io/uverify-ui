@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/UVerify-io/uverify-ui/compare/v2.0.0...v2.1.0) (2026-03-06)
+
+
+### Features
+
+* add gdpr url feature to allow anchoring just a hash of certain metadata ([c707d11](https://github.com/UVerify-io/uverify-ui/commit/c707d117d7b05d669cbdbbda8d3327aaa226aaf4))
+* add pet necklace template ([a5379c1](https://github.com/UVerify-io/uverify-ui/commit/a5379c19e9edb9b1c0c1adf53ab49b268a367515))
+
 ## [2.0.0](https://github.com/UVerify-io/uverify-ui/compare/v1.9.0...v2.0.0) (2026-03-01)
 
 
