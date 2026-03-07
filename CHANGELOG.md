@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/UVerify-io/uverify-ui/compare/v2.1.0...v3.0.0) (2026-03-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* new dark design and better accessibility
+
+### Features
+
+* new dark design and better accessibility ([bd5c424](https://github.com/UVerify-io/uverify-ui/commit/bd5c42441f4e97efb60a7733c23de0cb910d5da2))
+
 ## [2.1.0](https://github.com/UVerify-io/uverify-ui/compare/v2.0.0...v2.1.0) (2026-03-06)
 
 
