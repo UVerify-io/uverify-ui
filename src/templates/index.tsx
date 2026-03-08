@@ -3,6 +3,8 @@ import DiplomaTemplate from './Diploma';
 import MonochromeTemplate from './Monochrome';
 import ProductVerificationTemplate from './ProductVerification/ProductVerificationTemplate';
 import PetNecklaceTemplate from './PetNecklace';
+import LaboratoryReportTemplate from './LaboratoryReport';
+import DigitalProductPassportTemplate from './DigitalProductPassport';
 import { Template, UVerifyConfig } from '@uverify/core';
 
 export type Templates = {
@@ -16,6 +18,8 @@ export async function getTemplates(config: UVerifyConfig) {
     diploma: new DiplomaTemplate(config),
     productVerification: new ProductVerificationTemplate(config),
     petNecklace: new PetNecklaceTemplate(config),
+    laboratoryReport: new LaboratoryReportTemplate(config),
+    digitalProductPassport: new DigitalProductPassportTemplate(config),
   };
 
   let dynamicTemplates: Templates = {};
