@@ -136,6 +136,8 @@ const Section = ({
 
 class DigitalProductPassportTemplate extends Template {
   public name = 'Digital Product Passport';
+  /** Default: only the issuer wallet may push updates, newest version shown. */
+  public defaultUpdatePolicy = 'restricted' as const;
 
   public layoutMetadata = {
     // ── Identity

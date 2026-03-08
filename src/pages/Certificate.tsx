@@ -10,6 +10,7 @@ import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { UVerifyCertificate, UVerifyMetadata } from '@uverify/core';
+import { resolvePolicy, applyPolicy, ResolvedPolicy } from '../utils/updatePolicy';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -19,7 +20,11 @@ const Certificate = () => {
   const [firstDateTime, setFirstDateTime] = useState('');
   const [metadata, setMetadata] = useState({} as UVerifyMetadata);
   const [issuer, setIssuer] = useState('');
+  // Raw list of all on-chain submissions, sorted ascending by creationTime.
   const [certificates, setCertificates] = useState<UVerifyCertificate[]>([]);
+  // Policy-filtered list that drives pagination and template rendering.
+  const [displayedCertificates, setDisplayedCertificates] = useState<UVerifyCertificate[]>([]);
+  const [updatePolicy, setUpdatePolicy] = useState<ResolvedPolicy>({ mode: 'append', owner: '', whitelist: [] });
   const [certificate, setCertificate] = useState<UVerifyCertificate>();
   const [templateId, setTemplateId] = useState('default');
   const [totalPages, setTotalPages] = useState(1);
@@ -55,7 +60,14 @@ const Certificate = () => {
           setFirstDateTime(
             timestampToDateTime(certificateList[0].creationTime),
           );
-          setTotalPages(res.data.length);
+
+          // Derive update policy from all submissions, then filter the
+          // displayed set. totalPages tracks displayed certs, not raw certs.
+          const policy = resolvePolicy(certificateList);
+          const displayed = applyPolicy(certificateList, policy);
+          setUpdatePolicy(policy);
+          setDisplayedCertificates(displayed);
+          setTotalPages(displayed.length);
 
           const search = window.location.search;
           if (typeof query === 'undefined') {
@@ -63,7 +75,8 @@ const Certificate = () => {
             navigate(`/verify/${hash}/1${search}`, { replace: true });
           } else if (typeof query === 'string') {
             if (query.length === 64) {
-              const index = certificateList.findIndex(
+              // Try to resolve by transactionHash within displayed certs.
+              const index = displayed.findIndex(
                 (item) => item.transactionHash === query,
               );
               if (index !== -1) {
@@ -93,14 +106,14 @@ const Certificate = () => {
   }, [query, config]);
 
   useEffect(() => {
-    if (certificates.length > 0) {
-      if (page > certificates.length) {
-        setPage(certificates.length);
+    if (displayedCertificates.length > 0) {
+      if (page > displayedCertificates.length) {
+        setPage(displayedCertificates.length);
         return;
       }
-      setCertificate(certificates[page - 1]);
+      setCertificate(displayedCertificates[page - 1]);
 
-      const certificateMetadata = JSON.parse(certificates[page - 1].metadata);
+      const certificateMetadata = JSON.parse(displayedCertificates[page - 1].metadata);
 
       // Resolve uv_url_* fields: values are stored as SHA-256 hashes on-chain.
       // If the matching URL param is present and its hash matches, replace the
@@ -131,12 +144,12 @@ const Certificate = () => {
       setMetadata(resolvedMetadata);
 
       if (
-        config.serviceAccount === certificates[page - 1].issuer &&
+        config.serviceAccount === displayedCertificates[page - 1].issuer &&
         certificateMetadata.hasOwnProperty('original-issuer')
       ) {
         setIssuer(certificateMetadata['original-issuer']);
       } else {
-        setIssuer(certificates[page - 1].issuer);
+        setIssuer(displayedCertificates[page - 1].issuer);
       }
 
       const metadataTemplateId =
@@ -150,7 +163,7 @@ const Certificate = () => {
       ) {
         const candidateTemplate = templates[metadataTemplateId];
         const bootstrapWhitelist: string[] | undefined = (candidateTemplate as any).bootstrapWhitelist;
-        const certBootstrapToken: string | undefined = (certificates[page - 1] as any).bootstrapTokenName;
+        const certBootstrapToken: string | undefined = (displayedCertificates[page - 1] as any).bootstrapTokenName;
 
         if (
           bootstrapWhitelist &&
@@ -169,7 +182,7 @@ const Certificate = () => {
         restoreDefaults();
       }
     }
-  }, [page, certificates, templates]);
+  }, [page, displayedCertificates, templates]);
 
   if (!hash) return <div>Invalid hash</div>;
 
@@ -180,14 +193,16 @@ const Certificate = () => {
     template = templates['default'];
   }
 
-  const hashedMultipleTimes = certificates.length > 1;
-
   const extra = {
-    hashedMultipleTimes,
+    hashedMultipleTimes: certificates.length > 1,
     firstDateTime,
     issuer,
     serverError,
     isLoading,
+    // Extended: all raw submissions and resolved policy for templates that
+    // want to do their own lifecycle aggregation.
+    allCertificates: certificates,
+    updatePolicy,
   };
 
   const pagination = (
@@ -213,8 +228,6 @@ const Certificate = () => {
     );
   }
 
-  console.log('Template ID:', templateId);
-  console.log('Template Object:', template);
   if (!template) {
     return null;
   }

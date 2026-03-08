@@ -152,7 +152,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
         onClick={() => {
           setFields([...fields, { key: '', value: '' }]);
         }}
-        className="mt-2 flex items-center justify-center w-full h-10 rounded-lg border border-[#FFFFFF40] cursor-pointer bg-white/25 transition duration-200 hover:shadow-center hover:shadow-white/20 hover:bg-white/40"
+        className="mt-2 flex items-center justify-center w-full h-10 rounded-lg border border-white/15 cursor-pointer bg-white/5 transition duration-200 hover:shadow-center hover:shadow-white/20 hover:bg-white/10"
       >
         <PlusIcon />
         <p className="ml-2 text-white text-xs font-bold uppercase">
@@ -175,7 +175,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
           (error && error[index] === 'BOTH'));
 
       return (
-        <div key={index} className="flex items-center my-1 gap-1">
+        <div key={index} className="flex items-start my-1.5 gap-2">
           {/* Key - fixed width */}
           <div className="flex-none w-28">
             <input
@@ -205,8 +205,8 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
               className={`placeholder-white/60 w-full h-10 text-xs px-2 outline-hidden rounded ${
                 hasKeyError
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
-                  : 'bg-white/25 border border-[#FFFFFF40] text-white'
-              } focus:bg-white/30 focus:shadow-center focus:shadow-white/50`}
+                  : 'bg-white/5 border border-white/15 text-white'
+              } focus:bg-white/10 focus:shadow-center focus:shadow-white/50`}
               value={hasKeyError ? 'Required field' : displayKey}
               placeholder="Key"
               disabled={field.layoutProp}
@@ -226,10 +226,10 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
             <DynamicInput
               value={hasValueError ? 'Required field' : field.value}
               placeholder={field.placeholder || 'Value'}
-              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/30 focus:shadow-center focus:shadow-white/50 ${
+              className={`placeholder-white/60 w-full h-10 text-xs text-white px-2 outline-hidden rounded focus:bg-white/10 focus:shadow-center focus:shadow-white/50 ${
                 hasValueError
                   ? 'bg-red-500/25 border-2 border-red-500/75 text-white font-extrabold'
-                  : 'bg-white/25 border border-[#FFFFFF40] text-white'
+                  : 'bg-white/5 border border-white/15 text-white'
               }`}
               onBlur={(event) => {
                 if (event.target.value === '') {
@@ -266,7 +266,7 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
             />
           </div>
           {/* Right actions - fixed width so all rows align */}
-          <div className="flex-none w-20 flex items-center justify-start gap-1">
+          <div className="flex-none flex items-center justify-start gap-2">
             {field.layoutProp ? (
               isUrlParam ? <UrlParamBadge /> : null
             ) : (
@@ -286,16 +286,17 @@ const MetadataEditor = forwardRef<MetadataHandle, MetadataEditorProps>(
                       : 'uv_url_' + current;
                     setFields(updatedFields);
                   }}
-                  className={`text-[9px] uppercase tracking-wider rounded px-1.5 py-1 select-none whitespace-nowrap border transition-all duration-150 ${
+                  className={`text-[9px] uppercase tracking-wider rounded px-2.5 py-1 select-none whitespace-nowrap border transition-all duration-150 ${
                     isUrlParam
                       ? 'font-bold bg-white/30 border-white/40 text-white shadow-center shadow-white/50 hover:shadow-white/70'
-                      : 'font-normal bg-white/25 border-[#FFFFFF40] text-white hover:shadow-center hover:shadow-white/20'
+                      : 'font-normal bg-white/5 border-white/15 text-white hover:shadow-center hover:shadow-white/20'
                   }`}
                 >
                   URL
                 </button>
                 <IconButton
                   iconType={IconType.Minus}
+                  className="p-2"
                   onClick={() => {
                     const updatedFields = [...fields];
                     updatedFields.splice(index, 1);

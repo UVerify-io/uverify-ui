@@ -17,11 +17,13 @@ import MetadataEditor, { MetadataHandle } from '../components/MetadataEditor';
 import TemplateSelector from '../components/TemplateSelector';
 import IconButton from '../components/IconButton';
 import Preview from '../components/Preview';
+import UpdatePolicySelector from '../components/UpdatePolicySelector';
 import { timestampToDateTime } from '../utils/tools';
 import { getTemplates, Templates } from '../templates';
 import { useUVerifyTheme } from '../utils/hooks';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
+import { UpdatePolicy } from '../utils/updatePolicy';
 
 declare interface TransactionResult {
   successful: boolean;
@@ -42,6 +44,8 @@ const Creation = () => {
   }>({});
   const [selectedLayout, setSelectedLayout] = useState('default');
   const [requiredBootstrapToken, setRequiredBootstrapToken] = useState<string | undefined>(undefined);
+  const [selectedUpdatePolicy, setSelectedUpdatePolicy] = useState<UpdatePolicy>('append');
+  const [updateWhitelist, setUpdateWhitelist] = useState('');
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
   >('enabled');
@@ -195,13 +199,29 @@ const Creation = () => {
   }, [transactionResult]);
 
   const freezeData = async () => {
-    const metadata = metadataEditorRef.current?.metadata(selectedLayout);
+    const rawMetadata = metadataEditorRef.current?.metadata(selectedLayout);
 
-    if (metadata === undefined) {
+    if (rawMetadata === undefined) {
       toast.error(
         'Please fill in all required metadata fields and remove any unnecessary ones from the form.',
       );
       return;
+    }
+
+    // Inject update policy metadata before submission.
+    // Only stored when non-default so on-chain metadata stays minimal.
+    let metadata = rawMetadata;
+    if (selectedUpdatePolicy !== 'append') {
+      const metaObj = JSON.parse(rawMetadata);
+      metaObj.uverify_update_policy = selectedUpdatePolicy;
+      if (selectedUpdatePolicy === 'whitelist' && updateWhitelist.trim()) {
+        metaObj.uverify_update_whitelist = updateWhitelist
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .join(',');
+      }
+      metadata = JSON.stringify(metaObj);
     }
 
     await freezeDataWithWallet(metadata);
@@ -345,6 +365,11 @@ const Creation = () => {
                     setSelectedLayout(layout);
                     setLayoutMetadata(metadata);
                     setRequiredBootstrapToken(bootstrapTokenName);
+                    // Apply the template's declared default update policy, or
+                    // fall back to 'append' when the template has no preference.
+                    const defaultPolicy = (templates[layout] as any)?.defaultUpdatePolicy as UpdatePolicy | undefined;
+                    setSelectedUpdatePolicy(defaultPolicy ?? 'append');
+                    setUpdateWhitelist('');
                   }}
                 />
                 <IconButton
@@ -398,6 +423,16 @@ const Creation = () => {
                 />
               </div>
             </div>
+
+            <UpdatePolicySelector
+              className="mt-4 mb-2"
+              value={selectedUpdatePolicy}
+              whitelist={updateWhitelist}
+              onChange={(policy, whitelist) => {
+                setSelectedUpdatePolicy(policy);
+                setUpdateWhitelist(whitelist);
+              }}
+            />
 
             <MetadataEditor
               className={activeTab === 0 ? 'mt-1' : 'mt-2'}

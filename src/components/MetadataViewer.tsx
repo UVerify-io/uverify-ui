@@ -36,15 +36,15 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
     const isUrlParam = field.key.startsWith('uv_url_');
     const displayKey = isUrlParam ? field.key.slice(7) : field.key;
     return (
-      <div key={index} className="flex my-1">
-        <div className="flex w-3/12 flex-col mr-1">
+      <div key={index} className="flex items-start gap-2 my-1.5">
+        <div className="flex w-3/12 flex-col">
           <input
             onDoubleClick={() => {
               navigator.clipboard.writeText(field.key);
               toast.success('Copied to clipboard');
             }}
             type="text"
-            className={`cursor-pointer w-full h-10 text-xs px-2 outline-hidden rounded-sm bg-white/25 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
+            className={`cursor-pointer w-full h-10 text-xs px-2 outline-hidden rounded-sm bg-white/5 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/10 hover:shadow-center hover:shadow-white/50`}
             value={displayKey}
             readOnly
           />
@@ -54,7 +54,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
             </span>
           )}
         </div>
-        <div className="flex w-9/12 flex-col mr-1">
+        <div className="flex w-9/12 flex-col">
           {row.collapsed ? (
             <div className="flex">
               <input
@@ -63,7 +63,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
                   toast.success('Copied to clipboard');
                 }}
                 type="text"
-                className={`cursor-pointer grow h-10 text-xs px-2 outline-hidden rounded-sm bg-white/25 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/30 hover:shadow-center hover:shadow-white/50`}
+                className={`cursor-pointer grow h-10 text-xs px-2 outline-hidden rounded-sm bg-white/5 border border-${style?.border.color}/${style?.border.opacity} hover:border-${style?.border.hover.color}/${style?.border.hover.opacity} hover:bg-white/10 hover:shadow-center hover:shadow-white/50`}
                 value={
                   field.value.length > 50
                     ? field.value.slice(0, 50) + '...'
@@ -91,7 +91,7 @@ const JsonViewer = ({ json, className }: JsonViewerProps) => {
                   navigator.clipboard.writeText(field.value);
                   toast.success('Copied to clipboard');
                 }}
-                className={`cursor-pointer grow break-all text-left resize-none text-xs p-2.5 outline-hidden rounded-sm hover:bg-white/30 hover:shadow-center hover:shadow-white/50 bg-white/25 border border-[#FFFFFF40]`}
+                className={`cursor-pointer grow break-all text-left resize-none text-xs p-2.5 outline-hidden rounded-sm hover:bg-white/10 hover:shadow-center hover:shadow-white/50 bg-white/5 border border-white/15`}
               >
                 {field.value}
               </div>

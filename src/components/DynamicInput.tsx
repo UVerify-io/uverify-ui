@@ -75,7 +75,7 @@ const DynamicInput = ({
           onBlur={onBlur}
           onFocus={onFocus}
           placeholder={placeholder || 'Value'}
-          className={`p-2 mb-1 ${className}`}
+          className={`p-2 ${className}`}
           rows={3}
           style={{ resize: 'none', overflow: 'hidden', height: 'auto' }}
         />
