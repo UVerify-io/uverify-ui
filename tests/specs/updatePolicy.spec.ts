@@ -913,6 +913,58 @@ test.describe('Update Policy — Creation Page UI', () => {
     );
   });
 
+  test('selecting the Diploma template pre-selects the first policy', async ({ page }) => {
+    await page.getByText('Write Text').click();
+    await page.getByRole('textbox').fill('hello world test');
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+
+    const select = page.locator('select').first();
+    await expect(select).toContainText('Diploma', { timeout: 10000 });
+    await select.selectOption({ label: 'Diploma' });
+
+    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('selecting the Laboratory Report template pre-selects the first policy', async ({ page }) => {
+    await page.getByText('Write Text').click();
+    await page.getByRole('textbox').fill('hello world test');
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+
+    const select = page.locator('select').first();
+    await expect(select).toContainText('Laboratory Report', { timeout: 10000 });
+    await select.selectOption({ label: 'Laboratory Report' });
+
+    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('selecting the Pet Necklace template pre-selects the restricted policy', async ({ page }) => {
+    await page.getByText('Write Text').click();
+    await page.getByRole('textbox').fill('hello world test');
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+
+    const select = page.locator('select').first();
+    await expect(select).toContainText('Pet Necklace', { timeout: 10000 });
+    await select.selectOption({ label: 'Pet Necklace' });
+
+    await expect(page.getByTestId('policy-option-restricted')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('selecting the Product Verification template pre-selects the first policy', async ({ page }) => {
+    await page.getByText('Write Text').click();
+    await page.getByRole('textbox').fill('hello world test');
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+
+    const select = page.locator('select').first();
+    await expect(select).toContainText('ProductVerification', { timeout: 10000 });
+    await select.selectOption({ label: 'ProductVerification' });
+
+    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+  });
+
   test('switching away from Digital Product Passport resets policy to append', async ({
     page,
   }) => {

@@ -27,6 +27,7 @@ const PawIcon = ({ className }: { className?: string }) => (
 
 class PetNecklaceTemplate extends Template {
   public name = 'Pet Necklace';
+  public defaultUpdatePolicy = 'restricted' as const;
   public theme: Partial<ThemeSettings> = {
     background: 'bg-emerald-950',
     colors: {

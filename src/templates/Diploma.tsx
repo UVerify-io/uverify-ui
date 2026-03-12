@@ -26,6 +26,7 @@ const ChainIcon = () => (
 
 class DiplomaTemplate extends Template {
   public name = 'Diploma';
+  public defaultUpdatePolicy = 'first' as const;
   public theme: Partial<ThemeSettings> = {
     background: 'bg-slate-950',
     colors: {
