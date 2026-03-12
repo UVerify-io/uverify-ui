@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.1.0](https://github.com/UVerify-io/uverify-ui/compare/v3.0.0...v3.1.0) (2026-03-12)
+
+
+### Features
+
+* add laboratory report and digital prodcut passport template ([742f8b3](https://github.com/UVerify-io/uverify-ui/commit/742f8b39002ba973cfdcd9fc2544f3be05d1698f))
+* allow to filter applicable templates by bootstrap token whitelist. Closes [#32](https://github.com/UVerify-io/uverify-ui/issues/32) ([e813f2b](https://github.com/UVerify-io/uverify-ui/commit/e813f2b087c95fd458cc5f4191ce4c3522cd372d))
+
+
+### Bug Fixes
+
+* align margins and unify style. fix template policy selector ([f5fad4a](https://github.com/UVerify-io/uverify-ui/commit/f5fad4a64697a16155b3a34a83ce09c3fe495698))
+* change default update behaviours of templates ([b188649](https://github.com/UVerify-io/uverify-ui/commit/b1886494b53797037b33eb5ede2fb8e1e6975d17))
+
 ## [3.0.0](https://github.com/UVerify-io/uverify-ui/compare/v2.1.0...v3.0.0) (2026-03-07)
 
 
