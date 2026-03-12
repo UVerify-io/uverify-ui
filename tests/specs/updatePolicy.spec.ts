@@ -17,12 +17,9 @@ import { setupCommonMocks } from '../helpers/routeMocks';
 
 // ─── Shared constants ────────────────────────────────────────────────────────
 
-const ADDR_OWNER =
-  'addr1vx5sntqjtgyxqhxrgk9tusxn4d4l779p6vupgnhcw8qng5s9vk2c6';
-const ADDR_OTHER =
-  'addr1vyleluql6elu7sktvncqfufnq675hlt9z922ah9sm45dmpcy8332u';
-const ADDR_THIRD =
-  'addr1qxnrhrxstep9kstep9kstep9kstep9kstep9kstep9kstep9ks3p';
+const ADDR_OWNER = 'addr1vx5sntqjtgyxqhxrgk9tusxn4d4l779p6vupgnhcw8qng5s9vk2c6';
+const ADDR_OTHER = 'addr1vyleluql6elu7sktvncqfufnq675hlt9z922ah9sm45dmpcy8332u';
+const ADDR_THIRD = 'addr1qxnrhrxstep9kstep9kstep9kstep9kstep9kstep9kstep9ks3p';
 
 /** 64-char hex hash used for all policy tests (distinct from other spec hashes). */
 const POLICY_HASH =
@@ -78,18 +75,18 @@ test.describe('Update Policy — Display Behaviors', () => {
     await page.goto(`/verify/${POLICY_HASH}/1`, { waitUntil: 'networkidle' });
 
     // Page 1 shows first certificate content
-    await expect(
-      page.locator('input[value="FIRST_SUBMISSION"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="FIRST_SUBMISSION"]')).toBeVisible({
+      timeout: 5000,
+    });
 
     // Page 2 button is present (both certs displayed)
     await expect(paginationLink(page, 2)).toBeVisible({ timeout: 5000 });
 
     // Navigate to page 2 — second certificate content is shown
     await page.goto(`/verify/${POLICY_HASH}/2`, { waitUntil: 'networkidle' });
-    await expect(
-      page.locator('input[value="SECOND_SUBMISSION"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="SECOND_SUBMISSION"]')).toBeVisible({
+      timeout: 5000,
+    });
   });
 
   test('first: always displays the initial submission regardless of later ones', async ({
@@ -106,9 +103,9 @@ test.describe('Update Policy — Display Behaviors', () => {
 
     await page.goto(`/verify/${POLICY_HASH}/1`, { waitUntil: 'networkidle' });
 
-    await expect(
-      page.locator('input[value="FIRST_SUBMISSION"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="FIRST_SUBMISSION"]')).toBeVisible({
+      timeout: 5000,
+    });
 
     // Only one page displayed — page 2 navigation button must not exist
     await expect(paginationLink(page, 2)).not.toBeVisible({ timeout: 3000 });
@@ -119,7 +116,9 @@ test.describe('Update Policy — Display Behaviors', () => {
     ).not.toBeVisible();
   });
 
-  test('override: always shows the most recent submission', async ({ page }) => {
+  test('override: always shows the most recent submission', async ({
+    page,
+  }) => {
     const certs = makeCerts([
       {
         issuer: ADDR_OWNER,
@@ -132,9 +131,9 @@ test.describe('Update Policy — Display Behaviors', () => {
     await page.goto(`/verify/${POLICY_HASH}/1`, { waitUntil: 'networkidle' });
 
     // Latest cert content must be visible on page 1
-    await expect(
-      page.locator('input[value="LATEST_SUBMISSION"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="LATEST_SUBMISSION"]')).toBeVisible({
+      timeout: 5000,
+    });
 
     // First cert's content must not be shown
     await expect(
@@ -219,9 +218,9 @@ test.describe('Update Policy — Display Behaviors', () => {
 
     // Page 2 shows the whitelisted cert
     await page.goto(`/verify/${POLICY_HASH}/2`, { waitUntil: 'networkidle' });
-    await expect(
-      page.locator('input[value="WHITELISTED_CERT"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="WHITELISTED_CERT"]')).toBeVisible({
+      timeout: 5000,
+    });
   });
 
   test('accumulate: authorized updates add new metadata keys and are merged into one page', async ({
@@ -272,9 +271,9 @@ test.describe('Update Policy — Display Behaviors', () => {
     await expect(page.locator('input[value="FROM_CERT1"]')).toBeVisible({
       timeout: 5000,
     });
-    await expect(
-      page.locator('input[value="FROM_CERT3_OWNER"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="FROM_CERT3_OWNER"]')).toBeVisible({
+      timeout: 5000,
+    });
     await expect(
       page.locator('input[value="UNAUTHORIZED_VALUE"]'),
     ).not.toBeVisible();
@@ -305,9 +304,9 @@ test.describe('Update Policy — Display Behaviors', () => {
     await page.goto(`/verify/${POLICY_HASH}/1`, { waitUntil: 'networkidle' });
 
     // Original value is preserved
-    await expect(
-      page.locator('input[value="ORIGINAL_VALUE"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="ORIGINAL_VALUE"]')).toBeVisible({
+      timeout: 5000,
+    });
 
     // Overwrite attempt is silently dropped
     await expect(
@@ -351,9 +350,7 @@ test.describe('Update Policy — Owner Controls', () => {
     });
 
     // The first cert's content is no longer displayed (override replaced 'first')
-    await expect(
-      page.locator('input[value="CERT1_FIRST"]'),
-    ).not.toBeVisible();
+    await expect(page.locator('input[value="CERT1_FIRST"]')).not.toBeVisible();
   });
 
   test('owner can freeze the record — subsequent submissions are ignored', async ({
@@ -499,7 +496,10 @@ test.describe('Update Policy — Owner Controls', () => {
       // cert 2: ADDR_OTHER (whitelisted) tries to remove ADDR_THIRD — must be ignored
       {
         issuer: ADDR_OTHER,
-        meta: { uverify_whitelist_remove: ADDR_THIRD, marker: 'CERT2_FAKE_REMOVE' },
+        meta: {
+          uverify_whitelist_remove: ADDR_THIRD,
+          marker: 'CERT2_FAKE_REMOVE',
+        },
       },
       // cert 3: ADDR_THIRD submits — still whitelisted, must be shown
       { issuer: ADDR_THIRD, meta: { marker: 'CERT3_STILL_LISTED' } },
@@ -512,9 +512,9 @@ test.describe('Update Policy — Owner Controls', () => {
     await expect(paginationLink(page, 3)).toBeVisible({ timeout: 5000 });
 
     await page.goto(`/verify/${POLICY_HASH}/3`, { waitUntil: 'networkidle' });
-    await expect(
-      page.locator('input[value="CERT3_STILL_LISTED"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="CERT3_STILL_LISTED"]')).toBeVisible(
+      { timeout: 5000 },
+    );
   });
 
   test('non-owner cannot change the policy mode via uverify_policy', async ({
@@ -603,9 +603,9 @@ test.describe('Update Policy — Owner Controls', () => {
     ).not.toBeVisible();
 
     await page.goto(`/verify/${POLICY_HASH}/2`, { waitUntil: 'networkidle' });
-    await expect(
-      page.locator('input[value="CERT4_REAL_OWNER"]'),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('input[value="CERT4_REAL_OWNER"]')).toBeVisible({
+      timeout: 5000,
+    });
   });
 
   test('owner can remove an address from the whitelist via uverify_whitelist_remove', async ({
@@ -753,9 +753,7 @@ test.describe('Update Policy — Creation Page UI', () => {
     page,
   }) => {
     // Before entering any text, the section must not be visible
-    await expect(
-      page.getByTestId('update-policy-selector'),
-    ).not.toBeVisible();
+    await expect(page.getByTestId('update-policy-selector')).not.toBeVisible();
 
     // Switch to Write Text tab and enter text to produce a hash
     await page.getByText('Write Text').click();
@@ -789,7 +787,9 @@ test.describe('Update Policy — Creation Page UI', () => {
     }
   });
 
-  test('append is selected by default (aria-pressed=true)', async ({ page }) => {
+  test('append is selected by default (aria-pressed=true)', async ({
+    page,
+  }) => {
     await page.getByText('Write Text').click();
     await page.getByRole('textbox').fill('hello world test');
     await expect(page.getByTestId('update-policy-selector')).toBeVisible({
@@ -802,7 +802,13 @@ test.describe('Update Policy — Creation Page UI', () => {
     );
 
     // All other options must not be pressed
-    for (const mode of ['first', 'override', 'restricted', 'whitelist', 'accumulate']) {
+    for (const mode of [
+      'first',
+      'override',
+      'restricted',
+      'whitelist',
+      'accumulate',
+    ]) {
       await expect(page.getByTestId(`policy-option-${mode}`)).toHaveAttribute(
         'aria-pressed',
         'false',
@@ -879,9 +885,7 @@ test.describe('Update Policy — Creation Page UI', () => {
     });
 
     await page.getByTestId('policy-option-first').click();
-    await expect(
-      page.getByTestId('policy-whitelist-input'),
-    ).not.toBeVisible();
+    await expect(page.getByTestId('policy-whitelist-input')).not.toBeVisible();
   });
 
   test('selecting the Digital Product Passport template pre-selects the restricted policy', async ({
@@ -913,56 +917,76 @@ test.describe('Update Policy — Creation Page UI', () => {
     );
   });
 
-  test('selecting the Diploma template pre-selects the first policy', async ({ page }) => {
+  test('selecting the Diploma template pre-selects the first policy', async ({
+    page,
+  }) => {
     await page.getByText('Write Text').click();
     await page.getByRole('textbox').fill('hello world test');
-    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({
+      timeout: 5000,
+    });
 
     const select = page.locator('select').first();
     await expect(select).toContainText('Diploma', { timeout: 10000 });
     await select.selectOption({ label: 'Diploma' });
 
-    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
-    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByTestId('policy-option-first')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+      { timeout: 3000 },
+    );
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
   });
 
-  test('selecting the Laboratory Report template pre-selects the first policy', async ({ page }) => {
+  test('selecting the Laboratory Report template pre-selects the first policy', async ({
+    page,
+  }) => {
     await page.getByText('Write Text').click();
     await page.getByRole('textbox').fill('hello world test');
-    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({
+      timeout: 5000,
+    });
 
     const select = page.locator('select').first();
     await expect(select).toContainText('Laboratory Report', { timeout: 10000 });
     await select.selectOption({ label: 'Laboratory Report' });
 
-    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
-    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByTestId('policy-option-first')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+      { timeout: 3000 },
+    );
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
   });
 
-  test('selecting the Pet Necklace template pre-selects the restricted policy', async ({ page }) => {
+  test('selecting the Pet Necklace template pre-selects the restricted policy', async ({
+    page,
+  }) => {
     await page.getByText('Write Text').click();
     await page.getByRole('textbox').fill('hello world test');
-    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId('update-policy-selector')).toBeVisible({
+      timeout: 5000,
+    });
 
     const select = page.locator('select').first();
     await expect(select).toContainText('Pet Necklace', { timeout: 10000 });
     await select.selectOption({ label: 'Pet Necklace' });
 
-    await expect(page.getByTestId('policy-option-restricted')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
-    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
-  });
-
-  test('selecting the Product Verification template pre-selects the first policy', async ({ page }) => {
-    await page.getByText('Write Text').click();
-    await page.getByRole('textbox').fill('hello world test');
-    await expect(page.getByTestId('update-policy-selector')).toBeVisible({ timeout: 5000 });
-
-    const select = page.locator('select').first();
-    await expect(select).toContainText('ProductVerification', { timeout: 10000 });
-    await select.selectOption({ label: 'ProductVerification' });
-
-    await expect(page.getByTestId('policy-option-first')).toHaveAttribute('aria-pressed', 'true', { timeout: 3000 });
-    await expect(page.getByTestId('policy-option-append')).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.getByTestId('policy-option-restricted')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+      { timeout: 3000 },
+    );
+    await expect(page.getByTestId('policy-option-append')).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
   });
 
   test('switching away from Digital Product Passport resets policy to append', async ({
