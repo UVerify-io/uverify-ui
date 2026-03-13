@@ -5,6 +5,7 @@ import ProductVerificationTemplate from './ProductVerification/ProductVerificati
 import PetNecklaceTemplate from './PetNecklace';
 import LaboratoryReportTemplate from './LaboratoryReport';
 import DigitalProductPassportTemplate from './DigitalProductPassport';
+import CertificateOfInsuranceTemplate from './CertificateOfInsurance';
 import { Template, UVerifyConfig } from '@uverify/core';
 
 export type Templates = {
@@ -20,6 +21,7 @@ export async function getTemplates(config: UVerifyConfig) {
     petNecklace: new PetNecklaceTemplate(config),
     laboratoryReport: new LaboratoryReportTemplate(config),
     digitalProductPassport: new DigitalProductPassportTemplate(config),
+    certificateOfInsurance: new CertificateOfInsuranceTemplate(config),
   };
 
   let dynamicTemplates: Templates = {};
