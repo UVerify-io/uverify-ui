@@ -10,10 +10,29 @@ on:
         options:
           - mainnet
           - preprod
+          - both
 
 jobs:
-  deploy:
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      networks: ${{ steps.set-networks.outputs.networks }}
+    steps:
+      - name: 🎯 Resolve target networks
+        id: set-networks
+        run: |
+          if [ "${{ inputs.network }}" == "both" ]; then
+            echo 'networks=["mainnet","preprod"]' >> $GITHUB_OUTPUT
+          else
+            echo 'networks=["${{ inputs.network }}"]' >> $GITHUB_OUTPUT
+          fi
+
+  deploy:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        network: ${{ fromJSON(needs.setup.outputs.networks) }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -24,13 +43,13 @@ jobs:
           node-version: lts/*
 
       - name: 📝 Set mainnet site
-        if: inputs.network == 'mainnet'
+        if: matrix.network == 'mainnet'
         run: |
           echo "BACKEND_URL=https://api.uverify.io" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_MAINNET }}" >> $GITHUB_ENV
 
       - name: 📝 Set preprod site
-        if: inputs.network == 'preprod'
+        if: matrix.network == 'preprod'
         run: |
           echo "BACKEND_URL=https://api.preprod.uverify.io" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_PREPROD }}" >> $GITHUB_ENV
@@ -39,7 +58,7 @@ jobs:
         run: |
           echo 'VITE_VERSION=$npm_package_version' > .env
           echo "VITE_BACKEND_URL=${{ env.BACKEND_URL }}" >> .env
-          echo "VITE_CARDANO_NETWORK=${{ inputs.network }}" >> .env
+          echo "VITE_CARDANO_NETWORK=${{ matrix.network }}" >> .env
 
       - name: 📝 Create .firebaserc file
         run: |
