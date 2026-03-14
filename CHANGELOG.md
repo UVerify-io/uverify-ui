@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/UVerify-io/uverify-ui/compare/v3.1.0...v3.2.0) (2026-03-13)
+
+
+### Features
+
+* adding COI template as an insurance related use-case ([c569bb9](https://github.com/UVerify-io/uverify-ui/commit/c569bb929c0ab5ec2cc3980083cc1cbd9b1e419f))
+
 ## [3.1.0](https://github.com/UVerify-io/uverify-ui/compare/v3.0.0...v3.1.0) (2026-03-12)
 
 
