@@ -106,8 +106,8 @@ const Creation = () => {
           const reader = new FileReader();
           reader.onload = (event) => {
             const result = event.target?.result;
-            if (typeof result === 'string') {
-              setFileHash(sha256(result));
+            if (result instanceof ArrayBuffer) {
+              setFileHash(sha256(new Uint8Array(result)));
               setSelectedFile(file);
             }
           };
@@ -117,7 +117,7 @@ const Creation = () => {
             );
             console.error(event);
           };
-          reader.readAsText(file);
+          reader.readAsArrayBuffer(file);
         }}
       />
     ) : (
