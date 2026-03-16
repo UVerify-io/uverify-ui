@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/UVerify-io/uverify-ui/compare/v3.3.0...v3.3.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* file dropzone applied sha256 on utf-8 encoded file content instead of the raw bytes ([18e9a13](https://github.com/UVerify-io/uverify-ui/commit/18e9a137b14ebf0a0758317923db5ab1f294e92f))
+
 ## [3.3.0](https://github.com/UVerify-io/uverify-ui/compare/v3.2.0...v3.3.0) (2026-03-15)
 
 
