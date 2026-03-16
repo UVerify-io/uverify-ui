@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.3.1...ui-v3.4.0) (2026-03-16)
+
+
+### Features
+
+* add network switcher and explainer for sdks and custom templates ([bfce9e1](https://github.com/UVerify-io/uverify-ui/commit/bfce9e1ac7d0d2244dde16d760647ef87731b355))
+
+
+### Bug Fixes
+
+* enhance wallet connect error messages ([c980cc8](https://github.com/UVerify-io/uverify-ui/commit/c980cc86a033099d9585a8c50e9aadc1a78082e5))
+
 ## [3.3.1](https://github.com/UVerify-io/uverify-ui/compare/v3.3.0...v3.3.1) (2026-03-15)
 
 
