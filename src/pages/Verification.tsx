@@ -120,8 +120,8 @@ const Verification = () => {
           <Button
             className="mt-4"
             label="Verify"
-            variant="glass"
-            color="blue"
+            variant="default"
+            color="cyan"
             onClick={() => {
               if (activeTab === 0) {
                 if (fileHash === '') {

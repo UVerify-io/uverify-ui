@@ -453,13 +453,13 @@ const Creation = () => {
               className="mt-4 min-w-[236px]"
               state={buttonState}
               label="Create Trust Certificate"
-              variant="glass"
+              variant="default"
               onClick={freezeData}
-              color="blue"
+              color="green"
             />
             <Button
               color="pink"
-              variant="contained"
+              variant="default"
               className="mt-4 min-w-[236px]"
               label="Disconnect Wallet"
               onClick={disconnect}
@@ -490,9 +490,9 @@ const Creation = () => {
               className="mt-4 min-w-[236px]"
               state={buttonState}
               label="Connect Wallet"
-              variant="glass"
+              variant="default"
               onClick={() => setIsWalletDialogOpen(true)}
-              color="blue"
+              color="cyan"
             />
           </div>
         )}

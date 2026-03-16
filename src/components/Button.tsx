@@ -137,7 +137,7 @@ const Button = ({
       }}
       className={twMerge(
         variants[variant][color],
-        'cursor-pointer border rounded-xl px-4 py-2 text-base font-medium text-white backdrop-blur-sm transition duration-200',
+        'cursor-pointer border rounded-xl px-4 py-2 text-base font-medium text-white text-center backdrop-blur-sm transition duration-200',
         state === 'loading' && ' cursor-wait',
         className
       )}
