@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import AccordionInfo from './AccordionInfo';
 import { InfoIcon } from './Icons';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
+import { useEffect } from 'react';
 
 interface ConnectWalletDialogProps {
   isWalletDialogOpen: boolean;
@@ -27,6 +28,18 @@ export function ConnectWalletDialog({
   customWalletExplainer,
 }: ConnectWalletDialogProps) {
   const config = useUVerifyConfig();
+
+  useEffect(() => {
+    if (!isWalletDialogOpen) return;
+    const original = window.alert;
+    window.alert = (message) => {
+      toast.warning(String(message), { autoClose: 10000 });
+    };
+    return () => {
+      window.alert = original;
+    };
+  }, [isWalletDialogOpen]);
+
   const walletExplainer = customWalletExplainer
     ? customWalletExplainer
     : 'Connecting your wallet is required to pay for certificate creation and cover transaction costs. It also serves as your authentication, enabling access to different UI templates and personalized features.';
@@ -109,6 +122,7 @@ export function ConnectWalletDialog({
         onConnect={() => setIsWalletDialogOpen(false)}
         onConnectError={(walletname, error) => {
           const wallet = capitalize(walletname);
+          const network = capitalize(config.cardanoNetwork);
 
           const showWalletConnectError = (message: string) => {
             const WALLET_TOAST_ID = 'wallet-error';
@@ -116,25 +130,34 @@ export function ConnectWalletDialog({
               toast.update(WALLET_TOAST_ID, {
                 render: message,
                 type: 'warning',
+                autoClose: 10000,
               });
             } else {
               toast.warning(message, {
                 toastId: WALLET_TOAST_ID,
+                autoClose: 10000,
               });
             }
           };
 
           if (error.name === 'WalletNotInstalledError') {
             showWalletConnectError(
-              `${wallet} is not installed. Please install the ${wallet} app and try again.`,
+              `${wallet} is not installed. Please install the ${wallet} browser extension and try again.`,
             );
           } else if (error.name === 'WrongNetworkTypeError') {
             showWalletConnectError(
-              `You're connected to the wrong network. Please switch to the ${config.cardanoNetwork} network in your ${wallet} app settings and try again.`,
+              `${wallet} is set to the wrong network. This app runs on ${network} — open ${wallet}, switch its network to ${network} in the settings, then reconnect.`,
+            );
+          } else if (
+            error.message?.toLowerCase().includes('account') ||
+            error.message?.toLowerCase().includes('no wallet')
+          ) {
+            showWalletConnectError(
+              `No wallet account found in ${wallet}. Open ${wallet}, create or restore a wallet first, then try connecting again.`,
             );
           } else {
             showWalletConnectError(
-              `Unable to connect to ${wallet}. If you didn't cancel the connection manually, please ensure at least one wallet is created in the ${wallet} app and try again.`,
+              `Couldn't connect to ${wallet}. Make sure you have at least one wallet account set up in ${wallet} and try again.`,
             );
           }
         }}
