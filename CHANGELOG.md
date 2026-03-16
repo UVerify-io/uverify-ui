@@ -1,5 +1,80 @@
 # Changelog
 
+## [4.0.0](https://github.com/UVerify-io/uverify-ui/compare/v3.3.1...v4.0.0) (2026-03-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* new dark design and better accessibility
+* additional templates are now maintained in a json file and tadamon and social hub have been moved to an external repository closes #47 closes #45 closes #41
+
+### Features
+
+* add basic template engine and monochrome template ([70ac2a6](https://github.com/UVerify-io/uverify-ui/commit/70ac2a6bf1d725e9e699d406ef9f3dba73d92fd1))
+* add basic template engine and monochrome template ([51c6a7f](https://github.com/UVerify-io/uverify-ui/commit/51c6a7f3b4ab6fdc5fb3a9b06a8b194e65e0a138))
+* add basic ui template for the tadamon cso certificates ([a2eecc5](https://github.com/UVerify-io/uverify-ui/commit/a2eecc53134a28303e6d7fc4deb5b2357d96f902))
+* add diploma template ([1742b2a](https://github.com/UVerify-io/uverify-ui/commit/1742b2a3d488c2930a218b6ab7851d81e1ae8ecb))
+* add diploma template ([a9f194f](https://github.com/UVerify-io/uverify-ui/commit/a9f194f49bd2eaba4a5ab7b8c094537ebad9f7a2))
+* Add document integrity template ([fe103f5](https://github.com/UVerify-io/uverify-ui/commit/fe103f569274c0dc19c3b26eff7e99a5e5bc84a2))
+* add gdpr url feature to allow anchoring just a hash of certain metadata ([c707d11](https://github.com/UVerify-io/uverify-ui/commit/c707d117d7b05d669cbdbbda8d3327aaa226aaf4))
+* add laboratory report and digital prodcut passport template ([742f8b3](https://github.com/UVerify-io/uverify-ui/commit/742f8b39002ba973cfdcd9fc2544f3be05d1698f))
+* add linktree and connected goods extension ([4d283cd](https://github.com/UVerify-io/uverify-ui/commit/4d283cdb6cde988e12f638747fd320b8bb949b83))
+* add mobile instructions and support for in-app browsers ([8e12c94](https://github.com/UVerify-io/uverify-ui/commit/8e12c9409d326243351cf60475d305b8ac6e072c))
+* add more social icons and a link to the impress ([f01378c](https://github.com/UVerify-io/uverify-ui/commit/f01378c038523633c6d50fd9f891b5f6f58c9643))
+* add more social icons and a link to the impress ([e69053f](https://github.com/UVerify-io/uverify-ui/commit/e69053f8a6a049d1118e97f2f13907648345281a))
+* add network switcher and explainer for sdks and custom templates ([bfce9e1](https://github.com/UVerify-io/uverify-ui/commit/bfce9e1ac7d0d2244dde16d760647ef87731b355))
+* add pet necklace template ([a5379c1](https://github.com/UVerify-io/uverify-ui/commit/a5379c19e9edb9b1c0c1adf53ab49b268a367515))
+* add preview for different layout types ([01717b3](https://github.com/UVerify-io/uverify-ui/commit/01717b396e7f3631ad552572ebfe8d3332cd96ff))
+* add product verification template ([e753f49](https://github.com/UVerify-io/uverify-ui/commit/e753f49eda7646751f80ad5d43a7bc828549d738))
+* add template selector and dynmaic inputs ([6f64b54](https://github.com/UVerify-io/uverify-ui/commit/6f64b54b38c4e704f041b19cdae4271cf6ddc152))
+* adding COI template as an insurance related use-case ([c569bb9](https://github.com/UVerify-io/uverify-ui/commit/c569bb929c0ab5ec2cc3980083cc1cbd9b1e419f))
+* additional templates are now maintained in a json file and tadamon and social hub have been moved to an external repository closes [#47](https://github.com/UVerify-io/uverify-ui/issues/47) closes [#45](https://github.com/UVerify-io/uverify-ui/issues/45) closes [#41](https://github.com/UVerify-io/uverify-ui/issues/41) ([2c3c081](https://github.com/UVerify-io/uverify-ui/commit/2c3c08117514b36539f590b2dcab797801ada620))
+* allow import of additional ui template from outside the src folder ([7992aa4](https://github.com/UVerify-io/uverify-ui/commit/7992aa44eb2f54da45224311e18b5c171706063e))
+* allow to filter applicable templates by bootstrap token whitelist. Closes [#32](https://github.com/UVerify-io/uverify-ui/issues/32) ([e813f2b](https://github.com/UVerify-io/uverify-ui/commit/e813f2b087c95fd458cc5f4191ce4c3522cd372d))
+* allow users to provide the data in deeplinks instead of the hash. Fix certification page with invalid hash. ([974bdaf](https://github.com/UVerify-io/uverify-ui/commit/974bdaf7c5e6cb7196370e42f0dc59823ab1d5e1))
+* dynamic cardano network management based on environment variables ([eaa61a9](https://github.com/UVerify-io/uverify-ui/commit/eaa61a96e2245e1a4c8ea59d99d7f2b1d7c828e1))
+* implement proper error messages in case of wallet connect errors. closes [#17](https://github.com/UVerify-io/uverify-ui/issues/17) ([08d3e8a](https://github.com/UVerify-io/uverify-ui/commit/08d3e8abc9a9e18e032e5dbec4d2885bde574b58))
+* implement tadamon certificate custom ui ([86982bd](https://github.com/UVerify-io/uverify-ui/commit/86982bd1780029490bbb034e9d3c005fd53e7a10))
+* link privacy policy and terms of use in the footer ([306c474](https://github.com/UVerify-io/uverify-ui/commit/306c474088ae560323dfe6b58d7beedaabb615be))
+* link privacy policy and terms of use in the footer ([1c75566](https://github.com/UVerify-io/uverify-ui/commit/1c75566b40ef96f7c16b1fa4360f7f23add7a9f1))
+* move common parts of core and custom ui interfaces to @uverify/core ([bc6920a](https://github.com/UVerify-io/uverify-ui/commit/bc6920a710160e44ed911d40b51437ef69b47267))
+* new dark design and better accessibility ([bd5c424](https://github.com/UVerify-io/uverify-ui/commit/bd5c42441f4e97efb60a7733c23de0cb910d5da2))
+* provide a docker solution for a custom ui container setup ([9bbf400](https://github.com/UVerify-io/uverify-ui/commit/9bbf40019a74c69b68723a7016466cee0b230b6f))
+* showing a preview of the certificate page ([1d7817d](https://github.com/UVerify-io/uverify-ui/commit/1d7817d25a182bad5a97332838c6c09d2408d60f))
+* update requests to match the new api version ([a536428](https://github.com/UVerify-io/uverify-ui/commit/a536428e150e3574dffee6dfbcb215c39c180a87))
+* update requests to match the new api version ([36e6157](https://github.com/UVerify-io/uverify-ui/commit/36e6157521c16b222a56a917fffc8914e3cbfc59))
+
+
+### Bug Fixes
+
+* add uverify_template_id in case of using the dropdown ([66693a7](https://github.com/UVerify-io/uverify-ui/commit/66693a7f3c85275df9da85f0d961ec48caea2d1c))
+* align margins and unify style. fix template policy selector ([f5fad4a](https://github.com/UVerify-io/uverify-ui/commit/f5fad4a64697a16155b3a34a83ce09c3fe495698))
+* bump connect wallet version to fix eternl url ([970f17e](https://github.com/UVerify-io/uverify-ui/commit/970f17e14a5ed6d665a4f3bb865c2cfa3deb3e5f))
+* change default update behaviours of templates ([b188649](https://github.com/UVerify-io/uverify-ui/commit/b1886494b53797037b33eb5ede2fb8e1e6975d17))
+* correct wrong link to play and app store ([89d686d](https://github.com/UVerify-io/uverify-ui/commit/89d686d3deb651caa6c30937bb9559fa5fff90ba))
+* **docker:** add dotenv depend so config.js from entrypoint works ([5ee72d6](https://github.com/UVerify-io/uverify-ui/commit/5ee72d6a3574fe7fa746f30608805d3c2b0f4589))
+* **docker:** add dotenv depend so config.js from entrypoint works ([ae6b825](https://github.com/UVerify-io/uverify-ui/commit/ae6b825c1d54d18c9b13460743aef11accc340a2))
+* **docker:** nginx does now resolve deeplinks correctly ([1a305a6](https://github.com/UVerify-io/uverify-ui/commit/1a305a6c3266507b81f145347d65cb5ab69a8795))
+* encypt social hub before submitting it on-chain ([86d9f7e](https://github.com/UVerify-io/uverify-ui/commit/86d9f7e0ce4afb6ef748a62fb67c510dd6e2843a))
+* enhance wallet connect error messages ([c980cc8](https://github.com/UVerify-io/uverify-ui/commit/c980cc86a033099d9585a8c50e9aadc1a78082e5))
+* file dropzone applied sha256 on utf-8 encoded file content instead of the raw bytes ([18e9a13](https://github.com/UVerify-io/uverify-ui/commit/18e9a137b14ebf0a0758317923db5ab1f294e92f))
+* handle case when beneficiary_sign_date is not a number nor a string and swap logos ([a8647b3](https://github.com/UVerify-io/uverify-ui/commit/a8647b330c8a98c819877bfa9f9609431a2c140b))
+* make config hook an actual provider to prevent the config from being fetched multiple times ([9236d59](https://github.com/UVerify-io/uverify-ui/commit/9236d594a7a150fc24814ead6e15478046a5d58a))
+* make sure the config has been loaded before the app gots injected ([22aed24](https://github.com/UVerify-io/uverify-ui/commit/22aed2460a5ae7de0e29d1fabc8176d8bef2cb5b))
+* prevent the ui from showing the default template for one second before loading the actual one ([3b8b82d](https://github.com/UVerify-io/uverify-ui/commit/3b8b82dba318c8c93da20c15c0fef4a094e9d62a))
+* remove logging ([f3a02d9](https://github.com/UVerify-io/uverify-ui/commit/f3a02d9d940957fca1d0581c9567b66a51d06fb4))
+* remove typo in fallback url ([7bb9c22](https://github.com/UVerify-io/uverify-ui/commit/7bb9c22fe75a590b22282f39ce1175e6fe40842d))
+* repair identity card for monochrome template. fixes [#16](https://github.com/UVerify-io/uverify-ui/issues/16) ([4be3738](https://github.com/UVerify-io/uverify-ui/commit/4be3738c40f635a48e40ad8dbc8fe245acc1dd34))
+* repair pagination style ([672cfd1](https://github.com/UVerify-io/uverify-ui/commit/672cfd1c0faf4fd0e4a757ab2891a0f8138a04e8))
+* **social hub:** adding connect wallet error messages as well for the social hub template. ([891fee2](https://github.com/UVerify-io/uverify-ui/commit/891fee24d17e73c916e8825036c5c24c906d7c62))
+* **social hub:** use links directly if provided as part of the account name ([079fd24](https://github.com/UVerify-io/uverify-ui/commit/079fd243a5e49a46120a41da90a5ff8284174554))
+* **tadamon:** fix config resolution (and therefore, cexplorer links) ([c214b75](https://github.com/UVerify-io/uverify-ui/commit/c214b75184b0547e06068b63f00ae5f77ed34aee))
+* **tadamon:** fix config resolution (and therefore, cexplorer links) ([9f13e63](https://github.com/UVerify-io/uverify-ui/commit/9f13e634a3e1e0701a94e4132ac6c640fd4cedc8))
+* **tadamon:** resolve ui issues and remove footer, even if no colors are provided with the theme object ([381a373](https://github.com/UVerify-io/uverify-ui/commit/381a3736727811e99cbe34b088c733390e176ced))
+* transaction build endpoint response with new schema ([b0a98c4](https://github.com/UVerify-io/uverify-ui/commit/b0a98c4fc4a821346a3290a02d8875f46c900dcb))
+* use sign partially to fix eternl issue ([a8e8b1e](https://github.com/UVerify-io/uverify-ui/commit/a8e8b1ed830b36df1964da76e75614d2a60c0c83))
+* use sign partially to fix eternl issue ([ac8ac9f](https://github.com/UVerify-io/uverify-ui/commit/ac8ac9fa2c504a04c2546cea6e6847ad35fb82de))
+
 ## [3.3.1](https://github.com/UVerify-io/uverify-ui/compare/v3.3.0...v3.3.1) (2026-03-15)
 
 
