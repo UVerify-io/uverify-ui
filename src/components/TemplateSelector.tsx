@@ -67,7 +67,8 @@ const TemplateSelector = ({
   className = className ? ` ${className}` : '';
 
   return (
-    <div className="relative w-1/2">
+    <div className="flex flex-col w-1/2 gap-1">
+    <div className="relative w-full">
       <select
         className={
           'w-full block pl-2.5 py-2.5 pr-10 text-sm text-white bg-white/25 outline-hidden rounded border border-[#FFFFFF40] resize-none focus:bg-white/30 focus:shadow-center focus:shadow-white/50 appearance-none' +
@@ -104,6 +105,15 @@ const TemplateSelector = ({
           ></path>
         </svg>
       </div>
+    </div>
+    <a
+      href="https://docs.uverify.io/templates/building-a-template"
+      target="_blank"
+      rel="noreferrer"
+      className="text-xs text-white/45 hover:text-white/75 transition-colors duration-200 underline underline-offset-2 text-left"
+    >
+      + Add your own template
+    </a>
     </div>
   );
 };

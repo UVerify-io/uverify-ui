@@ -464,6 +464,25 @@ const Creation = () => {
               label="Disconnect Wallet"
               onClick={disconnect}
             />
+            <p className="mt-4 text-xs text-white/45 max-w-xs text-center leading-relaxed">
+              Need to issue many certificates?{' '}
+              <a
+                href="https://docs.uverify.io/sdk"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
+              >
+                Use our SDK
+              </a>{' '}
+              or{' '}
+              <a
+                href="mailto:hello@uverify.io"
+                className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
+              >
+                contact us
+              </a>{' '}
+              for bulk batching.
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
