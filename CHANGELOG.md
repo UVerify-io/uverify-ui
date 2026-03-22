@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.4.0...ui-v3.5.0) (2026-03-22)
+
+
+### Features
+
+* add optional templates based on enabled backend extensions ([832e759](https://github.com/UVerify-io/uverify-ui/commit/832e7598de73ecc6608be74aaa6897c08119594d))
+
 ## [3.4.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.3.1...ui-v3.4.0) (2026-03-16)
 
 
