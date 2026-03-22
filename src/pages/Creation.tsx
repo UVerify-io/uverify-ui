@@ -24,6 +24,33 @@ import { useUVerifyTheme } from '../utils/hooks';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
 import { UpdatePolicy } from '../utils/updatePolicy';
+import { BuildTransactionParams } from '@uverify/core';
+
+async function buildDefaultTransaction(params: BuildTransactionParams): Promise<string> {
+  const requestBody: Record<string, unknown> = {
+    type: params.bootstrapTokenName ? 'CUSTOM' : 'DEFAULT',
+    address: params.address,
+    certificates: [
+      {
+        hash: params.hash,
+        metadata: JSON.stringify(params.metadata),
+        algorithm: 'SHA-256',
+      },
+    ],
+  };
+  if (params.bootstrapTokenName) {
+    requestBody.bootstrapDatum = { name: params.bootstrapTokenName };
+  }
+  const response = await axios.post(params.backendUrl + '/api/v1/transaction/build', requestBody);
+  if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
+    return response.data.unsignedTransaction as string;
+  }
+  const message = response.data.status?.message ?? 'Transaction building failed or has been aborted.';
+  if (response.data.status?.code === 'ERROR') {
+    console.error(message);
+  }
+  throw new Error(message);
+}
 
 declare interface TransactionResult {
   successful: boolean;
@@ -245,50 +272,34 @@ const Creation = () => {
     setButtonState('loading');
     const hash = activeTab === 0 ? fileHash : sha256(text);
     try {
-      const requestBody: Record<string, unknown> = {
-        type: requiredBootstrapToken ? 'CUSTOM' : 'DEFAULT',
+      const buildParams: BuildTransactionParams = {
         address: userAddress,
-        certificates: [
-          {
-            hash: hash,
-            metadata: metadata,
-            algorithm: 'SHA-256',
-          },
-        ],
+        hash,
+        metadata: JSON.parse(metadata),
+        bootstrapTokenName: requiredBootstrapToken,
+        backendUrl: config.backendUrl,
+        searchParams: new URLSearchParams(window.location.search),
       };
-      if (requiredBootstrapToken) {
-        requestBody.bootstrapDatum = { name: requiredBootstrapToken };
-      }
-      const response = await axios.post(
-        config.backendUrl + '/api/v1/transaction/build',
-        requestBody,
+
+      const transaction = await (
+        templates[selectedLayout].buildTransaction?.(buildParams) ??
+        buildDefaultTransaction(buildParams)
       );
 
-      if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
-        const transaction = response.data.unsignedTransaction;
-        const api = await (window as any).cardano[enabledWallet].enable();
-        const witnessSet = await api.signTx(transaction, true);
-        const result = await axios.post(
-          config.backendUrl + '/api/v1/transaction/submit',
-          {
-            transaction: transaction,
-            witnessSet: witnessSet,
-          },
-        );
-        setTransactionResult({
-          successful: result.status === 200,
-          hash: hash,
-          transactionHash: result.data.transactionHash,
-        });
-      } else {
-        toast.error(
-          'Transaction building failed or has been aborted. Please try again.',
-        );
-        if (response.data.status?.code === 'ERROR') {
-          console.error(response.data.status.message);
-        }
-        setButtonState('enabled');
-      }
+      const api = await (window as any).cardano[enabledWallet].enable();
+      const witnessSet = await api.signTx(transaction, true);
+      const result = await axios.post(
+        config.backendUrl + '/api/v1/transaction/submit',
+        {
+          transaction: transaction,
+          witnessSet: witnessSet,
+        },
+      );
+      setTransactionResult({
+        successful: result.status === 200,
+        hash: hash,
+        transactionHash: result.data.transactionHash,
+      });
     } catch (error) {
       toast.error(
         'Transaction building failed or has been aborted. Please try again.',

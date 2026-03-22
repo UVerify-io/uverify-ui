@@ -7,6 +7,8 @@ import LaboratoryReportTemplate from './LaboratoryReport';
 import DigitalProductPassportTemplate from './DigitalProductPassport';
 import CertificateOfInsuranceTemplate from './CertificateOfInsurance';
 import DocumentIntegrityTemplate from './DocumentIntegrity/DocumentIntegrityTemplate';
+import TokenizableCertificateTemplate from './TokenizableCertificate';
+import FractionizedCertificateTemplate from './FractionizedCertificate';
 import { Template, UVerifyConfig } from '@uverify/core';
 
 export type Templates = {
@@ -24,6 +26,8 @@ export async function getTemplates(config: UVerifyConfig) {
     digitalProductPassport: new DigitalProductPassportTemplate(config),
     certificateOfInsurance: new CertificateOfInsuranceTemplate(config),
     documentIntegrity: new DocumentIntegrityTemplate(config),
+    tokenizableCertificate: new TokenizableCertificateTemplate(config),
+    fractionizedCertificate: new FractionizedCertificateTemplate(config),
   };
 
   let dynamicTemplates: Templates = {};

@@ -29,7 +29,7 @@ const Footer = ({ className }: FooterProps) => {
           href="https://discord.gg/Dvqkynn6xc"
           iconType={IconType.DiscordIcon}
         />
-        <IconButton href="https://x.com/UVer1fy" iconType={IconType.XIcon} />
+        <IconButton href="https://x.com/uvfyhq" iconType={IconType.XIcon} />
         <IconButton
           href="https://www.linkedin.com/company/uverify-io"
           iconType={IconType.LinkedInIcon}
@@ -41,14 +41,40 @@ const Footer = ({ className }: FooterProps) => {
       </div>
       {config.cardanoNetwork && (
         <div className="mb-3 flex items-center gap-2 text-xs">
-          <span className={`flex items-center gap-1 font-medium ${isMainnet ? 'text-green-400/80' : 'text-white/30'}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${isMainnet ? 'bg-green-400/80' : 'bg-white/20'}`} />
-            {isMainnet ? 'Mainnet' : <a href={otherNetworkUrl} className="hover:text-white/75 transition-colors duration-200">Mainnet</a>}
+          <span
+            className={`flex items-center gap-1 font-medium ${isMainnet ? 'text-green-400/80' : 'text-white/30'}`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${isMainnet ? 'bg-green-400/80' : 'bg-white/20'}`}
+            />
+            {isMainnet ? (
+              'Mainnet'
+            ) : (
+              <a
+                href={otherNetworkUrl}
+                className="hover:text-white/75 transition-colors duration-200"
+              >
+                Mainnet
+              </a>
+            )}
           </span>
           <span className="text-white/20">|</span>
-          <span className={`flex items-center gap-1 font-medium ${!isMainnet ? 'text-yellow-400/80' : 'text-white/30'}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${!isMainnet ? 'bg-yellow-400/80' : 'bg-white/20'}`} />
-            {!isMainnet ? 'Preprod' : <a href={otherNetworkUrl} className="hover:text-white/75 transition-colors duration-200">Preprod</a>}
+          <span
+            className={`flex items-center gap-1 font-medium ${!isMainnet ? 'text-yellow-400/80' : 'text-white/30'}`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${!isMainnet ? 'bg-yellow-400/80' : 'bg-white/20'}`}
+            />
+            {!isMainnet ? (
+              'Preprod'
+            ) : (
+              <a
+                href={otherNetworkUrl}
+                className="hover:text-white/75 transition-colors duration-200"
+              >
+                Preprod
+              </a>
+            )}
           </span>
         </div>
       )}

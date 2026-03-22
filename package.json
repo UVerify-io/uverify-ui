@@ -15,7 +15,7 @@
     "@cardano-foundation/cardano-connect-with-wallet": "^0.2.17",
     "@cardano-foundation/cardano-connect-with-wallet-core": "^0.2.9",
     "@uverify/asymmetric-nfc": "^0.1.1",
-    "@uverify/core": "^1.1.0",
+    "@uverify/core": "^1.3.0",
     "axios": "^1.13.6",
     "dompurify": "^3.3.2",
     "dotenv": "^17.3.1",

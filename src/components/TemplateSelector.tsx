@@ -20,6 +20,15 @@ async function checkBootstrapAccess(backendUrl: string, address: string, tokenNa
   }
 }
 
+async function checkBackendExtension(backendUrl: string, extensionName: string): Promise<boolean> {
+  try {
+    const response = await axios.get(`${backendUrl}/api/v1/extension/${extensionName}`);
+    return response.status === 200;
+  } catch {
+    return false;
+  }
+}
+
 const TemplateSelector = ({
   onChange,
   userAddress,
@@ -54,6 +63,18 @@ const TemplateSelector = ({
             }
           }
           if (!hasAccess) continue;
+        }
+
+        const requiredExtensions = template.requiredBackendExtensions;
+        if (requiredExtensions && requiredExtensions.length > 0) {
+          let allEnabled = true;
+          for (const extensionName of requiredExtensions) {
+            if (!(await checkBackendExtension(config.backendUrl, extensionName))) {
+              allEnabled = false;
+              break;
+            }
+          }
+          if (!allEnabled) continue;
         }
 
         filtered[key] = template;
