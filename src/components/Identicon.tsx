@@ -1,4 +1,5 @@
-import Peep, {
+import React from 'react';
+import ReactPeepsLib, {
   AccessoryType,
   BustPoseType,
   FaceType,
@@ -7,6 +8,9 @@ import Peep, {
   SittingPoseType,
   StandingPoseType,
 } from 'react-peeps';
+
+const Peep = ((ReactPeepsLib as any).default ??
+  ReactPeepsLib) as React.ComponentType<any>;
 import seedrandom from 'seedrandom';
 
 declare interface IdenticonProps {

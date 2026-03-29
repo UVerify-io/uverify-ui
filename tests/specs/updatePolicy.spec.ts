@@ -538,9 +538,12 @@ test.describe('Update Policy — Owner Controls', () => {
 
     await page.goto(`/verify/${POLICY_HASH}/1`, { waitUntil: 'networkidle' });
 
-    // Only cert1 from owner is shown — non-owner policy change had no effect
-    await expect(paginationLink(page, 1)).toBeVisible({ timeout: 5000 });
-    await expect(paginationLink(page, 2)).not.toBeVisible({ timeout: 3000 });
+    // Only cert1 from owner is shown — non-owner policy change had no effect.
+    // With a single displayed cert pagination is hidden, so assert on content.
+    await expect(paginationLink(page, 2)).not.toBeVisible({ timeout: 5000 });
+    await expect(
+      page.locator('input[value="CERT1_OWNER"]'),
+    ).toBeVisible({ timeout: 5000 });
 
     await expect(
       page.locator('input[value="CERT3_FILTERED"]'),

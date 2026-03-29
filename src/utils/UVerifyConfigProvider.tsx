@@ -15,11 +15,7 @@ const testnetServiceAccount =
 export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [config, setConfig] = useState<UVerifyConfig>({
-    backendUrl: '',
-    cardanoNetwork: '',
-    serviceAccount: '',
-  });
+  const [config, setConfig] = useState<UVerifyConfig | null>(null);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -45,6 +41,8 @@ export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchConfig();
   }, []);
 
+  if (!config) return null;
+
   return (
     <UVerifyConfigContext.Provider value={config}>
       {children}
@@ -56,7 +54,7 @@ export const useUVerifyConfig = () => {
   const config = useContext(UVerifyConfigContext);
   if (!config) {
     throw new Error(
-      'useUVerifyConfig must be used within a UVerifyConfigProvider'
+      'useUVerifyConfig must be used within a UVerifyConfigProvider',
     );
   }
   return config;

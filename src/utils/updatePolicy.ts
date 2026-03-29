@@ -115,8 +115,8 @@ export function resolvePolicy(certificates: UVerifyCertificate[]): ResolvedPolic
     const isOwner = cert.issuer === owner;
 
     if (isOwner) {
-      if (meta.uverify_policy) {
-        mode = meta.uverify_policy as UpdatePolicy;
+      if (meta.uverify_update_policy || meta.uverify_policy) {
+        mode = (meta.uverify_update_policy ?? meta.uverify_policy) as UpdatePolicy;
       }
       if (meta.uverify_transfer_ownership) {
         owner = String(meta.uverify_transfer_ownership);
@@ -134,8 +134,8 @@ export function resolvePolicy(certificates: UVerifyCertificate[]): ResolvedPolic
       }
     } else if (whitelist.includes(cert.issuer)) {
       // Whitelisted addresses may change the display mode only.
-      if (meta.uverify_policy) {
-        mode = meta.uverify_policy as UpdatePolicy;
+      if (meta.uverify_update_policy || meta.uverify_policy) {
+        mode = (meta.uverify_update_policy ?? meta.uverify_policy) as UpdatePolicy;
       }
     }
   }
