@@ -119,8 +119,6 @@ const Creation = () => {
     loadTemplates();
   }, [config]);
 
-  // Restore a previously created demo wallet from localStorage on mount,
-  // or clear it when the network is mainnet (demo wallets are preprod-only).
   useEffect(() => {
     if (config.cardanoNetwork === 'mainnet') {
       setDemoWallet(null);
@@ -674,6 +672,20 @@ const Creation = () => {
                 variant="default"
                 label="Use Demo Wallet"
               />
+            )}
+            {config.cardanoNetwork === 'mainnet' && (
+              <p className="mt-4 text-xs text-white/45 max-w-xs text-center leading-relaxed">
+                Want to try it first?{' '}
+                <a
+                  href="https://app.preprod.uverify.io/create"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
+                >
+                  The preprod deployment
+                </a>{' '}
+                lets you create certificates without a wallet or any funds.
+              </p>
             )}
           </div>
         )}
