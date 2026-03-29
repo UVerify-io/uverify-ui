@@ -10,7 +10,11 @@ import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { UVerifyCertificate, UVerifyMetadata } from '@uverify/core';
-import { resolvePolicy, applyPolicy, ResolvedPolicy } from '../utils/updatePolicy';
+import {
+  resolvePolicy,
+  applyPolicy,
+  ResolvedPolicy,
+} from '../utils/updatePolicy';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -23,8 +27,14 @@ const Certificate = () => {
   // Raw list of all on-chain submissions, sorted ascending by creationTime.
   const [certificates, setCertificates] = useState<UVerifyCertificate[]>([]);
   // Policy-filtered list that drives pagination and template rendering.
-  const [displayedCertificates, setDisplayedCertificates] = useState<UVerifyCertificate[]>([]);
-  const [updatePolicy, setUpdatePolicy] = useState<ResolvedPolicy>({ mode: 'append', owner: '', whitelist: [] });
+  const [displayedCertificates, setDisplayedCertificates] = useState<
+    UVerifyCertificate[]
+  >([]);
+  const [updatePolicy, setUpdatePolicy] = useState<ResolvedPolicy>({
+    mode: 'append',
+    owner: '',
+    whitelist: [],
+  });
   const [certificate, setCertificate] = useState<UVerifyCertificate>();
   const [templateId, setTemplateId] = useState('default');
   const [totalPages, setTotalPages] = useState(1);
@@ -81,7 +91,14 @@ const Certificate = () => {
               );
               if (index !== -1) {
                 setPage(index + 1);
-                navigate(`/verify/${hash}/${index + 1}${search}`, { replace: true });
+                navigate(`/verify/${hash}/${index + 1}${search}`, {
+                  replace: true,
+                });
+              } else if (
+                certificateList.some((item) => item.transactionHash === query)
+              ) {
+                setPage(1);
+                navigate(`/verify/${hash}/1${search}`, { replace: true });
               } else {
                 toast.error(
                   'Unable to resolve the deeplink: Transaction hash not found or does not match the provided data. Please exercise caution if someone sent you this URL.',
@@ -113,7 +130,9 @@ const Certificate = () => {
       }
       setCertificate(displayedCertificates[page - 1]);
 
-      const certificateMetadata = JSON.parse(displayedCertificates[page - 1].metadata);
+      const certificateMetadata = JSON.parse(
+        displayedCertificates[page - 1].metadata,
+      );
 
       // Resolve uv_url_* fields: values are stored as SHA-256 hashes on-chain.
       // If the matching URL param is present and its hash matches, replace the
@@ -162,13 +181,18 @@ const Certificate = () => {
         templates.hasOwnProperty(metadataTemplateId)
       ) {
         const candidateTemplate = templates[metadataTemplateId];
-        const bootstrapWhitelist: string[] | undefined = (candidateTemplate as any).bootstrapWhitelist;
-        const certBootstrapToken: string | undefined = (displayedCertificates[page - 1] as any).bootstrapTokenName;
+        const bootstrapWhitelist: string[] | undefined = (
+          candidateTemplate as any
+        ).bootstrapWhitelist;
+        const certBootstrapToken: string | undefined = (
+          displayedCertificates[page - 1] as any
+        ).bootstrapTokenName;
 
         if (
           bootstrapWhitelist &&
           bootstrapWhitelist.length > 0 &&
-          (!certBootstrapToken || !bootstrapWhitelist.includes(certBootstrapToken))
+          (!certBootstrapToken ||
+            !bootstrapWhitelist.includes(certBootstrapToken))
         ) {
           setTemplateId('default');
           restoreDefaults();
@@ -211,7 +235,9 @@ const Certificate = () => {
       totalPages={totalPages}
       setPage={(newPage) => {
         setPage(newPage);
-        navigate(`/verify/${hash}/${newPage}${window.location.search}`, { replace: true });
+        navigate(`/verify/${hash}/${newPage}${window.location.search}`, {
+          replace: true,
+        });
       }}
     />
   );
@@ -223,7 +249,9 @@ const Certificate = () => {
           <div className="w-16 h-16 rounded-full border-2 border-cyan-400/30 border-t-cyan-400 animate-spin"></div>
           <div className="absolute w-10 h-10 rounded-full border-2 border-cyan-300/15 border-t-cyan-300 animate-spin [animation-direction:reverse] [animation-duration:1.2s]"></div>
         </div>
-        <p className="text-white/70 text-sm tracking-widest uppercase">Verifying</p>
+        <p className="text-white/70 text-sm tracking-widest uppercase">
+          Verifying
+        </p>
       </div>
     );
   }

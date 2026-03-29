@@ -99,6 +99,8 @@ const Pagination = ({ page, setPage, totalPages }: PaginationProps) => {
     }
   }, [width, page, totalPages]);
 
+  if (totalPages <= 1) return null;
+
   return (
     <div ref={navigationRef} className="w-full">
       <nav>

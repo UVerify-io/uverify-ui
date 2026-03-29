@@ -20,12 +20,12 @@ async function checkBootstrapAccess(backendUrl: string, address: string, tokenNa
   }
 }
 
-async function checkBackendExtension(backendUrl: string, extensionName: string): Promise<boolean> {
+async function fetchExtensionRegistry(backendUrl: string): Promise<Record<string, boolean>> {
   try {
-    const response = await axios.get(`${backendUrl}/api/v1/extension/${extensionName}`);
-    return response.status === 200;
+    const response = await axios.get(`${backendUrl}/api/v1/extensions`);
+    return response.data ?? {};
   } catch {
-    return false;
+    return {};
   }
 }
 
@@ -45,6 +45,8 @@ const TemplateSelector = ({
         networkType: config.cardanoNetwork,
         searchParams: new URLSearchParams(window.location.search),
       });
+
+      const extensionRegistry = await fetchExtensionRegistry(config.backendUrl);
 
       const filtered: Templates = {};
       for (const key of Object.keys(loadedTemplates)) {
@@ -67,13 +69,7 @@ const TemplateSelector = ({
 
         const requiredExtensions = template.requiredBackendExtensions;
         if (requiredExtensions && requiredExtensions.length > 0) {
-          let allEnabled = true;
-          for (const extensionName of requiredExtensions) {
-            if (!(await checkBackendExtension(config.backendUrl, extensionName))) {
-              allEnabled = false;
-              break;
-            }
-          }
+          const allEnabled = requiredExtensions.every((name) => extensionRegistry[name] === true);
           if (!allEnabled) continue;
         }
 

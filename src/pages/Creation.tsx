@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Card from '../components/Card';
 import Dropzone from '../components/Dropzone';
 import Header from '../components/Header';
@@ -7,7 +7,6 @@ import Tabs from '../components/Tabs';
 import TextArea from '../components/TextArea';
 import Button from '../components/Button';
 import { sha256 } from 'js-sha256';
-import axios from 'axios';
 import { useCardano } from '@cardano-foundation/cardano-connect-with-wallet';
 import { NetworkType } from '@cardano-foundation/cardano-connect-with-wallet-core';
 import { toast } from 'react-toastify';
@@ -23,33 +22,28 @@ import { getTemplates, Templates } from '../templates';
 import { useUVerifyTheme } from '../utils/hooks';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
+import { DemoWalletDialog } from '../components/DemoWalletDialog';
 import { UpdatePolicy } from '../utils/updatePolicy';
 import { BuildTransactionParams } from '@uverify/core';
+import { UVerifyClient, UVerifyApiError } from '@uverify/sdk';
+import {
+  DemoWallet,
+  createDemoWallet,
+  loadDemoWallet,
+  clearDemoWallet,
+  hasDemoWallet,
+} from '../utils/demoWallet';
 
-async function buildDefaultTransaction(params: BuildTransactionParams): Promise<string> {
-  const requestBody: Record<string, unknown> = {
-    type: params.bootstrapTokenName ? 'CUSTOM' : 'DEFAULT',
-    address: params.address,
-    certificates: [
-      {
-        hash: params.hash,
-        metadata: JSON.stringify(params.metadata),
-        algorithm: 'SHA-256',
-      },
-    ],
-  };
-  if (params.bootstrapTokenName) {
-    requestBody.bootstrapDatum = { name: params.bootstrapTokenName };
-  }
-  const response = await axios.post(params.backendUrl + '/api/v1/transaction/build', requestBody);
-  if (response.status === 200 && response.data.status?.code === 'SUCCESS') {
-    return response.data.unsignedTransaction as string;
-  }
-  const message = response.data.status?.message ?? 'Transaction building failed or has been aborted.';
-  if (response.data.status?.code === 'ERROR') {
-    console.error(message);
-  }
-  throw new Error(message);
+/** Returns true when the error message suggests the wallet has no funds. */
+function isInsufficientFundsError(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes('insufficient') ||
+    lower.includes('balance') ||
+    lower.includes('utxo') ||
+    lower.includes('not enough') ||
+    lower.includes('exhausted')
+  );
 }
 
 declare interface TransactionResult {
@@ -61,8 +55,17 @@ declare interface TransactionResult {
 const Creation = () => {
   const [text, setText] = useState('');
   const config = useUVerifyConfig();
+  const client = useMemo(
+    () => new UVerifyClient({ baseUrl: config.backendUrl }),
+    [config.backendUrl],
+  );
   const pageRef = useRef<HTMLDivElement>(null);
   const [isWalletDialogOpen, setIsWalletDialogOpen] = useState(false);
+  const [isDemoWalletDialogOpen, setIsDemoWalletDialogOpen] = useState(false);
+  const [isCreatingDemoWallet, setIsCreatingDemoWallet] = useState(false);
+  const [demoWallet, setDemoWallet] = useState<DemoWallet | null>(null);
+  const [isFueling, setIsFueling] = useState(false);
+  const pendingMetadataRef = useRef<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewMetadata, setPreviewMetadata] = useState('{}');
   const metadataEditorRef = useRef<MetadataHandle>(null);
@@ -70,8 +73,11 @@ const Creation = () => {
     [key: string]: string;
   }>({});
   const [selectedLayout, setSelectedLayout] = useState('default');
-  const [requiredBootstrapToken, setRequiredBootstrapToken] = useState<string | undefined>(undefined);
-  const [selectedUpdatePolicy, setSelectedUpdatePolicy] = useState<UpdatePolicy>('append');
+  const [requiredBootstrapToken, setRequiredBootstrapToken] = useState<
+    string | undefined
+  >(undefined);
+  const [selectedUpdatePolicy, setSelectedUpdatePolicy] =
+    useState<UpdatePolicy>('append');
   const [updateWhitelist, setUpdateWhitelist] = useState('');
   const [buttonState, setButtonState] = useState<
     'enabled' | 'loading' | 'disabled'
@@ -113,11 +119,26 @@ const Creation = () => {
     loadTemplates();
   }, [config]);
 
+  // Restore a previously created demo wallet from localStorage on mount,
+  // or clear it when the network is mainnet (demo wallets are preprod-only).
+  useEffect(() => {
+    if (config.cardanoNetwork === 'mainnet') {
+      setDemoWallet(null);
+      return;
+    }
+    if (hasDemoWallet()) {
+      const w = loadDemoWallet();
+      if (w) setDemoWallet(w);
+    }
+  }, [config.cardanoNetwork]);
+
   const showFingerprint =
     (activeTab === 0 && fileHash !== '') ||
     (activeTab === 1 && text.length > 0);
   const hash = showFingerprint && (activeTab === 0 ? fileHash : sha256(text));
-  const userAddress = usedAddresses[0] || unusedAddresses[0];
+  const userAddress =
+    demoWallet?.address || usedAddresses[0] || unusedAddresses[0];
+  const isWalletActive = isConnected || demoWallet !== null;
 
   const dropArea =
     typeof selectedFile === 'undefined' ? (
@@ -179,31 +200,27 @@ const Creation = () => {
         metadataEditorRef.current?.reset();
 
         const toastId = toast.loading(
-          'Your transaction has been submitted, and your data will now be distributed worldwide. We just need to wait for a few confirmations (no longer than 2 minutes) until it is verified.',
-          {
-            type: 'info',
-          },
+          'Your certificate has been submitted and is being secured on the blockchain. This usually takes about 20 seconds, though it can take up to 2 minutes to become a permanent, tamper-proof record.',
+          { type: 'info' },
         );
-        const interval = setInterval(async () => {
-          const response = await axios.get(
-            config.backendUrl +
-              `/api/v1/verify/by-transaction-hash/${transactionResult.transactionHash}/${transactionResult.hash}`,
-          );
-          if (response.status === 200) {
-            clearInterval(interval);
+
+        let cancelled = false;
+        const { hash: dataHash, transactionHash } = transactionResult;
+        client
+          .waitFor(transactionHash)
+          .then(() => {
+            if (cancelled) return;
             const paramStr = capturedUrlParamsRef.current;
-            const deepLink = `/verify/${transactionResult.hash}/${transactionResult.transactionHash}${paramStr ? '?' + paramStr : ''}`;
+            const deepLink = `/verify/${dataHash}/${transactionHash}${paramStr ? '?' + paramStr : ''}`;
             toast.update(toastId, {
               render: (
                 <a
                   href={deepLink}
                   target="_blank"
-                  onClick={() => {
-                    toast.dismiss();
-                  }}
+                  onClick={() => toast.dismiss()}
                 >
-                  Your data is now on-chain and verifiable! Click on this
-                  message to access your certificate.
+                  Your data is now permanently secured and verifiable! Click
+                  here to view your certificate.
                 </a>
               ),
               type: 'success',
@@ -211,10 +228,19 @@ const Creation = () => {
               autoClose: 5000,
               isLoading: false,
             });
-          }
-        }, 5000);
+          })
+          .catch(() => {
+            if (cancelled) return;
+            toast.update(toastId, {
+              render:
+                'Confirmation is taking longer than expected. Your certificate should appear shortly.',
+              type: 'warning',
+              isLoading: false,
+              autoClose: 8000,
+            });
+          });
         return () => {
-          clearInterval(interval);
+          cancelled = true;
         };
       } else {
         setTransactionResult(undefined);
@@ -223,9 +249,11 @@ const Creation = () => {
         );
       }
     }
-  }, [transactionResult]);
+  }, [transactionResult, client]);
 
   const freezeData = async () => {
+    if (!isWalletActive) return;
+
     const rawMetadata = metadataEditorRef.current?.metadata(selectedLayout);
 
     if (rawMetadata === undefined) {
@@ -254,10 +282,9 @@ const Creation = () => {
     await freezeDataWithWallet(metadata);
   };
 
-  const freezeDataWithWallet = async (metadata: string) => {
-    if (!isConnected || !enabledWallet) {
-      return;
-    }
+  const freezeDataWithWallet = async (metadata: string, skipFaucet = false) => {
+    if (!isWalletActive) return;
+    if (!isConnected && !demoWallet) return;
 
     if (activeTab === 0 && fileHash === '') {
       toast.info('Please upload a file');
@@ -271,6 +298,7 @@ const Creation = () => {
 
     setButtonState('loading');
     const hash = activeTab === 0 ? fileHash : sha256(text);
+    let faucetFlowStarted = false;
     try {
       const buildParams: BuildTransactionParams = {
         address: userAddress,
@@ -281,32 +309,118 @@ const Creation = () => {
         searchParams: new URLSearchParams(window.location.search),
       };
 
-      const transaction = await (
-        templates[selectedLayout].buildTransaction?.(buildParams) ??
-        buildDefaultTransaction(buildParams)
-      );
+      const transaction = await (templates[selectedLayout].buildTransaction?.(
+        buildParams,
+      ) ??
+        client.core
+          .buildTransaction({
+            type: requiredBootstrapToken ? 'custom' : 'default',
+            address: userAddress,
+            certificates: [
+              { hash, metadata: JSON.parse(metadata), algorithm: 'SHA-256' },
+            ],
+            ...(requiredBootstrapToken
+              ? { bootstrapDatum: { name: requiredBootstrapToken } }
+              : {}),
+          })
+          .then((r) => r.unsignedTransaction));
 
-      const api = await (window as any).cardano[enabledWallet].enable();
-      const witnessSet = await api.signTx(transaction, true);
-      const result = await axios.post(
-        config.backendUrl + '/api/v1/transaction/submit',
-        {
-          transaction: transaction,
-          witnessSet: witnessSet,
-        },
+      let witnessSet: string;
+      if (demoWallet) {
+        witnessSet = await demoWallet.signTx(transaction);
+      } else if (enabledWallet) {
+        const api = await (window as any).cardano[enabledWallet].enable();
+        witnessSet = await api.signTx(transaction, true);
+      } else {
+        throw new Error('No wallet available for signing.');
+      }
+
+      const transactionHash = await client.core.submitTransaction(
+        transaction,
+        witnessSet,
       );
-      setTransactionResult({
-        successful: result.status === 200,
-        hash: hash,
-        transactionHash: result.data.transactionHash,
-      });
-    } catch (error) {
+      setTransactionResult({ successful: true, hash, transactionHash });
+    } catch (error: any) {
+      const message: string =
+        error?.response?.data?.status?.message || error?.message || '';
+
+      // If the demo wallet has no funds, automatically top it up via the faucet.
+      if (demoWallet && !skipFaucet && isInsufficientFundsError(message)) {
+        faucetFlowStarted = true;
+        pendingMetadataRef.current = metadata;
+        setButtonState('disabled');
+        setIsFueling(true);
+
+        const fuelToastId = toast.loading(
+          'Your demo wallet has no test Ada (tAda) yet. UVerify is getting some test funds for you, this should take no longer than a minute. Please keep this page open and do not refresh.',
+          { type: 'info' },
+        );
+
+        const client = new UVerifyClient({ baseUrl: config.backendUrl });
+        try {
+          const faucetTxHash = await client.fundWallet(
+            demoWallet.address,
+            demoWallet.signMessage,
+          );
+
+          await client.waitFor(faucetTxHash, 3 * 60 * 1000);
+
+          toast.update(fuelToastId, {
+            render: 'Wallet funded! Retrying certificate creation.',
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+          });
+
+          if (pendingMetadataRef.current) {
+            const retryMeta = pendingMetadataRef.current;
+            pendingMetadataRef.current = null;
+            setIsFueling(false);
+            await freezeDataWithWallet(retryMeta, true);
+          }
+          return;
+        } catch (faucetError: unknown) {
+          let render: string;
+          if (
+            faucetError instanceof UVerifyApiError &&
+            faucetError.statusCode === 429
+          ) {
+            render =
+              'This address already received test funds recently. Please wait a few minutes and try again.';
+          } else if (
+            faucetError instanceof Error &&
+            faucetError.name === 'WaitForTimeoutError'
+          ) {
+            render =
+              'Funding timed out. Try clicking "Create Trust Certificate" again in a moment.';
+          } else {
+            const msg =
+              faucetError instanceof Error
+                ? faucetError.message
+                : 'Unknown error';
+            render = `Faucet request failed: ${msg}`;
+          }
+          toast.update(fuelToastId, {
+            render,
+            type: 'error',
+            isLoading: false,
+            autoClose: 10000,
+          });
+          return;
+        } finally {
+          setIsFueling(false);
+          setButtonState('enabled');
+        }
+      }
+
       toast.error(
         'Transaction building failed or has been aborted. Please try again.',
       );
       console.error(error);
     } finally {
-      setButtonState('enabled');
+      if (!faucetFlowStarted) {
+        setButtonState('enabled');
+      }
     }
   };
 
@@ -378,7 +492,8 @@ const Creation = () => {
                     setRequiredBootstrapToken(bootstrapTokenName);
                     // Apply the template's declared default update policy, or
                     // fall back to 'append' when the template has no preference.
-                    const defaultPolicy = (templates[layout] as any)?.defaultUpdatePolicy as UpdatePolicy | undefined;
+                    const defaultPolicy = (templates[layout] as any)
+                      ?.defaultUpdatePolicy as UpdatePolicy | undefined;
                     setSelectedUpdatePolicy(defaultPolicy ?? 'append');
                     setUpdateWhitelist('');
                   }}
@@ -458,42 +573,88 @@ const Creation = () => {
           setIsWalletDialogOpen={setIsWalletDialogOpen}
           networkType={networkType}
         />
-        {isConnected ? (
+        <DemoWalletDialog
+          isOpen={isDemoWalletDialogOpen}
+          isCreating={isCreatingDemoWallet}
+          onConfirm={async () => {
+            setIsCreatingDemoWallet(true);
+            try {
+              const w = createDemoWallet();
+              setDemoWallet(w);
+              setIsDemoWalletDialogOpen(false);
+            } catch (err) {
+              toast.error('Failed to create demo wallet. Please try again.');
+              console.error(err);
+            } finally {
+              setIsCreatingDemoWallet(false);
+            }
+          }}
+          onClose={() => setIsDemoWalletDialogOpen(false)}
+        />
+        {isWalletActive ? (
           <div className="flex flex-col items-center">
-            <Button
-              className="mt-4 min-w-[236px]"
-              state={buttonState}
-              label="Create Trust Certificate"
-              variant="default"
-              onClick={freezeData}
-              color="green"
-            />
+            {isFueling ? (
+              <Button
+                className="mt-4 min-w-[236px]"
+                state="loading"
+                label="Funding wallet…"
+                variant="default"
+                color="cyan"
+                disabled
+              />
+            ) : (
+              <Button
+                className="mt-4 min-w-[236px]"
+                state={buttonState}
+                label="Create Trust Certificate"
+                variant="default"
+                onClick={freezeData}
+                color="green"
+              />
+            )}
             <Button
               color="pink"
               variant="default"
               className="mt-4 min-w-[236px]"
-              label="Disconnect Wallet"
-              onClick={disconnect}
+              label={
+                demoWallet ? 'Disconnect Demo Wallet' : 'Disconnect Wallet'
+              }
+              onClick={() => {
+                if (demoWallet) {
+                  clearDemoWallet();
+                  setDemoWallet(null);
+                } else {
+                  disconnect();
+                }
+              }}
             />
-            <p className="mt-4 text-xs text-white/45 max-w-xs text-center leading-relaxed">
-              Need to issue many certificates?{' '}
-              <a
-                href="https://docs.uverify.io/sdk"
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
-              >
-                Use our SDK
-              </a>{' '}
-              or{' '}
-              <a
-                href="mailto:hello@uverify.io"
-                className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
-              >
-                contact us
-              </a>{' '}
-              for bulk batching.
-            </p>
+            {demoWallet && (
+              <p className="mt-3 text-xs text-white/45 max-w-xs text-center leading-relaxed">
+                Using a disposable demo wallet on preprod. Your key is stored in
+                local storage only.
+              </p>
+            )}
+            {!demoWallet && (
+              <p className="mt-4 text-xs text-white/45 max-w-xs text-center leading-relaxed">
+                Need to issue many certificates?{' '}
+                <a
+                  href="https://docs.uverify.io/sdk"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
+                >
+                  Use our SDK
+                </a>{' '}
+                or{' '}
+                <a
+                  href="mailto:hello@uverify.io"
+                  className="underline underline-offset-2 hover:text-white/75 transition-colors duration-200"
+                >
+                  contact us
+                </a>{' '}
+                for bulk batching.
+              </p>
+            )}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
@@ -505,6 +666,15 @@ const Creation = () => {
               onClick={() => setIsWalletDialogOpen(true)}
               color="cyan"
             />
+            {config.cardanoNetwork !== 'mainnet' && (
+              <Button
+                className="mt-4 min-w-[236px]"
+                onClick={() => setIsDemoWalletDialogOpen(true)}
+                color="purple"
+                variant="default"
+                label="Use Demo Wallet"
+              />
+            )}
           </div>
         )}
       </Card>

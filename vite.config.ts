@@ -5,16 +5,10 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react(), tailwindcss()],
-
-  optimizeDeps: {
-    esbuildOptions: {
-      // Node.js global to browser globalThis
-      define: {
-        global: 'globalThis',
-      },
-    },
-  },
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
 
   server: {
     port: 3000,
