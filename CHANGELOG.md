@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.0...ui-v3.6.1) (2026-04-01)
+
+
+### Bug Fixes
+
+* upgrade the uverify-sdk to fix that insufficient funds won't trigger the faucet call ([31713fc](https://github.com/UVerify-io/uverify-ui/commit/31713fc0fa19970cb3c1b1acc81a5d1dd89bc569))
+
 ## [3.6.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.5.0...ui-v3.6.0) (2026-03-29)
 
 
