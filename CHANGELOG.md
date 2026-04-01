@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.6.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.5.0...ui-v3.6.0) (2026-03-29)
+
+
+### Features
+
+* add uverify faucet as an ui function, allowing people to fuel up a disposable wallet ([e5ed36a](https://github.com/UVerify-io/uverify-ui/commit/e5ed36a8c575f65c5705b2815a3f6fd208ab6d94))
+* **mainnet:** link to preprod deployment for testing without wallet ([16ef610](https://github.com/UVerify-io/uverify-ui/commit/16ef61070ffc184580c671483c8523daed7619a2))
+
+
+### Bug Fixes
+
+* upgrade all dependency version and update connect with wallet button and core version ([edc4328](https://github.com/UVerify-io/uverify-ui/commit/edc4328e5e8ecd2a1d59ba33532d61cda8b3e870))
+
 ## [3.5.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.4.0...ui-v3.5.0) (2026-03-22)
 
 
