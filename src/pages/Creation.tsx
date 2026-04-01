@@ -25,7 +25,7 @@ import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
 import { DemoWalletDialog } from '../components/DemoWalletDialog';
 import { UpdatePolicy } from '../utils/updatePolicy';
 import { BuildTransactionParams } from '@uverify/core';
-import { UVerifyClient, UVerifyApiError } from '@uverify/sdk';
+import { UVerifyClient, InsufficientFundsError, RateLimitError } from '@uverify/sdk';
 import {
   DemoWallet,
   createDemoWallet,
@@ -34,17 +34,6 @@ import {
   hasDemoWallet,
 } from '../utils/demoWallet';
 
-/** Returns true when the error message suggests the wallet has no funds. */
-function isInsufficientFundsError(message: string): boolean {
-  const lower = message.toLowerCase();
-  return (
-    lower.includes('insufficient') ||
-    lower.includes('balance') ||
-    lower.includes('utxo') ||
-    lower.includes('not enough') ||
-    lower.includes('exhausted')
-  );
-}
 
 declare interface TransactionResult {
   successful: boolean;
@@ -280,7 +269,7 @@ const Creation = () => {
     await freezeDataWithWallet(metadata);
   };
 
-  const freezeDataWithWallet = async (metadata: string, skipFaucet = false) => {
+  const freezeDataWithWallet = async (metadata: string) => {
     if (!isWalletActive) return;
     if (!isConnected && !demoWallet) return;
 
@@ -339,11 +328,8 @@ const Creation = () => {
       );
       setTransactionResult({ successful: true, hash, transactionHash });
     } catch (error: any) {
-      const message: string =
-        error?.response?.data?.status?.message || error?.message || '';
-
       // If the demo wallet has no funds, automatically top it up via the faucet.
-      if (demoWallet && !skipFaucet && isInsufficientFundsError(message)) {
+      if (demoWallet && error instanceof InsufficientFundsError) {
         faucetFlowStarted = true;
         pendingMetadataRef.current = metadata;
         setButtonState('disabled');
@@ -374,15 +360,12 @@ const Creation = () => {
             const retryMeta = pendingMetadataRef.current;
             pendingMetadataRef.current = null;
             setIsFueling(false);
-            await freezeDataWithWallet(retryMeta, true);
+            await freezeDataWithWallet(retryMeta);
           }
           return;
         } catch (faucetError: unknown) {
           let render: string;
-          if (
-            faucetError instanceof UVerifyApiError &&
-            faucetError.statusCode === 429
-          ) {
+          if (faucetError instanceof RateLimitError) {
             render =
               'This address already received test funds recently. Please wait a few minutes and try again.';
           } else if (
