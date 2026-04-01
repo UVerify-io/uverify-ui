@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.2](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.1...ui-v3.6.2) (2026-04-01)
+
+
+### Bug Fixes
+
+* upgrade sdks to prevent testnet fueling issue ([549eab0](https://github.com/UVerify-io/uverify-ui/commit/549eab0ff2d60406b6b7fa6954756366b284fc21))
+
 ## [3.6.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.0...ui-v3.6.1) (2026-04-01)
 
 
