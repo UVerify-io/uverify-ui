@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.3](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.2...ui-v3.6.3) (2026-04-01)
+
+
+### Bug Fixes
+
+* verified fix of testnet faucet in action ([010c1e5](https://github.com/UVerify-io/uverify-ui/commit/010c1e5c0ea3c2eff983b2680a7b637130e944bd))
+
 ## [3.6.2](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.1...ui-v3.6.2) (2026-04-01)
 
 
