@@ -25,7 +25,11 @@ import { ConnectWalletDialog } from '../components/ConnectWalletDialog';
 import { DemoWalletDialog } from '../components/DemoWalletDialog';
 import { UpdatePolicy } from '../utils/updatePolicy';
 import { BuildTransactionParams } from '@uverify/core';
-import { UVerifyClient, InsufficientFundsError, RateLimitError } from '@uverify/sdk';
+import {
+  UVerifyClient,
+  InsufficientFundsError,
+  RateLimitError,
+} from '@uverify/sdk';
 import {
   DemoWallet,
   createDemoWallet,
@@ -33,7 +37,6 @@ import {
   clearDemoWallet,
   hasDemoWallet,
 } from '../utils/demoWallet';
-
 
 declare interface TransactionResult {
   successful: boolean;
@@ -269,7 +272,7 @@ const Creation = () => {
     await freezeDataWithWallet(metadata);
   };
 
-  const freezeDataWithWallet = async (metadata: string) => {
+  const freezeDataWithWallet = async (metadata: string, skipFaucet = false) => {
     if (!isWalletActive) return;
     if (!isConnected && !demoWallet) return;
 
@@ -329,7 +332,11 @@ const Creation = () => {
       setTransactionResult({ successful: true, hash, transactionHash });
     } catch (error: any) {
       // If the demo wallet has no funds, automatically top it up via the faucet.
-      if (demoWallet && error instanceof InsufficientFundsError) {
+      if (
+        demoWallet &&
+        !skipFaucet &&
+        error instanceof InsufficientFundsError
+      ) {
         faucetFlowStarted = true;
         pendingMetadataRef.current = metadata;
         setButtonState('disabled');
@@ -349,18 +356,33 @@ const Creation = () => {
 
           await client.waitFor(faucetTxHash, 3 * 60 * 1000);
 
-          toast.update(fuelToastId, {
-            render: 'Wallet funded! Retrying certificate creation.',
-            type: 'success',
-            isLoading: false,
-            autoClose: 3000,
-          });
-
           if (pendingMetadataRef.current) {
             const retryMeta = pendingMetadataRef.current;
             pendingMetadataRef.current = null;
-            setIsFueling(false);
-            await freezeDataWithWallet(retryMeta);
+
+            // Keep the loading toast alive and retry until UTXOs propagate.
+            let propagated = false;
+            while (!propagated) {
+              try {
+                await freezeDataWithWallet(retryMeta, true);
+                propagated = true;
+              } catch (retryError: unknown) {
+                if (retryError instanceof InsufficientFundsError) {
+                  await new Promise<void>((resolve) =>
+                    setTimeout(resolve, 5_000),
+                  );
+                } else {
+                  throw retryError;
+                }
+              }
+            }
+
+            toast.update(fuelToastId, {
+              render: 'Wallet funded! Certificate created successfully.',
+              type: 'success',
+              isLoading: false,
+              autoClose: 3000,
+            });
           }
           return;
         } catch (faucetError: unknown) {
@@ -392,6 +414,12 @@ const Creation = () => {
           setIsFueling(false);
           setButtonState('enabled');
         }
+      }
+
+      // Re-throw InsufficientFundsError when called from the retry loop so the
+      // while loop can catch it and keep retrying until UTXOs propagate.
+      if (skipFaucet && error instanceof InsufficientFundsError) {
+        throw error;
       }
 
       toast.error(
@@ -587,6 +615,7 @@ const Creation = () => {
               <Button
                 className="mt-4 min-w-[236px]"
                 state={buttonState}
+                disabled={!hash || buttonState === 'disabled'}
                 label="Create Trust Certificate"
                 variant="default"
                 onClick={freezeData}
