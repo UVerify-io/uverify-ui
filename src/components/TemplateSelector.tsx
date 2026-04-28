@@ -101,7 +101,7 @@ const TemplateSelector = ({
         }}
       >
         {Object.keys(visibleTemplates).map((template) => (
-          <option key={template} value={template}>
+          <option key={template} value={template} className="bg-[rgb(3,8,18)] text-white">
             {visibleTemplates[template].name}
           </option>
         ))}
