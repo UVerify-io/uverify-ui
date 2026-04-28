@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.7.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.3...ui-v3.7.0) (2026-04-28)
+
+
+### Features
+
+* update tokenizable certificate and add config file to allow using an alternative json for additional templates ([9d6b2b2](https://github.com/UVerify-io/uverify-ui/commit/9d6b2b2a38a40009a8f2e030cb00a6a34e1fefe9))
+
+
+### Bug Fixes
+
+* templates in template selector were invisible on Windows machines ([3313633](https://github.com/UVerify-io/uverify-ui/commit/33136334f498725f0cd81dfbaaf2db642f214b6d))
+
 ## [3.6.3](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.2...ui-v3.6.3) (2026-04-01)
 
 
