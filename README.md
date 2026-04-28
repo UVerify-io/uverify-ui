@@ -39,10 +39,40 @@ VITE_BACKEND_URL=http://localhost:9090
 VITE_CARDANO_NETWORK=preprod
 ```
 
-| Variable Name          | Description                                                           | Default Value           |
-|------------------------|-----------------------------------------------------------------------|-------------------------|
-| `VITE_BACKEND_URL`     | URL of the UVerify backend service                                    | `http://localhost:9090` |
-| `VITE_CARDANO_NETWORK` | Cardano network to connect to (e.g., `preprod`, `preview`, `mainnet`) | `preprod`               |
+| Variable Name               | Description                                                                                                                     | Default Value                   |
+|-----------------------------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `VITE_BACKEND_URL`          | URL of the UVerify backend service                                                                                              | `http://localhost:9090`         |
+| `VITE_CARDANO_NETWORK`      | Cardano network to connect to (e.g., `preprod`, `preview`, `mainnet`)                                                          | `preprod`                       |
+| `ADDITIONAL_TEMPLATES_FILE` | Path to an alternative `additional-templates.json` file. Supports `~`, absolute, and relative paths (relative to `uverify-ui`). Set this to load a custom template list without modifying the committed `additional-templates.json`. | `./additional-templates.json`   |
+
+#### Using `ADDITIONAL_TEMPLATES_FILE` locally
+
+Add it to your `.env` to load a local templates file during development:
+
+```env
+ADDITIONAL_TEMPLATES_FILE=../uverify-examples/sandbox/vin-additional-templates.json
+```
+
+#### Using `ADDITIONAL_TEMPLATES_FILE` in Docker
+
+Pass it as a build argument so templates are baked in at image build time:
+
+```yaml
+# docker-compose.override.yml
+services:
+  uverify-ui:
+    build:
+      args:
+        ADDITIONAL_TEMPLATES_FILE: ./my-additional-templates.json
+```
+
+The corresponding `Dockerfile` must declare the arg and export it as an env var before running `npm run build`:
+
+```dockerfile
+ARG ADDITIONAL_TEMPLATES_FILE=./additional-templates.json
+ENV ADDITIONAL_TEMPLATES_FILE=${ADDITIONAL_TEMPLATES_FILE}
+RUN npm run build
+```
 
 ## 🚀 Features
 

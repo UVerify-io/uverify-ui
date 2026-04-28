@@ -112,10 +112,13 @@ function runGit(cwd, ...gitArgs) {
 }
 
 // --- Process additional-templates.json ---
-const additionalTemplatesFile = path.resolve(
-  __dirname,
-  'additional-templates.json'
-);
+const additionalTemplatesFile = process.env.ADDITIONAL_TEMPLATES_FILE
+  ? resolvePath(process.env.ADDITIONAL_TEMPLATES_FILE)
+  : path.resolve(__dirname, 'additional-templates.json');
+
+if (process.env.ADDITIONAL_TEMPLATES_FILE) {
+  console.log(`Using custom additional-templates file: ${additionalTemplatesFile}`);
+}
 
 if (fs.existsSync(additionalTemplatesFile)) {
   let templates;

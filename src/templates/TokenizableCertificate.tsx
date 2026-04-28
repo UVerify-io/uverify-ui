@@ -45,9 +45,11 @@ interface TokenizationPanelProps {
   certHash: string;
   backendUrl: string;
   mintingPolicyId?: string;
+  initUtxoTxHash: string;
+  initUtxoOutputIndex: number;
 }
 
-const TokenizationPanel = ({ certHash, backendUrl, mintingPolicyId }: TokenizationPanelProps) => {
+const TokenizationPanel = ({ certHash, backendUrl, mintingPolicyId, initUtxoTxHash, initUtxoOutputIndex }: TokenizationPanelProps) => {
   const [nodeStatus, setNodeStatus]   = useState<NodeStatus>('loading');
   const [isOwner,    setIsOwner]      = useState<boolean | null>(null);
   const [mintState,  setMintState]    = useState<MintState>('idle');
@@ -56,28 +58,28 @@ const TokenizationPanel = ({ certHash, backendUrl, mintingPolicyId }: Tokenizati
   const { isConnected, usedAddresses, enabledWallet } = useCardano();
   const walletAddress = usedAddresses?.[0];
 
+  const statusBaseUrl = `${backendUrl}/api/v1/extension/tokenizable-certificate/status/${certHash}?initUtxoTxHash=${initUtxoTxHash}&initUtxoOutputIndex=${initUtxoOutputIndex}`;
+
   // Fetch node status; also ask backend whether the connected wallet is the owner.
   useEffect(() => {
-    if (!certHash) { setNodeStatus('unknown'); return; }
+    if (!certHash || !initUtxoTxHash) { setNodeStatus('unknown'); return; }
 
-    const url = walletAddress
-      ? `${backendUrl}/api/v1/tokenizable/node/${certHash}?walletAddress=${walletAddress}`
-      : `${backendUrl}/api/v1/tokenizable/node/${certHash}`;
+    const url = walletAddress ? `${statusBaseUrl}&walletAddress=${walletAddress}` : statusBaseUrl;
 
     fetch(url)
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((data) => {
-        setNodeStatus(data.status === 'Available' ? 'available' : 'redeemed');
+        setNodeStatus(data.claimed ? 'redeemed' : 'available');
         if (typeof data.isOwner === 'boolean') setIsOwner(data.isOwner);
       })
       .catch(() => setNodeStatus('unknown'));
-  }, [certHash, backendUrl, walletAddress]);
+  }, [certHash, backendUrl, walletAddress, initUtxoTxHash, initUtxoOutputIndex]);
 
   // Re-check ownership when wallet connection changes.
   useEffect(() => {
-    if (!isConnected || !walletAddress || !certHash || nodeStatus === 'loading') return;
+    if (!isConnected || !walletAddress || !certHash || !initUtxoTxHash || nodeStatus === 'loading') return;
 
-    fetch(`${backendUrl}/api/v1/tokenizable/node/${certHash}?walletAddress=${walletAddress}`)
+    fetch(`${statusBaseUrl}&walletAddress=${walletAddress}`)
       .then((r) => r.json())
       .then((data) => { if (typeof data.isOwner === 'boolean') setIsOwner(data.isOwner); })
       .catch(() => {});
@@ -298,22 +300,14 @@ class TokenizableCertificateTemplate extends Template {
   };
 
   public layoutMetadata = {
-    asset_name:              'Human-readable name of the certified asset',
-    asset_class:             'Category (e.g. Real Estate, Art, Commodity, IP, Membership)',
-    issuer_name:             'Issuing organisation or individual',
-    ipfs_image:              'IPFS CID of the asset image (e.g. QmXxx…)',
-    description:             'Description of the certified asset',
-    valuation:               'Optional current valuation (numeric)',
-    valuation_currency:      'Currency or unit of the valuation (e.g. USD, EUR, ADA)',
-    jurisdiction:            'Legal or regulatory jurisdiction',
-    asset_id:                'Unique identifier of the asset (e.g. registry number)',
-    // Fields required by the Insert endpoint — filled in by the issuer:
-    owner_pub_key_hash:      'Hex payment key hash of the wallet that will own the NFT',
-    asset_name_hex:          'Hex-encoded base asset name for the NFT to be minted',
-    init_utxo_tx_hash:       'Tx-hash of the init UTxO used to derive the policy ID',
-    init_utxo_output_index:  'Output index of the init UTxO (usually 0)',
-    // Written by the backend — not filled in by the issuer:
-    minting_policy_id:       'Policy ID of the tokenizable_certificate validator (set by backend)',
+    asset_name:    'Human-readable name of the certified asset',
+    asset_class:   'Category (e.g. Real Estate, Art, Commodity, IP, Membership)',
+    issuer_name:   'Issuing organisation or individual',
+    ipfs_image:    'IPFS CID of the asset image (e.g. QmXxx…)',
+    description:   'Description of the certified asset',
+    jurisdiction:  'Legal or regulatory jurisdiction',
+    asset_id:      'Unique identifier of the asset (e.g. registry number)',
+    owner_address: 'Bech32 address of the wallet that will receive the NFT (e.g. addr1…)',
   };
 
   /**
@@ -324,33 +318,34 @@ class TokenizableCertificateTemplate extends Template {
   public buildTransaction = async (params: BuildTransactionParams): Promise<string> => {
     const { address, hash, metadata, bootstrapTokenName, backendUrl, searchParams } = params;
 
-    const initUtxoTxHash =
-      (searchParams.get('tokenizableInitTxHash') ??
-        (metadata.init_utxo_tx_hash as string | undefined) ??
-        '') as string;
+    const initUtxoTxHash = searchParams.get('tokenizableInitTxHash') ?? '';
     const initUtxoOutputIndex = parseInt(
-      searchParams.get('tokenizableInitOutputIndex') ??
-        (metadata.init_utxo_output_index as string | undefined) ??
-        '0',
+      searchParams.get('tokenizableInitOutputIndex') ?? '0',
       10,
     );
-    const ownerPubKeyHash = (metadata.owner_pub_key_hash as string | undefined) ?? '';
-    const assetNameHex    = (metadata.asset_name_hex    as string | undefined) ?? '';
+
+    const ownerAddress = (metadata.owner_address as string | undefined) ?? '';
+    const assetName    = (metadata.asset_name    as string | undefined) ?? '';
+
+    // Hex-encode the asset name for the on-chain token name.
+    const assetNameHex = Array.from(new TextEncoder().encode(assetName))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
 
     const response = await axios.post(
-      `${backendUrl}/api/v1/extension/tokenizable-certificate/insert`,
+      `${backendUrl}/api/v1/extension/tokenizable-certificate/build`,
       {
-        inserterAddress:     address,
-        key:                 hash,
-        ownerPubKeyHash,
-        assetName:           assetNameHex,
+        type:               'CREATE',
+        senderAddress:      address,
+        certificate:        { hash },
+        ownerAddress,
+        assetName:          assetNameHex,
         initUtxoTxHash,
         initUtxoOutputIndex,
-        bootstrapTokenName:  bootstrapTokenName ?? undefined,
+        bootstrapTokenName: bootstrapTokenName ?? undefined,
       },
     );
 
-    // Extension endpoint returns the hex tx directly as a string.
     return response.data as string;
   }
 
@@ -367,20 +362,19 @@ class TokenizableCertificateTemplate extends Template {
     const explorerPrefix =
       config.cardanoNetwork === 'mainnet' ? '' : config.cardanoNetwork + '.';
 
-    const assetName       = (metadata.asset_name        ?? 'Unnamed Asset')   as string;
-    const assetClass      = (metadata.asset_class       ?? '')                 as string;
-    const issuerName      = (metadata.issuer_name       ?? 'Unknown Issuer')  as string;
-    const ipfsCid         = (metadata.ipfs_image        ?? '')                 as string;
-    const description     = (metadata.description       ?? '')                 as string;
-    const valuation       = metadata.valuation                                  as string | number | null;
-    const valuationCcy    = (metadata.valuation_currency ?? '')                 as string;
-    const jurisdiction    = (metadata.jurisdiction      ?? '')                  as string;
-    const assetId         = (metadata.asset_id          ?? '')                  as string;
-    const mintingPolicyId = (metadata.minting_policy_id ?? '')                  as string;
+    const assetName           = (metadata.asset_name           ?? 'Unnamed Asset')  as string;
+    const assetClass          = (metadata.asset_class          ?? '')                as string;
+    const issuerName          = (metadata.issuer_name          ?? 'Unknown Issuer') as string;
+    const ipfsCid             = (metadata.ipfs_image           ?? '')                as string;
+    const description         = (metadata.description          ?? '')                as string;
+    const jurisdiction        = (metadata.jurisdiction         ?? '')                as string;
+    const assetId             = (metadata.asset_id             ?? '')                as string;
+    const mintingPolicyId     = (metadata.minting_policy_id    ?? '')                as string;
+    const initUtxoTxHash      = (metadata.init_utxo_tx_hash    ?? '')                as string;
+    const initUtxoOutputIndex = parseInt((metadata.init_utxo_output_index ?? '0') as string, 10);
 
     const imageUrl = ipfsCid ? `https://ipfs.io/ipfs/${ipfsCid}` : null;
     const date = timestampToDateTime(certificate.creationTime);
-    const hasValuation = valuation !== null && valuation !== undefined && String(valuation).trim() !== '';
 
     return (
       <div
@@ -441,38 +435,7 @@ class TokenizableCertificateTemplate extends Template {
                 </p>
               </div>
 
-              {/* Valuation badge (desktop) */}
-              {hasValuation && (
-                <div
-                  className="flex-shrink-0 text-right rounded-xl px-4 py-3 hidden sm:block"
-                  style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.18)' }}
-                >
-                  <p className="text-xs uppercase tracking-widest mb-0.5" style={{ color: 'rgba(251,191,36,0.6)' }}>
-                    Valuation
-                  </p>
-                  <p className="text-lg font-bold" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                    {String(valuation)}
-                    {valuationCcy && (
-                      <span className="text-sm font-normal ml-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                        {valuationCcy}
-                      </span>
-                    )}
-                  </p>
-                </div>
-              )}
             </div>
-
-            {/* Valuation (mobile) */}
-            {hasValuation && (
-              <div className="mt-4 sm:hidden">
-                <span className="text-xs uppercase tracking-widest" style={{ color: 'rgba(251,191,36,0.6)' }}>
-                  Valuation:{' '}
-                </span>
-                <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                  {String(valuation)} {valuationCcy}
-                </span>
-              </div>
-            )}
           </div>
 
           {/* ── Body ── */}
@@ -507,6 +470,8 @@ class TokenizableCertificateTemplate extends Template {
               certHash={hash}
               backendUrl={config.backendUrl}
               mintingPolicyId={mintingPolicyId}
+              initUtxoTxHash={initUtxoTxHash}
+              initUtxoOutputIndex={initUtxoOutputIndex}
             />
 
             {/* Provenance footer */}
