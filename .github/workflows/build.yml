@@ -53,7 +53,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:${{ env.APP_VERSION }}
 
-      - name: 🐳 Build and Push Docker Image (uverify-custom-ui)
+      - name: 🐳 Build and Push Docker Image (uverify-ui:builder)
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -61,5 +61,5 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-custom-ui:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-custom-ui:${{ env.APP_VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:builder
+            ${{ secrets.DOCKERHUB_USERNAME }}/uverify-ui:${{ env.APP_VERSION }}-builder
