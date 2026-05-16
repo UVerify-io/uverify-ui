@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.7.1...ui-v3.8.0) (2026-05-16)
+
+
+### Features
+
+* upgrade cardano-connect-with-wallet for CIP-158 support ([a2ad816](https://github.com/UVerify-io/uverify-ui/commit/a2ad816d8ff04ffcdce124746dc48ce9cd61d0ed))
+
 ## [3.7.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.7.0...ui-v3.7.1) (2026-05-09)
 
 
