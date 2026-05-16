@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.7.0...ui-v3.7.1) (2026-05-09)
+
+
+### Bug Fixes
+
+* upload a tag builder version to dockerhub and repair type issue ([edf1bf5](https://github.com/UVerify-io/uverify-ui/commit/edf1bf55c368e4b196fb308520ef83ab1625cdd3))
+
 ## [3.7.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.6.3...ui-v3.7.0) (2026-04-28)
 
 
