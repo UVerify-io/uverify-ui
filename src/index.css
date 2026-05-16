@@ -27,10 +27,6 @@
 
 :root {
     --toastify-toast-width: 100%;
-    --toastify-icon-color-warning: #FFFFFF;
-    --toastify-icon-color-error: #FFFFFF;
-    --toastify-icon-color-info: #FFFFFF;
-    --toastify-icon-color-success: #FFFFFF;      
     --color-blue-50: 239, 250, 255;
     --color-blue-100: 223, 243, 255;
     --color-blue-200: 184, 233, 255;
@@ -133,43 +129,43 @@
   }
 }
 
-.Toastify__toast--info {
-  @apply bg-blue-500/60;
-  @apply text-white;
-  @apply border;
-  @apply border-white/25;
-  @apply backdrop-blur-xs;
-  @apply shadow-xs;
+.Toastify__toast.Toastify__toast--info {
+  --toastify-icon-color-info: #fff;
+  background-color: rgba(6, 176, 241, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.Toastify__toast--success {
-  @apply bg-green-300/50;
-  @apply text-white;
-  @apply border;
-  @apply border-white/25;
-  @apply backdrop-blur-xs;
-  @apply shadow-xs;
+.Toastify__toast.Toastify__toast--success {
+  --toastify-icon-color-success: #fff;
+  background-color: rgba(74, 174, 177, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-.Toastify__toast--warning {
-  @apply bg-yellow-500/60;
-  @apply text-white;
-  @apply border;
-  @apply border-white/25;
-  @apply backdrop-blur-xs;
-  @apply shadow-xs;
+.Toastify__toast.Toastify__toast--warning {
+  --toastify-icon-color-warning: #fff;
+  background-color: rgba(249, 156, 7, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .Toastify__close-button {
-  @apply text-white;
+  color: #fff;
   opacity: 0.8;
 }
 
-.Toastify__toast--error {
-  @apply bg-red-500/60;
-  @apply text-white;
-  @apply border;
-  @apply border-white/25;
-  @apply backdrop-blur-xs;
-  @apply shadow-xs;
+.Toastify__toast.Toastify__toast--error {
+  --toastify-icon-color-error: #fff;
+  background-color: rgba(248, 87, 59, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
