@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.8.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.8.0...ui-v3.8.1) (2026-05-16)
+
+
+### Bug Fixes
+
+* repair alert colors ([21c1bab](https://github.com/UVerify-io/uverify-ui/commit/21c1bab77d445f88a1802ccd78704822b5fb0e51))
+* repair toast positions ([b6e9e28](https://github.com/UVerify-io/uverify-ui/commit/b6e9e280f99920648cad23fc06f9c32d1de37783))
+
 ## [3.8.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.7.1...ui-v3.8.0) (2026-05-16)
 
 
