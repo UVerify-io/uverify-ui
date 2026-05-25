@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.9.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.8.1...ui-v3.9.0) (2026-05-25)
+
+
+### Features
+
+* add identity auth and agent receipt templates ([98285d2](https://github.com/UVerify-io/uverify-ui/commit/98285d26bc451ce739398a06e85a83aa9c93d211))
+
+
+### Bug Fixes
+
+* use latest core package ([84a1657](https://github.com/UVerify-io/uverify-ui/commit/84a1657a7623bd836de9dff521ca44f8e662cabd))
+
 ## [3.8.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.8.0...ui-v3.8.1) (2026-05-16)
 
 
