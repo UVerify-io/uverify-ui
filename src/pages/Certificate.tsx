@@ -123,89 +123,114 @@ const Certificate = () => {
   }, [query, config]);
 
   useEffect(() => {
-    if (displayedCertificates.length > 0) {
-      if (page > displayedCertificates.length) {
-        setPage(displayedCertificates.length);
-        return;
-      }
-      setCertificate(displayedCertificates[page - 1]);
+    async function run() {
+      if (displayedCertificates.length > 0) {
+        if (page > displayedCertificates.length) {
+          setPage(displayedCertificates.length);
+          return;
+        }
+        setCertificate(displayedCertificates[page - 1]);
 
-      const certificateMetadata = JSON.parse(
-        displayedCertificates[page - 1].metadata,
-      );
+        const certificateMetadata = JSON.parse(
+          displayedCertificates[page - 1].metadata,
+        );
 
-      // Resolve uv_url_* fields: values are stored as SHA-256 hashes on-chain.
-      // If the matching URL param is present and its hash matches, replace the
-      // stored hash with the plain value so templates can display it directly.
-      const searchParams = new URLSearchParams(window.location.search);
-      const resolvedMetadata = { ...certificateMetadata };
-      let urlParamMismatch = false;
-      for (const key of Object.keys(resolvedMetadata)) {
-        if (key.startsWith('uv_url_')) {
-          const plainKey = key.slice(7);
-          const urlValue = searchParams.get(plainKey);
-          if (urlValue !== null) {
-            if (sha256(urlValue) === resolvedMetadata[key]) {
-              resolvedMetadata[key] = urlValue;
-            } else {
-              urlParamMismatch = true;
+        // Resolve uv_url_* fields: values are stored as SHA-256 hashes on-chain.
+        // If the matching URL param is present and its hash matches, replace the
+        // stored hash with the plain value so templates can display it directly.
+        const searchParams = new URLSearchParams(window.location.search);
+        const resolvedMetadata = { ...certificateMetadata };
+        let urlParamMismatch = false;
+        for (const key of Object.keys(resolvedMetadata)) {
+          if (key.startsWith('uv_url_')) {
+            const plainKey = key.slice(7);
+            const urlValue = searchParams.get(plainKey);
+            if (urlValue !== null) {
+              if (sha256(urlValue) === resolvedMetadata[key]) {
+                resolvedMetadata[key] = urlValue;
+              } else {
+                urlParamMismatch = true;
+              }
             }
           }
         }
-      }
-      if (urlParamMismatch) {
-        toast.error(
-          'Certificate URL parameter validation failed and one or more provided values do not match the on-chain hashes. This certificate may have been tampered with.',
-          { autoClose: false },
-        );
-      }
+        if (urlParamMismatch) {
+          toast.error(
+            'Certificate URL parameter validation failed and one or more provided values do not match the on-chain hashes. This certificate may have been tampered with.',
+            { autoClose: false },
+          );
+        }
 
-      setMetadata(resolvedMetadata);
-
-      if (
-        config.serviceAccount === displayedCertificates[page - 1].issuer &&
-        certificateMetadata.hasOwnProperty('original-issuer')
-      ) {
-        setIssuer(certificateMetadata['original-issuer']);
-      } else {
-        setIssuer(displayedCertificates[page - 1].issuer);
-      }
-
-      const metadataTemplateId =
-        certificateMetadata['uverify_template_id'] === 'linktree'
-          ? 'socialHub'
-          : certificateMetadata['uverify_template_id'];
-
-      if (
-        certificateMetadata.hasOwnProperty('uverify_template_id') &&
-        templates.hasOwnProperty(metadataTemplateId)
-      ) {
-        const candidateTemplate = templates[metadataTemplateId];
-        const bootstrapWhitelist: string[] | undefined = (
-          candidateTemplate as any
-        ).bootstrapWhitelist;
-        const certBootstrapToken: string | undefined = (
-          displayedCertificates[page - 1] as any
-        ).bootstrapTokenName;
+        setMetadata(resolvedMetadata);
 
         if (
-          bootstrapWhitelist &&
-          bootstrapWhitelist.length > 0 &&
-          (!certBootstrapToken ||
-            !bootstrapWhitelist.includes(certBootstrapToken))
+          config.serviceAccount === displayedCertificates[page - 1].issuer &&
+          certificateMetadata.hasOwnProperty('original-issuer')
         ) {
+          setIssuer(certificateMetadata['original-issuer']);
+        } else {
+          setIssuer(displayedCertificates[page - 1].issuer);
+        }
+
+        const metadataTemplateId =
+          certificateMetadata['uverify_template_id'] === 'linktree'
+            ? 'socialHub'
+            : certificateMetadata['uverify_template_id'];
+
+        if (
+          certificateMetadata.hasOwnProperty('uverify_template_id') &&
+          templates.hasOwnProperty(metadataTemplateId)
+        ) {
+          const candidateTemplate = templates[metadataTemplateId];
+          const bootstrapWhitelist: string[] | undefined = (
+            candidateTemplate as any
+          ).bootstrapWhitelist;
+          const certBootstrapToken: string | undefined = (
+            displayedCertificates[page - 1] as any
+          ).bootstrapTokenName;
+
+          if (
+            bootstrapWhitelist &&
+            bootstrapWhitelist.length > 0 &&
+            (!certBootstrapToken ||
+              !bootstrapWhitelist.includes(certBootstrapToken))
+          ) {
+            setTemplateId('default');
+            restoreDefaults();
+          } else if (
+            candidateTemplate.requiredCredentials &&
+            candidateTemplate.requiredCredentials.length > 0
+          ) {
+            const issuerCredential = displayedCertificates[page - 1].issuer;
+            const credResults = await Promise.all(
+              candidateTemplate.requiredCredentials.map((type) =>
+                axios
+                  .get(
+                    `${config.backendUrl}/api/v1/credential/${issuerCredential}?type=${type}`,
+                  )
+                  .catch(() => null),
+              ),
+            );
+            const allPresent = credResults.every((r) => r?.status === 200);
+            if (allPresent) {
+              setTemplateId(metadataTemplateId);
+              applyTheme(candidateTemplate.theme);
+            } else {
+              setTemplateId('default');
+              restoreDefaults();
+            }
+          } else {
+            setTemplateId(metadataTemplateId);
+            applyTheme(candidateTemplate.theme);
+          }
+        } else {
           setTemplateId('default');
           restoreDefaults();
-        } else {
-          setTemplateId(metadataTemplateId);
-          applyTheme(candidateTemplate.theme);
-          return restoreDefaults;
         }
-      } else {
-        setTemplateId('default');
-        restoreDefaults();
       }
     }
+    run();
+    return restoreDefaults;
   }, [page, displayedCertificates, templates]);
 
   if (!hash) return <div>Invalid hash</div>;

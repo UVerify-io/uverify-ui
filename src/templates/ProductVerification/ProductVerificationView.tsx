@@ -4,6 +4,7 @@ import {
   type UVerifyMetadata,
 } from '@uverify/core';
 import { useState, useEffect, useRef } from 'react';
+import IssuerIdentityBadge from '../../components/IssuerIdentityBadge';
 import { useWebNfc } from '@uverify/asymmetric-nfc';
 import nacl from 'tweetnacl';
 import {
@@ -605,10 +606,19 @@ function ProductVerificationView({
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1 md:mb-2">
             {metadata.productName}
           </h1>
-          {metadata.manufacturer && (
-            <p className="text-pink-100 text-sm md:text-base">
-              by {metadata.manufacturer}
-            </p>
+          {extra.issuer ? (
+            <div className="mt-1">
+              <IssuerIdentityBadge
+                issuerPaymentCredential={extra.issuer}
+                credentialType="identity"
+              />
+            </div>
+          ) : (
+            metadata.manufacturer && (
+              <p className="text-pink-100 text-sm md:text-base">
+                by {metadata.manufacturer}
+              </p>
+            )
           )}
         </div>
 
