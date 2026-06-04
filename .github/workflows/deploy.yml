@@ -89,6 +89,8 @@ jobs:
           }' > firebase.json
 
       - name: 🔨 Download dependencies and build hosting
+        env:
+          GITLAB_TOKEN_BLOCKFORCE: ${{ secrets.GITLAB_TOKEN_BLOCKFORCE }}
         run: npm ci && npm run build
 
       - name: 🦺 Install Playwright browsers

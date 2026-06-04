@@ -64,9 +64,9 @@ const DYNAMIC_TEMPLATES_CSS_FILE = path.resolve(
 
 const TEMPLATE_CACHE_DIR = path.resolve(__dirname, '.template-cache');
 
-// Track repos already cloned/fetched in this run to avoid redundant git operations
-// Key: repository URL — multiple templates from the same repo share one clone
-const clonedRepos = new Map();
+// Track repos already cloned/fetched in this run to avoid redundant git operations.
+// Key: repository URL — multiple templates from the same repo share one clone.
+const clonedRepositories = new Map();
 
 const templateImports = [];
 const templateEntries = [];
@@ -98,9 +98,9 @@ function addTemplate(name, absolutePath) {
   cssSourceDirectives.push(`@source "${sourcePath}";`);
 }
 
-function runGit(cwd, ...gitArgs) {
+function runGit(workingDirectory, ...gitArgs) {
   const result = spawnSync('git', gitArgs, {
-    cwd,
+    cwd: workingDirectory,
     stdio: 'inherit',
     encoding: 'utf-8',
   });
@@ -109,6 +109,35 @@ function runGit(cwd, ...gitArgs) {
       `git ${gitArgs.join(' ')} failed with exit code ${result.status}`
     );
   }
+}
+
+function buildAuthenticatedCloneUrl(repositoryUrl, accessTokenName) {
+  if (!accessTokenName) return repositoryUrl;
+
+  const accessToken = process.env[accessTokenName];
+  if (!accessToken) {
+    console.warn(
+      `Access token env var "${accessTokenName}" is not set — cloning without auth (will fail for private repos)`
+    );
+    return repositoryUrl;
+  }
+
+  const parsedUrl = new URL(repositoryUrl);
+  if (parsedUrl.hostname === 'github.com') {
+    parsedUrl.username = 'x-access-token';
+    parsedUrl.password = accessToken;
+  } else if (
+    parsedUrl.hostname === 'gitlab.com' ||
+    parsedUrl.hostname.includes('gitlab')
+  ) {
+    parsedUrl.username = 'oauth2';
+    parsedUrl.password = accessToken;
+  } else {
+    parsedUrl.username = 'token';
+    parsedUrl.password = accessToken;
+  }
+
+  return parsedUrl.toString();
 }
 
 // --- Process additional-templates.json ---
@@ -160,36 +189,44 @@ if (fs.existsSync(additionalTemplatesFile)) {
       console.log(`Adding local template "${name}" from ${absolutePath}`);
       addTemplate(name, absolutePath);
     } else if (type === 'repository') {
-      const { url, commit, path: repoPath } = template;
+      const { url, commit, path: repositoryFilePath, accessTokenName } = template;
 
-      if (!url || !commit || !repoPath) {
+      if (!url || !commit || !repositoryFilePath) {
         console.warn(
           `Skipping repository template "${name}": missing "url", "commit", or "path".`
         );
         continue;
       }
 
-      // Derive clone directory from the repo URL so multiple templates from
-      // the same repository share a single clone.
-      const repoName = url.replace(/\.git$/, '').split('/').pop();
-      const cacheDir = path.join(TEMPLATE_CACHE_DIR, repoName);
+      // Sanitize the full URL into a unique directory name so two repos from
+      // different hosts or orgs with the same project name don't collide.
+      const repositoryName = url
+        .replace(/\.git$/, '')
+        .replace(/https?:\/\//, '')
+        .replace(/[^a-zA-Z0-9]/g, '_');
+      const repositoryCacheDirectory = path.join(TEMPLATE_CACHE_DIR, repositoryName);
 
       if (!fs.existsSync(TEMPLATE_CACHE_DIR)) {
         fs.mkdirSync(TEMPLATE_CACHE_DIR, { recursive: true });
       }
 
-      if (!clonedRepos.has(url)) {
+      if (!clonedRepositories.has(url)) {
         try {
-          if (!fs.existsSync(cacheDir)) {
-            console.log(`Cloning ${url} into ${cacheDir} ...`);
-            runGit(__dirname, 'clone', url, cacheDir);
+          const authenticatedCloneUrl = buildAuthenticatedCloneUrl(url, accessTokenName);
+
+          if (!fs.existsSync(repositoryCacheDirectory)) {
+            console.log(`Cloning ${url} into ${repositoryCacheDirectory} ...`);
+            runGit(__dirname, 'clone', authenticatedCloneUrl, repositoryCacheDirectory);
           } else {
             console.log(`Fetching updates for ${url} ...`);
-            runGit(cacheDir, 'fetch', '--all');
+            if (accessTokenName) {
+              runGit(repositoryCacheDirectory, 'remote', 'set-url', 'origin', authenticatedCloneUrl);
+            }
+            runGit(repositoryCacheDirectory, 'fetch', '--all');
           }
 
           console.log(`Checking out commit ${commit} ...`);
-          runGit(cacheDir, 'checkout', commit);
+          runGit(repositoryCacheDirectory, 'checkout', commit);
         } catch (err) {
           console.error(
             `Failed to fetch repository template "${name}":`,
@@ -197,14 +234,14 @@ if (fs.existsSync(additionalTemplatesFile)) {
           );
           process.exit(1);
         }
-        clonedRepos.set(url, cacheDir);
+        clonedRepositories.set(url, repositoryCacheDirectory);
       }
 
-      const absolutePath = path.join(cacheDir, repoPath);
+      const absoluteTemplatePath = path.join(repositoryCacheDirectory, repositoryFilePath);
 
-      if (!fs.existsSync(absolutePath)) {
+      if (!fs.existsSync(absoluteTemplatePath)) {
         console.error(
-          `Repository template "${name}": file not found at path "${repoPath}" in commit ${commit}.`
+          `Repository template "${name}": file not found at path "${repositoryFilePath}" in commit ${commit}.`
         );
         process.exit(1);
       }
@@ -212,7 +249,7 @@ if (fs.existsSync(additionalTemplatesFile)) {
       console.log(
         `Adding repository template "${name}" from ${url} at commit ${commit}`
       );
-      addTemplate(name, absolutePath);
+      addTemplate(name, absoluteTemplatePath);
     } else {
       console.warn(
         `Skipping template "${name}": unknown type "${type}". Supported types: "file", "repository".`
