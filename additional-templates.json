@@ -12,5 +12,13 @@
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
     "commit": "20561655fb4cf6714b8ae02d6aa2d24b0ee88770",
     "path": "tadamon/src/Certificate.tsx"
+  },
+  {
+    "type": "repository",
+    "name": "Blockforce",
+    "url": "https://gitlab.com/chaingrid/uverify-template-blockforce",
+    "commit": "8b7796bf3a52ff925e0d6dab0ce2068dd56c41eb",
+    "path": "src/Certificate.tsx",
+    "accessTokenName": "GITLAB_TOKEN_BLOCKFORCE"
   }
 ]
