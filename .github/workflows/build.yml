@@ -27,6 +27,8 @@ jobs:
           echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: 🔨 Build Frontend
+        env:
+          GITLAB_TOKEN_BLOCKFORCE: ${{ secrets.GITLAB_TOKEN_BLOCKFORCE }}
         run: |
           npm install
           npm run build
