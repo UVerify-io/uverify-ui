@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.10.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.9.0...ui-v3.10.0) (2026-06-10)
+
+
+### Features
+
+* add blockforce template to ui templates ([e6f13ba](https://github.com/UVerify-io/uverify-ui/commit/e6f13ba5dc5cd05c8455065052f3d2501a488ceb))
+* prepare supporting additional templates from GitLab, as well as privat repositories ([c31f927](https://github.com/UVerify-io/uverify-ui/commit/c31f9277b839f639f7f4bfecdb68d320b7daee93))
+
+
+### Bug Fixes
+
+* skip failing templates without throwing an error ([f0d8d14](https://github.com/UVerify-io/uverify-ui/commit/f0d8d14e9b3dac2b6f74c7b5e3a9c1e133ced590))
+
 ## [3.9.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.8.1...ui-v3.9.0) (2026-05-25)
 
 
