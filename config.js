@@ -228,11 +228,10 @@ if (fs.existsSync(additionalTemplatesFile)) {
           console.log(`Checking out commit ${commit} ...`);
           runGit(repositoryCacheDirectory, 'checkout', commit);
         } catch (err) {
-          console.error(
-            `Failed to fetch repository template "${name}":`,
-            err.message
+          console.warn(
+            `Skipping repository template "${name}": failed to fetch — ${err.message}`
           );
-          process.exit(1);
+          continue;
         }
         clonedRepositories.set(url, repositoryCacheDirectory);
       }
@@ -240,10 +239,10 @@ if (fs.existsSync(additionalTemplatesFile)) {
       const absoluteTemplatePath = path.join(repositoryCacheDirectory, repositoryFilePath);
 
       if (!fs.existsSync(absoluteTemplatePath)) {
-        console.error(
-          `Repository template "${name}": file not found at path "${repositoryFilePath}" in commit ${commit}.`
+        console.warn(
+          `Skipping repository template "${name}": file not found at path "${repositoryFilePath}" in commit ${commit}.`
         );
-        process.exit(1);
+        continue;
       }
 
       console.log(
