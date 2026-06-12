@@ -17,7 +17,7 @@
     "type": "repository",
     "name": "Blockforce",
     "url": "https://gitlab.com/chaingrid/uverify-template-blockforce",
-    "commit": "7dd0b24dcfc97718e368ca678c7d0398c6b17382",
+    "commit": "2568ac9dab12d3338ca1eb6a8d65635a0d7fbfac",
     "path": "src/Certificate.tsx",
     "accessTokenName": "GITLAB_TOKEN_BLOCKFORCE"
   }
