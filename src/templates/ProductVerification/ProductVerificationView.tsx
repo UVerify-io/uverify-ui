@@ -54,6 +54,7 @@ function ProductVerificationView({
   const [lastPayloadText, setLastPayloadText] = useState<string>('');
   const [lastReadTime, setLastReadTime] = useState<number>(0);
   const [tagInRange, setTagInRange] = useState<boolean>(true);
+  const [showDebug, setShowDebug] = useState(false);
 
   const addDebugLog = (msg: string) => {
     const ts = new Date().toLocaleTimeString();
@@ -149,19 +150,39 @@ function ProductVerificationView({
           } catch {}
           setIsScanning(false);
 
-          // Generate message + start signing
-          const msg = `VERIFY-${Date.now()}-${Math.random()
-            .toString(36)
-            .substring(7)}`;
+          (async () => {
+            if (certificate?.hash) {
+              const hashBuffer = await crypto.subtle.digest(
+                'SHA-256',
+                new TextEncoder().encode(pk.toUpperCase()),
+              );
+              const pkHash = Array.from(new Uint8Array(hashBuffer))
+                .map((b) => b.toString(16).padStart(2, '0'))
+                .join('');
+              addDebugLog(
+                `pubkey SHA-256=${pkHash} registered=${certificate.hash}`,
+              );
+              if (pkHash.toLowerCase() !== certificate.hash.toLowerCase()) {
+                setVerificationStep('failed');
+                setError(
+                  "This product's security chip does not match the registered product. The cryptographic key is different from the one that was registered on the blockchain.",
+                );
+                setIsProcessing(false);
+                return;
+              }
+            }
 
-          setRandomMessage(msg);
-          setVerificationStep('signing');
-          setStatusText(
-            'Public key extracted! Now signing a random message...',
-          );
+            const msg = `VERIFY-${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(7)}`;
 
-          // Auto-start signing
-          window.setTimeout(() => startSigning(msg), 400);
+            setRandomMessage(msg);
+            setVerificationStep('signing');
+            setStatusText(
+              'Public key extracted! Now signing a random message...',
+            );
+            window.setTimeout(() => startSigning(msg), 400);
+          })();
         }
 
         // Not recognized yet -> keep scanning until timeout
@@ -529,9 +550,11 @@ function ProductVerificationView({
         throw new Error(`Public key must be 32 bytes, got ${pkBytes.length}`);
 
       if (certificate?.hash) {
+        // The certificate hash is SHA-256 of the uppercase hex string (UTF-8),
+        // matching how the product was registered at creation time.
         const hashBuffer = await crypto.subtle.digest(
           'SHA-256',
-          pkBytes.buffer as ArrayBuffer,
+          new TextEncoder().encode(pkHex.toUpperCase()),
         );
         const pkHash = Array.from(new Uint8Array(hashBuffer))
           .map((b) => b.toString(16).padStart(2, '0'))
@@ -790,38 +813,49 @@ function ProductVerificationView({
             verificationStep === 'signing' ||
             verificationStep === 'verifying' ||
             verificationStep === 'failed') && (
-            <div className="mt-4 p-3 rounded-lg border border-gray-200 bg-gray-50">
-              <p className="text-xs font-semibold text-gray-700">Debug</p>
-              <p className="text-xs text-gray-700">
-                Last read:{' '}
-                {lastReadTime
-                  ? new Date(lastReadTime).toLocaleTimeString()
-                  : '—'}{' '}
-                {(verificationStep === 'signing' ||
-                  verificationStep === 'verifying') && (
-                  <span
-                    className={tagInRange ? 'text-green-700' : 'text-red-700'}
-                  >
-                    {tagInRange
-                      ? '(tag in range)'
-                      : '(no reads for 5s — likely moved off tag)'}
-                  </span>
-                )}
-              </p>
-              <p className="text-xs text-gray-700 break-all">
-                Last payload: {lastPayloadText || '—'}
-              </p>
-
-              <div className="mt-2 space-y-1">
-                {debugLogs.map((line, i) => (
-                  <p
-                    key={i}
-                    className="text-[11px] font-mono text-gray-700 break-all"
-                  >
-                    {line}
+            <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 overflow-hidden">
+              <button
+                onClick={() => setShowDebug((v) => !v)}
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                <span>Debug logs</span>
+                <span>{showDebug ? '▲' : '▼'}</span>
+              </button>
+              {showDebug && (
+                <div className="px-3 pb-3 space-y-1">
+                  <p className="text-xs text-gray-700">
+                    Last read:{' '}
+                    {lastReadTime
+                      ? new Date(lastReadTime).toLocaleTimeString()
+                      : '—'}{' '}
+                    {(verificationStep === 'signing' ||
+                      verificationStep === 'verifying') && (
+                      <span
+                        className={
+                          tagInRange ? 'text-green-700' : 'text-red-700'
+                        }
+                      >
+                        {tagInRange
+                          ? '(tag in range)'
+                          : '(no reads for 5s — likely moved off tag)'}
+                      </span>
+                    )}
                   </p>
-                ))}
-              </div>
+                  <p className="text-xs text-gray-700 break-all">
+                    Last payload: {lastPayloadText || '—'}
+                  </p>
+                  <div className="mt-1 space-y-1">
+                    {debugLogs.map((line, i) => (
+                      <p
+                        key={i}
+                        className="text-[11px] font-mono text-gray-700 break-all"
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
