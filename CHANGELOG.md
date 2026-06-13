@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.10.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.10.0...ui-v3.10.1) (2026-06-13)
+
+
+### Bug Fixes
+
+* repair public key check in product verification template ([7bae835](https://github.com/UVerify-io/uverify-ui/commit/7bae8352c15c8b9d5d2fa1ae9fc91934587d8ca2))
+
 ## [3.10.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.9.0...ui-v3.10.0) (2026-06-10)
 
 
