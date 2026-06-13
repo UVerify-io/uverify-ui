@@ -507,13 +507,13 @@ function ProductVerificationView({
     return out;
   };
 
-  const verifySignature = (sigHex: string, pkHex: string, msg: string) => {
+  const verifySignature = async (
+    sigHex: string,
+    pkHex: string,
+    msg: string,
+  ) => {
     try {
       addDebugLog(`verifySignature() starting... (raw ed25519)`);
-
-      const sig = hexToBytes(sigHex);
-      const pk = hexToBytes(pkHex);
-      const msgBytes = new TextEncoder().encode(msg);
 
       const pkBytes = hexToBytes(pkHex);
       const sigBytes = hexToBytes(sigHex);
@@ -523,12 +523,31 @@ function ProductVerificationView({
         `verify inputs bytes: pk=${pkBytes.length} sig=${sigBytes.length} msgUtf8=${msgUtf8.length} msg=${JSON.stringify(msg)}`,
       );
 
-      if (sig.length !== 64)
-        throw new Error(`Signature must be 64 bytes, got ${sig.length}`);
-      if (pk.length !== 32)
-        throw new Error(`Public key must be 32 bytes, got ${pk.length}`);
+      if (sigBytes.length !== 64)
+        throw new Error(`Signature must be 64 bytes, got ${sigBytes.length}`);
+      if (pkBytes.length !== 32)
+        throw new Error(`Public key must be 32 bytes, got ${pkBytes.length}`);
 
-      const ok = nacl.sign.detached.verify(msgBytes, sig, pk);
+      if (certificate?.hash) {
+        const hashBuffer = await crypto.subtle.digest(
+          'SHA-256',
+          pkBytes.buffer as ArrayBuffer,
+        );
+        const pkHash = Array.from(new Uint8Array(hashBuffer))
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('');
+        addDebugLog(`pubkey SHA-256=${pkHash} registered=${certificate.hash}`);
+        if (pkHash.toLowerCase() !== certificate.hash.toLowerCase()) {
+          setVerificationStep('failed');
+          setError(
+            "This product's security chip does not match the registered product. The cryptographic key is different from the one that was registered on the blockchain.",
+          );
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      const ok = nacl.sign.detached.verify(msgUtf8, sigBytes, pkBytes);
       addDebugLog(`ed25519.verify result=${String(ok)}`);
 
       if (ok) {
