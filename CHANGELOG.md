@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.11.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.10.1...ui-v3.11.0) (2026-07-05)
+
+
+### Features
+
+* support uv_tid as short alias for uverify_template_id ([54a7aa8](https://github.com/UVerify-io/uverify-ui/commit/54a7aa8539258a2c1f9c913f599a050c08f0a280))
+
 ## [3.10.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.10.0...ui-v3.10.1) (2026-06-13)
 
 
