@@ -298,3 +298,75 @@ test.describe('SocialHub Template Tests', () => {
     ).toBeVisible({ timeout: 5000 });
   });
 });
+
+test.describe('uv_tid Template Alias Tests', () => {
+  const buildCertificate = (metadata: Record<string, string>) => [
+    {
+      ...MOCK_SOCIAL_HUB_CERTIFICATE[0],
+      metadata: JSON.stringify(metadata),
+    },
+  ];
+
+  const mockVerifyResponse = async (
+    page: Parameters<typeof setupCommonMocks>[0],
+    metadata: Record<string, string>,
+  ) => {
+    await setupCommonMocks(page);
+    await page.route(`**/api/v1/verify/${SOCIAL_HUB_HASH}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(buildCertificate(metadata)),
+      });
+    });
+  };
+
+  test('uv_tid selects the template just like uverify_template_id', async ({
+    page,
+  }) => {
+    await mockVerifyResponse(page, {
+      batch_ids: SOCIAL_HUB_BATCH_ID,
+      whitelabel: 'TEST_EVENT_2025',
+      uv_tid: 'socialHub',
+    });
+    await page.route(
+      `**/api/v1/extension/connected-goods/${SOCIAL_HUB_BATCH_ID}/${SOCIAL_HUB_ITEM}`,
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(MOCK_SOCIAL_HUB_DATA),
+        });
+      },
+    );
+
+    await page.goto(`/verify/${SOCIAL_HUB_HASH}/1?item=${SOCIAL_HUB_ITEM}`, {
+      waitUntil: 'networkidle',
+    });
+
+    await expect(page.getByText('Alex Example')).toBeVisible({
+      timeout: 5000,
+    });
+    await expect(page.getByTestId('certificate-headline')).not.toBeVisible();
+  });
+
+  test('uv_tid takes precedence over uverify_template_id when both are present', async ({
+    page,
+  }) => {
+    // uv_tid points at an unknown template, so the page must fall back to the
+    // default template. If the legacy key won, socialHub would render instead
+    // and the default headline would be hidden.
+    await mockVerifyResponse(page, {
+      uv_tid: 'unknownTemplate',
+      uverify_template_id: 'socialHub',
+    });
+
+    await page.goto(`/verify/${SOCIAL_HUB_HASH}/1`, {
+      waitUntil: 'networkidle',
+    });
+
+    await expect(page.getByTestId('certificate-headline')).toBeVisible({
+      timeout: 5000,
+    });
+  });
+});

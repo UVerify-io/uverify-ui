@@ -15,6 +15,7 @@ import {
   applyPolicy,
   ResolvedPolicy,
 } from '../utils/updatePolicy';
+import { resolveTemplateId } from '../utils/templateId';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -172,13 +173,10 @@ const Certificate = () => {
           setIssuer(displayedCertificates[page - 1].issuer);
         }
 
-        const metadataTemplateId =
-          certificateMetadata['uverify_template_id'] === 'linktree'
-            ? 'socialHub'
-            : certificateMetadata['uverify_template_id'];
+        const metadataTemplateId = resolveTemplateId(certificateMetadata);
 
         if (
-          certificateMetadata.hasOwnProperty('uverify_template_id') &&
+          metadataTemplateId !== undefined &&
           templates.hasOwnProperty(metadataTemplateId)
         ) {
           const candidateTemplate = templates[metadataTemplateId];
@@ -235,8 +233,7 @@ const Certificate = () => {
 
   if (!hash) return <div>Invalid hash</div>;
 
-  let template =
-    templates[templateId === 'linktree' ? 'socialHub' : templateId];
+  let template = templates[templateId];
 
   if (!templates.hasOwnProperty(templateId)) {
     template = templates['default'];
@@ -287,7 +284,7 @@ const Certificate = () => {
 
   return (
     <TemplateWrapper
-      key={templateId === 'linktree' ? 'socialHub' : templateId}
+      key={templateId}
       template={template}
       hash={hash}
       metadata={metadata}

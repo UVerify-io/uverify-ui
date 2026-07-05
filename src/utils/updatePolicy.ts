@@ -1,4 +1,5 @@
 import { UVerifyCertificate } from '@uverify/core';
+import { TEMPLATE_ID_KEY } from './templateId';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -68,7 +69,8 @@ export const POLICY_OPTIONS: Array<{
   {
     mode: 'accumulate',
     label: 'Additive only',
-    description: 'Authorised updates may only add new metadata keys, never change existing ones',
+    description:
+      'Authorised updates may only add new metadata keys, never change existing ones',
   },
 ];
 
@@ -80,6 +82,10 @@ function parseMeta(raw: string | undefined): Record<string, unknown> {
   } catch {
     return {};
   }
+}
+
+export function isReservedKey(key: string): boolean {
+  return key.startsWith('uverify_') || key === TEMPLATE_ID_KEY;
 }
 
 function parseAddressList(value: unknown): string[] {
@@ -95,7 +101,9 @@ function parseAddressList(value: unknown): string[] {
  * Derives the effective update policy by aggregating all on-chain submissions.
  * Only submissions from the current policy owner can change the policy.
  */
-export function resolvePolicy(certificates: UVerifyCertificate[]): ResolvedPolicy {
+export function resolvePolicy(
+  certificates: UVerifyCertificate[],
+): ResolvedPolicy {
   if (certificates.length === 0) {
     return { mode: 'append', owner: '', whitelist: [] };
   }
@@ -116,7 +124,8 @@ export function resolvePolicy(certificates: UVerifyCertificate[]): ResolvedPolic
 
     if (isOwner) {
       if (meta.uverify_update_policy || meta.uverify_policy) {
-        mode = (meta.uverify_update_policy ?? meta.uverify_policy) as UpdatePolicy;
+        mode = (meta.uverify_update_policy ??
+          meta.uverify_policy) as UpdatePolicy;
       }
       if (meta.uverify_transfer_ownership) {
         owner = String(meta.uverify_transfer_ownership);
@@ -135,7 +144,8 @@ export function resolvePolicy(certificates: UVerifyCertificate[]): ResolvedPolic
     } else if (whitelist.includes(cert.issuer)) {
       // Whitelisted addresses may change the display mode only.
       if (meta.uverify_update_policy || meta.uverify_policy) {
-        mode = (meta.uverify_update_policy ?? meta.uverify_policy) as UpdatePolicy;
+        mode = (meta.uverify_update_policy ??
+          meta.uverify_policy) as UpdatePolicy;
       }
     }
   }
@@ -168,7 +178,7 @@ export function applyPolicy(
       // from the owner (those that only contain uverify_* keys).
       for (let i = certificates.length - 1; i >= 0; i--) {
         const meta = parseMeta(certificates[i].metadata);
-        const keys = Object.keys(meta).filter((k) => !k.startsWith('uverify_'));
+        const keys = Object.keys(meta).filter((k) => !isReservedKey(k));
         if (keys.length > 0 || i === 0) return [certificates[i]];
       }
       return [certificates[0]];
@@ -183,7 +193,9 @@ export function applyPolicy(
       // submission so that historical certs remain visible even after the owner
       // later adds or removes addresses.
       const firstMeta = parseMeta(certificates[0].metadata);
-      let currentWhitelist = parseAddressList(firstMeta.uverify_update_whitelist);
+      let currentWhitelist = parseAddressList(
+        firstMeta.uverify_update_whitelist,
+      );
       const displayed: UVerifyCertificate[] = [certificates[0]];
 
       for (let i = 1; i < certificates.length; i++) {
@@ -196,7 +208,9 @@ export function applyPolicy(
           }
           if (meta.uverify_whitelist_remove) {
             const removes = parseAddressList(meta.uverify_whitelist_remove);
-            currentWhitelist = currentWhitelist.filter((a) => !removes.includes(a));
+            currentWhitelist = currentWhitelist.filter(
+              (a) => !removes.includes(a),
+            );
           }
           displayed.push(cert);
         } else if (currentWhitelist.includes(cert.issuer)) {
@@ -217,7 +231,7 @@ export function applyPolicy(
         if (!isAuthorised(cert)) continue;
         const meta = parseMeta(cert.metadata);
         for (const [key, value] of Object.entries(meta)) {
-          if (!key.startsWith('uverify_') && !(key in baseMeta)) {
+          if (!isReservedKey(key) && !(key in baseMeta)) {
             baseMeta[key] = value;
           }
         }
