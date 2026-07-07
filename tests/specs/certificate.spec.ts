@@ -400,3 +400,28 @@ test.describe('Salted URL param display', () => {
     await expect(page.locator(`input[value="${salted}"]`)).not.toBeVisible();
   });
 });
+
+test.describe('Share dialog', () => {
+  test('opens with short url, QR code and LinkedIn link', async ({ page }) => {
+    await setupCommonMocks(page);
+    await page.route(`**/api/v1/verify/${KNOWN_HASH}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_CERTIFICATE),
+      });
+    });
+    await page.goto(`/verify/${KNOWN_HASH}/1`, { waitUntil: 'networkidle' });
+
+    await page.getByTestId('share-button').click();
+    await expect(page.getByTestId('share-dialog')).toBeVisible();
+    await expect(page.getByTestId('share-short-url')).toHaveValue(
+      'https://go.uverify.io/RXYWODQzXG',
+    );
+    await expect(page.getByTestId('share-dialog').locator('svg')).toBeVisible();
+    await expect(page.getByTestId('share-linkedin')).toHaveAttribute(
+      'href',
+      /linkedin\.com\/profile\/add/,
+    );
+  });
+});

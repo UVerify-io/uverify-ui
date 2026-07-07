@@ -50,3 +50,39 @@ test.describe('isReservedKey', () => {
     expect(isReservedKey('title')).toBe(false);
   });
 });
+
+import {
+  buildLinkedInAddToProfileUrl,
+  buildEmbedSnippet,
+} from '../../src/utils/share';
+
+test.describe('share utils', () => {
+  test('builds a prefilled LinkedIn add-to-profile url', () => {
+    const url = buildLinkedInAddToProfileUrl({
+      name: 'Certified Cardano Developer',
+      organizationName: 'Cardano Academy',
+      issueYear: 2026,
+      issueMonth: 7,
+      certUrl: 'https://go.uverify.io/RXYWODQzXG',
+      certId: 'RXYWODQzXG',
+    });
+    expect(url).toContain('https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME');
+    expect(url).toContain('name=Certified+Cardano+Developer');
+    expect(url).toContain('organizationName=Cardano+Academy');
+    expect(url).toContain('issueYear=2026');
+    expect(url).toContain('issueMonth=7');
+    expect(url).toContain('certId=RXYWODQzXG');
+  });
+
+  test('embed snippet escapes html and links the short url', () => {
+    const snippet = buildEmbedSnippet(
+      'https://go.uverify.io/RXYWODQzXG',
+      'https://app.uverify.io/og/diploma.png',
+      'My "Diploma" <2026>',
+    );
+    expect(snippet).toContain('href="https://go.uverify.io/RXYWODQzXG"');
+    expect(snippet).toContain('src="https://app.uverify.io/og/diploma.png"');
+    expect(snippet).not.toContain('<2026>');
+    expect(snippet).toContain('&quot;Diploma&quot;');
+  });
+});

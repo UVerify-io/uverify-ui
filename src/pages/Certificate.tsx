@@ -16,6 +16,12 @@ import {
   ResolvedPolicy,
 } from '../utils/updatePolicy';
 import { resolveTemplateId } from '../utils/templateId';
+import ShareDialog from '../components/ShareDialog';
+import { shortCodeFromHash } from '../utils/shortCode';
+import {
+  buildLinkedInAddToProfileUrl,
+  buildEmbedSnippet,
+} from '../utils/share';
 
 const Certificate = () => {
   const { hash, query } = useParams();
@@ -43,6 +49,7 @@ const Certificate = () => {
   const config = useUVerifyConfig();
   const navigate = useNavigate();
   const [templates, setTemplates] = useState<Templates>({});
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => {
     if (!config.backendUrl) return;
@@ -233,6 +240,26 @@ const Certificate = () => {
 
   if (!hash) return <div>Invalid hash</div>;
 
+  const shortUrl = `${config.shortLinkDomain}/${shortCodeFromHash(hash)}${window.location.search}`;
+  const certificateTitle =
+    typeof metadata.title === 'string' ? metadata.title : 'Certificate';
+  const organizationName =
+    typeof metadata.issuer === 'string' ? metadata.issuer : 'UVerify';
+  const issued = certificate ? new Date(certificate.creationTime) : new Date();
+  const linkedInUrl = buildLinkedInAddToProfileUrl({
+    name: certificateTitle,
+    organizationName,
+    issueYear: issued.getFullYear(),
+    issueMonth: issued.getMonth() + 1,
+    certUrl: shortUrl,
+    certId: shortCodeFromHash(hash),
+  });
+  const embedSnippet = buildEmbedSnippet(
+    shortUrl,
+    `${window.location.origin}/og/${templateId}.png`,
+    certificateTitle,
+  );
+
   let template = templates[templateId];
 
   if (!templates.hasOwnProperty(templateId)) {
@@ -283,15 +310,32 @@ const Certificate = () => {
   }
 
   return (
-    <TemplateWrapper
-      key={templateId}
-      template={template}
-      hash={hash}
-      metadata={metadata}
-      certificate={certificate}
-      pagination={pagination}
-      extra={extra}
-    />
+    <>
+      <TemplateWrapper
+        key={templateId}
+        template={template}
+        hash={hash}
+        metadata={metadata}
+        certificate={certificate}
+        pagination={pagination}
+        extra={extra}
+      />
+      <button
+        onClick={() => setShareOpen(true)}
+        data-testid="share-button"
+        aria-label="Share certificate"
+        className="fixed bottom-6 right-6 z-40 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm hover:bg-white/20 print:hidden"
+      >
+        Share
+      </button>
+      <ShareDialog
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        shortUrl={shortUrl}
+        linkedInUrl={linkedInUrl}
+        embedSnippet={embedSnippet}
+      />
+    </>
   );
 };
 

@@ -27,6 +27,7 @@
     "react-dom": "^19.2.6",
     "react-i18next": "^17.0.8",
     "react-peeps": "^0.1.10",
+    "react-qr-code": "^2.2.0",
     "react-router-dom": "^7.15.1",
     "react-toastify": "^11.1.0",
     "seedrandom": "^3.0.5",
