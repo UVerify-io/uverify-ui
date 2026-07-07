@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { CertificatePage } from '../pages/certificatePage';
 import { setupCommonMocks } from '../helpers/routeMocks';
+import { sha256 } from 'js-sha256';
 
 const SOCIAL_HUB_HASH =
   '243d719da7c49d8616723e0cfb698611b0f370f0b34a744b2e0e88b55cd86fa8';
@@ -368,5 +369,34 @@ test.describe('uv_tid Template Alias Tests', () => {
     await expect(page.getByTestId('certificate-headline')).toBeVisible({
       timeout: 5000,
     });
+  });
+});
+
+test.describe('Salted URL param display', () => {
+  test('verified uv_url_ value is displayed without the salt suffix', async ({
+    page,
+  }) => {
+    await setupCommonMocks(page);
+    const salted = 'Jane Doe~x7Rk2p';
+    await page.route(`**/api/v1/verify/${SOCIAL_HUB_HASH}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            ...MOCK_SOCIAL_HUB_CERTIFICATE[0],
+            metadata: JSON.stringify({ uv_url_name: sha256(salted) }),
+          },
+        ]),
+      });
+    });
+
+    await page.goto(
+      `/verify/${SOCIAL_HUB_HASH}/1?name=${encodeURIComponent(salted)}`,
+      { waitUntil: 'networkidle' },
+    );
+
+    await expect(page.locator('input[value="Jane Doe"]')).toBeVisible();
+    await expect(page.locator(`input[value="${salted}"]`)).not.toBeVisible();
   });
 });

@@ -5,7 +5,7 @@ import axios from 'axios';
 import Pagination from '../components/Pagination';
 import { toast } from 'react-toastify';
 import { getTemplates, Templates } from '../templates';
-import { timestampToDateTime } from '../utils/tools';
+import { timestampToDateTime, cropSalt } from '../utils/tools';
 import { useUVerifyTheme } from '../utils/hooks';
 import TemplateWrapper from '../templates/TemplateWrapper';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
@@ -148,7 +148,7 @@ const Certificate = () => {
             const urlValue = searchParams.get(plainKey);
             if (urlValue !== null) {
               if (sha256(urlValue) === resolvedMetadata[key]) {
-                resolvedMetadata[key] = urlValue;
+                resolvedMetadata[key] = cropSalt(urlValue);
               } else {
                 urlParamMismatch = true;
               }

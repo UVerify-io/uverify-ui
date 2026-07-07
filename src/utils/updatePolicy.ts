@@ -84,8 +84,17 @@ function parseMeta(raw: string | undefined): Record<string, unknown> {
   }
 }
 
+/**
+ * System-controlled keys that must never be edited via the UI.
+ * uverify_* and uv_og_* carry control directives or preview text and must not
+ * be injectable via accumulate. uv_url_* stays unreserved and is user-editable.
+ */
 export function isReservedKey(key: string): boolean {
-  return key.startsWith('uverify_') || key === TEMPLATE_ID_KEY;
+  return (
+    key.startsWith('uverify_') ||
+    key.startsWith('uv_og_') ||
+    key === TEMPLATE_ID_KEY
+  );
 }
 
 function parseAddressList(value: unknown): string[] {
