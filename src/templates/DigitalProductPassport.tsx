@@ -138,6 +138,7 @@ class DigitalProductPassportTemplate extends Template {
   public name = 'Digital Product Passport';
   /** Default: only the issuer wallet may push updates, newest version shown. */
   public defaultUpdatePolicy = 'restricted' as const;
+  public shareable = true;
 
   public layoutMetadata = {
     // ── Identity

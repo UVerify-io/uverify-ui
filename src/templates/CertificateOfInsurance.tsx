@@ -31,6 +31,7 @@ function formatDate(dateStr: string): string {
 class CertificateOfInsuranceTemplate extends Template {
   public name = 'Certificate of Insurance';
   public defaultUpdatePolicy = 'restricted' as const;
+  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Issuing insurance company name',
