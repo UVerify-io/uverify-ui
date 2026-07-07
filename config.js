@@ -73,6 +73,7 @@ const clonedRepositories = new Map();
 
 const templateImports = [];
 const templateEntries = [];
+const dynamicTemplateNames = [];
 const cssSourceDirectives = [];
 
 function addTemplate(name, absolutePath) {
@@ -90,6 +91,7 @@ function addTemplate(name, absolutePath) {
 
   templateImports.push(`import ${importId} from '${importPath}';`);
   templateEntries.push(`  ${key}: new ${importId}(config),`);
+  dynamicTemplateNames.push(key);
 
   const parentDir = path.dirname(absolutePath);
   const relativeParentDir = path
@@ -298,3 +300,15 @@ const dynamicTemplatesCssContent = `/* Auto-generated file - do not edit manuall
   '\n'
 )}\n`;
 fs.writeFileSync(DYNAMIC_TEMPLATES_CSS_FILE, dynamicTemplatesCssContent);
+
+const OG_DIR = path.resolve(__dirname, 'public/og');
+const ogDefault = path.join(OG_DIR, 'default.png');
+if (fs.existsSync(ogDefault)) {
+  for (const templateName of dynamicTemplateNames) {
+    const target = path.join(OG_DIR, `${templateName}.png`);
+    if (!fs.existsSync(target)) {
+      fs.copyFileSync(ogDefault, target);
+      console.log(`og image fallback created for template "${templateName}"`);
+    }
+  }
+}

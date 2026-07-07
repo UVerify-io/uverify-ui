@@ -81,6 +81,10 @@ jobs:
               ],
               "rewrites": [
                 {
+                  "source": "/og/**",
+                  "destination": "/og/default.png"
+                },
+                {
                   "source": "**",
                   "destination": "/index.html"
                 }
