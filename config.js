@@ -145,6 +145,8 @@ function buildAuthenticatedCloneUrl(repositoryUrl, accessTokenName) {
   return parsedUrl.toString();
 }
 
+const OG_DIR = path.resolve(__dirname, 'public/og');
+
 // --- Process additional-templates.json ---
 const additionalTemplatesFile = process.env.ADDITIONAL_TEMPLATES_FILE
   ? resolvePath(process.env.ADDITIONAL_TEMPLATES_FILE)
@@ -193,6 +195,18 @@ if (fs.existsSync(additionalTemplatesFile)) {
 
       console.log(`Adding local template "${name}" from ${absolutePath}`);
       addTemplate(name, absolutePath);
+
+      if (template.ogImage) {
+        const resolvedOgImage = resolvePath(template.ogImage);
+        const ogImageKey = name.charAt(0).toLowerCase() + name.slice(1);
+        if (fs.existsSync(resolvedOgImage)) {
+          fs.mkdirSync(OG_DIR, { recursive: true });
+          fs.copyFileSync(resolvedOgImage, path.join(OG_DIR, `${ogImageKey}.png`));
+          console.log(`og image registered for template "${name}"`);
+        } else {
+          console.warn(`og image not found for template "${name}": ${resolvedOgImage}`);
+        }
+      }
     } else if (type === 'repository') {
       const { url, commit, path: repositoryFilePath, accessTokenName } = template;
 
@@ -254,6 +268,18 @@ if (fs.existsSync(additionalTemplatesFile)) {
         `Adding repository template "${name}" from ${url} at commit ${commit}`
       );
       addTemplate(name, absoluteTemplatePath);
+
+      if (template.ogImage) {
+        const resolvedOgImage = path.join(repositoryCacheDirectory, template.ogImage);
+        const ogImageKey = name.charAt(0).toLowerCase() + name.slice(1);
+        if (fs.existsSync(resolvedOgImage)) {
+          fs.mkdirSync(OG_DIR, { recursive: true });
+          fs.copyFileSync(resolvedOgImage, path.join(OG_DIR, `${ogImageKey}.png`));
+          console.log(`og image registered for template "${name}"`);
+        } else {
+          console.warn(`og image not found for template "${name}": ${resolvedOgImage}`);
+        }
+      }
     } else {
       console.warn(
         `Skipping template "${name}": unknown type "${type}". Supported types: "file", "repository".`
@@ -301,7 +327,6 @@ const dynamicTemplatesCssContent = `/* Auto-generated file - do not edit manuall
 )}\n`;
 fs.writeFileSync(DYNAMIC_TEMPLATES_CSS_FILE, dynamicTemplatesCssContent);
 
-const OG_DIR = path.resolve(__dirname, 'public/og');
 const ogDefault = path.join(OG_DIR, 'default.png');
 if (fs.existsSync(ogDefault)) {
   for (const templateName of dynamicTemplateNames) {

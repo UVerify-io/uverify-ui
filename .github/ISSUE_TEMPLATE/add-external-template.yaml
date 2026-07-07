@@ -44,6 +44,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    attributes:
+      label: Path to OG Preview Image
+      description: The relative path within the repository to a 1200×630 PNG image used for social preview cards. Leave blank to use the default preview image.
+      placeholder: og-preview.png
+    validations:
+      required: false
+
   - type: textarea
     attributes:
       label: Template Description
