@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import QRCode from 'react-qr-code';
 
 interface ShareDialogProps {
@@ -16,15 +16,27 @@ const ShareDialog = ({
   linkedInUrl,
   embedSnippet,
 }: ShareDialogProps) => {
-  const [copied, setCopied] = useState<'link' | 'embed' | null>(null);
+  const [copied, setCopied] = useState<'link' | 'embed' | 'failed' | null>(null);
+  const resetTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    return () => {
+      if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    };
+  }, []);
 
   const copy = async (text: string, marker: 'link' | 'embed') => {
-    await navigator.clipboard.writeText(text);
-    setCopied(marker);
-    setTimeout(() => setCopied(null), 2000);
+    if (resetTimeout.current) clearTimeout(resetTimeout.current);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(marker);
+    } catch {
+      setCopied('failed');
+    }
+    resetTimeout.current = setTimeout(() => setCopied(null), 2000);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -53,7 +65,7 @@ const ShareDialog = ({
             onClick={() => copy(shortUrl, 'link')}
             className="cursor-pointer rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition duration-200 hover:bg-white/20"
           >
-            {copied === 'link' ? 'Copied' : 'Copy'}
+            {copied === 'link' ? 'Copied' : copied === 'failed' ? 'Copy failed' : 'Copy'}
           </button>
         </div>
         <a
@@ -70,7 +82,7 @@ const ShareDialog = ({
           data-testid="share-embed"
           className="w-full rounded-lg border border-white/20 px-3 py-2 text-sm text-white/75 hover:text-white"
         >
-          {copied === 'embed' ? 'Embed code copied' : 'Copy embed code'}
+          {copied === 'embed' ? 'Embed code copied' : copied === 'failed' ? 'Copy failed' : 'Copy embed code'}
         </button>
       </div>
     </div>
