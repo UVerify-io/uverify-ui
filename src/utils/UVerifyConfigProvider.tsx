@@ -4,6 +4,7 @@ export type UVerifyConfig = {
   backendUrl: string;
   cardanoNetwork: string;
   serviceAccount: string;
+  shortLinkDomain: string;
 };
 
 const UVerifyConfigContext = createContext<UVerifyConfig | null>(null);
@@ -28,6 +29,7 @@ export const UVerifyConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 
         setConfig({
           ...data,
+          shortLinkDomain: data.shortLinkDomain ?? 'https://go.uverify.io',
           serviceAccount:
             data.cardanoNetwork.toLowerCase() === 'mainnet'
               ? mainnetServiceAccount
