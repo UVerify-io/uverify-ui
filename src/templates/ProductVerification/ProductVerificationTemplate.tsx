@@ -11,10 +11,7 @@ import ProductVerificationView from './ProductVerificationView';
 class ProductVerificationTemplate extends Template {
   public name = 'ProductVerification';
   public defaultUpdatePolicy = 'first' as const;
-  public whitelist = [
-    'addr1qx5sntqjtgyxqhxrgk9tusxn4d4l779p6vupgnhcw8qng5jpzxceaupuyg04ft759k29yucngkf50zdxmj0rn8jjgmasdlampf',
-    'addr_test1qrsvfa4tsqemxv5gxz2ngtxjqs62axd8rhfspf7rf2fc0ff4y7x36llgd5535syfm4u7v59sg4puqjt8z98gqy37dupsk6snpk',
-  ];
+
   public theme: Partial<ThemeSettings> = {
     background: 'bg-linear-to-br from-pink-100 via-purple-100 to-blue-100',
     footer: {
