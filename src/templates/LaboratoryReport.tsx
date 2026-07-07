@@ -19,6 +19,7 @@ function formatLabel(key: string): string {
 class LaboratoryReportTemplate extends Template {
   public name = 'Laboratory Report';
   public defaultUpdatePolicy = 'first' as const;
+  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Issuing laboratory or institution',

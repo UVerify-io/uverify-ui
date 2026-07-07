@@ -402,13 +402,24 @@ test.describe('Salted URL param display', () => {
 });
 
 test.describe('Share dialog', () => {
-  test('opens with short url, QR code and LinkedIn link', async ({ page }) => {
+  test('opens with short url, QR code and LinkedIn link on a shareable template', async ({
+    page,
+  }) => {
     await setupCommonMocks(page);
     await page.route(`**/api/v1/verify/${KNOWN_HASH}`, async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(MOCK_CERTIFICATE),
+        body: JSON.stringify([
+          {
+            ...MOCK_CERTIFICATE[0],
+            metadata: JSON.stringify({
+              uv_tid: 'diploma',
+              issuer: 'Cardano Academy',
+              title: 'Certified Cardano Developer',
+            }),
+          },
+        ]),
       });
     });
     await page.goto(`/verify/${KNOWN_HASH}/1`, { waitUntil: 'networkidle' });
@@ -423,6 +434,21 @@ test.describe('Share dialog', () => {
       'href',
       /linkedin\.com\/profile\/add/,
     );
+  });
+
+  test('is absent on templates that do not opt in', async ({ page }) => {
+    await setupCommonMocks(page);
+    await page.route(`**/api/v1/verify/${KNOWN_HASH}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(MOCK_CERTIFICATE),
+      });
+    });
+    await page.goto(`/verify/${KNOWN_HASH}/1`, { waitUntil: 'networkidle' });
+
+    await expect(page.getByTestId('certificate-headline')).toBeVisible();
+    await expect(page.getByTestId('share-button')).not.toBeVisible();
   });
 });
 

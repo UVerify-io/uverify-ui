@@ -320,21 +320,25 @@ const Certificate = () => {
         pagination={pagination}
         extra={extra}
       />
-      <button
-        onClick={() => setShareOpen(true)}
-        data-testid="share-button"
-        aria-label="Share certificate"
-        className="fixed bottom-6 right-6 z-40 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm hover:bg-white/20 print:hidden"
-      >
-        Share
-      </button>
-      <ShareDialog
-        isOpen={shareOpen}
-        onClose={() => setShareOpen(false)}
-        shortUrl={shortUrl}
-        linkedInUrl={linkedInUrl}
-        embedSnippet={embedSnippet}
-      />
+      {(template as { shareable?: boolean }).shareable === true && (
+        <>
+          <button
+            onClick={() => setShareOpen(true)}
+            data-testid="share-button"
+            aria-label="Share certificate"
+            className="fixed bottom-6 right-6 z-40 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm hover:bg-white/20 print:hidden"
+          >
+            Share
+          </button>
+          <ShareDialog
+            isOpen={shareOpen}
+            onClose={() => setShareOpen(false)}
+            shortUrl={shortUrl}
+            linkedInUrl={linkedInUrl}
+            embedSnippet={embedSnippet}
+          />
+        </>
+      )}
     </>
   );
 };

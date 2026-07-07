@@ -10,6 +10,7 @@ import DocumentIntegrityView from './DocumentIntegrityView';
 class DocumentIntegrityTemplate extends Template {
   public name = 'Document Integrity';
   public defaultUpdatePolicy = 'first' as const;
+  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Name of the person or organization who certified this file',
