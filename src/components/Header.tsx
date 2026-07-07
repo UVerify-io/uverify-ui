@@ -34,7 +34,7 @@ const Header = ({ title, fingerprint }: HeaderProps) => {
   );
 
   return (
-    <header className="flex items-center w-full py-1">
+    <header className="flex items-center w-full py-1 print:hidden">
       <div
         onClick={() => navigate('/')}
         className="flex items-center cursor-pointer group min-w-[92px] min-[410px]:min-w-[164px]"

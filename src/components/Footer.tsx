@@ -18,7 +18,7 @@ const Footer = ({ className }: FooterProps) => {
   return (
     <footer
       data-testid="footer"
-      className={'flex flex-col items-center p-1 text-white mt-4 ' + className}
+      className={'flex flex-col items-center p-1 text-white mt-4 print:hidden' + className}
     >
       <div className="mt-6 mb-2">
         <IconButton

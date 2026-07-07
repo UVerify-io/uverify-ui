@@ -10,6 +10,7 @@ import DOMPurify from 'dompurify';
 import { JSX } from 'react';
 import uverifyIcon from '../assets/uverify.svg';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
+import { PrintDownloadButton, PrintQr } from '../components/CertificatePrint';
 
 const ChainIcon = () => (
   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0 }}>
@@ -125,6 +126,16 @@ class DiplomaTemplate extends Template {
 
     const config = useUVerifyConfig();
     const explorerUrlPrefix = config.cardanoNetwork === 'mainnet' ? '' : config.cardanoNetwork + '.';
+
+    const isUnresolvedHash = (value: string) => /^[0-9a-f]{64}$/i.test(value);
+    const rawName = typeof metadata['uv_url_name'] === 'string' ? metadata['uv_url_name'] : undefined;
+    const resolvedName = rawName && !isUnresolvedHash(rawName) ? rawName : undefined;
+    const filenameParts = [
+      typeof metadata.issuer === 'string' ? metadata.issuer : 'UVerify',
+      typeof metadata.title === 'string' ? metadata.title : 'Certificate',
+      resolvedName,
+    ].filter(Boolean);
+    const pdfFilename = filenameParts.join(' - ');
     const issuer = metadata.issuer ?? 'Institution';
     // uv_url_name is stored as a SHA-256 hash on-chain; Certificate.tsx resolves
     // the plain value from the ?name= URL param and writes it back in-place.
@@ -376,7 +387,12 @@ class DiplomaTemplate extends Template {
                 </svg>
               </a>
             )}
+
+            <PrintQr hash={hash} />
           </div>
+        </div>
+        <div className="flex justify-center mt-4">
+          <PrintDownloadButton filename={pdfFilename} />
         </div>
       </div>
     );

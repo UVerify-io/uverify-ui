@@ -425,3 +425,38 @@ test.describe('Share dialog', () => {
     );
   });
 });
+
+test.describe('Diploma print view', () => {
+  const DIPLOMA_METADATA = {
+    uv_tid: 'diploma',
+    issuer: 'Cardano Academy',
+    title: 'Certified Cardano Developer',
+  };
+
+  test('shows download button on screen and QR only in print', async ({
+    page,
+  }) => {
+    await setupCommonMocks(page);
+    await page.route(`**/api/v1/verify/${KNOWN_HASH}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            ...MOCK_CERTIFICATE[0],
+            metadata: JSON.stringify(DIPLOMA_METADATA),
+          },
+        ]),
+      });
+    });
+    await page.goto(`/verify/${KNOWN_HASH}/1`, { waitUntil: 'networkidle' });
+
+    await expect(page.getByTestId('print-download-button')).toBeVisible();
+    await expect(page.getByTestId('print-qr')).not.toBeVisible();
+
+    await page.emulateMedia({ media: 'print' });
+    await expect(page.getByTestId('print-qr')).toBeVisible();
+    await expect(page.getByTestId('print-download-button')).not.toBeVisible();
+    await expect(page.getByTestId('share-button')).not.toBeVisible();
+  });
+});
