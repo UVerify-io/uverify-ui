@@ -11,6 +11,7 @@ import { JSX } from 'react';
 import uverifyIcon from '../assets/uverify.svg';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import { PrintDownloadButton, PrintQr } from '../components/CertificatePrint';
+import CertificateShare from '../components/CertificateShare';
 
 const ChainIcon = () => (
   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0 }}>
@@ -28,7 +29,6 @@ const ChainIcon = () => (
 class DiplomaTemplate extends Template {
   public name = 'Diploma';
   public defaultUpdatePolicy = 'first' as const;
-  public shareable = true;
   public theme: Partial<ThemeSettings> = {
     background: 'bg-slate-950',
     colors: {
@@ -395,6 +395,7 @@ class DiplomaTemplate extends Template {
         <div className="flex justify-center mt-4">
           <PrintDownloadButton filename={pdfFilename} />
         </div>
+        <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="diploma" />
       </div>
     );
   }

@@ -8,6 +8,7 @@ import { timestampToDateTime } from '../utils/tools';
 import { JSX } from 'react';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import uverifyIcon from '../assets/uverify.svg';
+import CertificateShare from '../components/CertificateShare';
 
 function formatLabel(key: string): string {
   return key
@@ -19,7 +20,6 @@ function formatLabel(key: string): string {
 class LaboratoryReportTemplate extends Template {
   public name = 'Laboratory Report';
   public defaultUpdatePolicy = 'first' as const;
-  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Issuing laboratory or institution',
@@ -273,6 +273,7 @@ class LaboratoryReportTemplate extends Template {
             <img src={uverifyIcon} width="18" height="18" alt="UVerify" style={{ opacity: 0.25 }} />
           </div>
         </div>
+        <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="laboratoryReport" />
       </div>
     );
   }

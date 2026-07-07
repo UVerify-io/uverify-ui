@@ -8,6 +8,7 @@ import { timestampToDateTime } from '../utils/tools';
 import { JSX } from 'react';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import uverifyIcon from '../assets/uverify.svg';
+import CertificateShare from '../components/CertificateShare';
 
 function formatCoverageLabel(key: string): string {
   return key
@@ -31,7 +32,6 @@ function formatDate(dateStr: string): string {
 class CertificateOfInsuranceTemplate extends Template {
   public name = 'Certificate of Insurance';
   public defaultUpdatePolicy = 'restricted' as const;
-  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Issuing insurance company name',
@@ -690,6 +690,7 @@ class CertificateOfInsuranceTemplate extends Template {
             <img src={uverifyIcon} width="16" height="16" alt="UVerify" style={{ opacity: 0.2 }} />
           </div>
         </div>
+        <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="certificateOfInsurance" />
       </div>
     );
   }

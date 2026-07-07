@@ -6,11 +6,11 @@ import {
   type UVerifyMetadata,
 } from '@uverify/core';
 import DocumentIntegrityView from './DocumentIntegrityView';
+import CertificateShare from '../../components/CertificateShare';
 
 class DocumentIntegrityTemplate extends Template {
   public name = 'Document Integrity';
   public defaultUpdatePolicy = 'first' as const;
-  public shareable = true;
 
   public layoutMetadata = {
     issuer: 'Name of the person or organization who certified this file',
@@ -31,12 +31,15 @@ class DocumentIntegrityTemplate extends Template {
     extra: UVerifyCertificateExtraData,
   ): JSX.Element {
     return (
-      <DocumentIntegrityView
-        hash={hash}
-        metadata={metadata}
-        certificate={certificate}
-        _extra={extra}
-      />
+      <>
+        <DocumentIntegrityView
+          hash={hash}
+          metadata={metadata}
+          certificate={certificate}
+          _extra={extra}
+        />
+        <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="documentIntegrity" />
+      </>
     );
   }
 }

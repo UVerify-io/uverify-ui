@@ -8,6 +8,7 @@ import { timestampToDateTime } from '../utils/tools';
 import { JSX } from 'react';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import uverifyIcon from '../assets/uverify.svg';
+import CertificateShare from '../components/CertificateShare';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -138,7 +139,6 @@ class DigitalProductPassportTemplate extends Template {
   public name = 'Digital Product Passport';
   /** Default: only the issuer wallet may push updates, newest version shown. */
   public defaultUpdatePolicy = 'restricted' as const;
-  public shareable = true;
 
   public layoutMetadata = {
     // ── Identity
@@ -250,6 +250,7 @@ class DigitalProductPassportTemplate extends Template {
     };
 
     return (
+      <>
       <div
         style={{
           minHeight: '100vh',
@@ -1015,6 +1016,8 @@ class DigitalProductPassportTemplate extends Template {
           </div>
         </div>
       </div>
+      <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="digitalProductPassport" />
+      </>
     );
   }
 }
