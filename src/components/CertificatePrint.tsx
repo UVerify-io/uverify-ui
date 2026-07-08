@@ -2,7 +2,13 @@ import QRCode from 'react-qr-code';
 import { shortCodeFromHash } from '../utils/shortCode';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 
-export const PrintDownloadButton = ({ filename }: { filename: string }) => {
+export const PrintDownloadButton = ({
+  filename,
+  className,
+}: {
+  filename: string;
+  className?: string;
+}) => {
   const handleDownload = () => {
     const previousTitle = document.title;
     document.title = filename;
@@ -14,7 +20,10 @@ export const PrintDownloadButton = ({ filename }: { filename: string }) => {
     <button
       onClick={handleDownload}
       data-testid="print-download-button"
-      className="rounded-lg border border-indigo-300 px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50 print:hidden"
+      className={
+        className ??
+        'rounded-lg border border-indigo-300 px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50 print:hidden'
+      }
     >
       Download PDF
     </button>

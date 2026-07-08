@@ -166,8 +166,9 @@ class DiplomaTemplate extends Template {
         className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-6"
         style={{ background: 'linear-gradient(145deg, #04060e 0%, #0c1020 55%, #04060e 100%)' }}
       >
+        <div className="w-full max-w-5xl">
         <div
-          className="relative w-full max-w-5xl overflow-hidden rounded-none sm:rounded-[18px]"
+          className="relative w-full overflow-hidden rounded-none sm:rounded-[18px]"
           style={{
             boxShadow:
               '0 0 0 1px rgba(99,102,241,0.18), 0 32px 80px rgba(0,0,0,0.85), 0 0 100px rgba(55,48,163,0.1)',
@@ -392,10 +393,20 @@ class DiplomaTemplate extends Template {
             <PrintQr hash={hash} />
           </div>
         </div>
-        <div className="flex justify-center mt-4">
-          <PrintDownloadButton filename={pdfFilename} />
+        <div className="mt-5 flex justify-end gap-3 px-5 pb-8 sm:px-0 sm:pb-0 print:hidden">
+          <PrintDownloadButton
+            filename={pdfFilename}
+            className="rounded-lg border border-indigo-400/50 bg-indigo-500/10 px-5 py-2.5 text-sm font-medium text-indigo-200 transition-colors hover:bg-indigo-500/25 print:hidden"
+          />
+          <CertificateShare
+            hash={hash}
+            metadata={metadata}
+            certificate={certificate}
+            templateId="diploma"
+            className="rounded-lg border border-indigo-400/50 bg-indigo-500/10 px-5 py-2.5 text-sm font-medium text-indigo-200 transition-colors hover:bg-indigo-500/25 print:hidden"
+          />
         </div>
-        <CertificateShare hash={hash} metadata={metadata} certificate={certificate} templateId="diploma" />
+        </div>
       </div>
     );
   }
