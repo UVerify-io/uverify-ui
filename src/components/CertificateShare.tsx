@@ -6,6 +6,7 @@ import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import {
   buildLinkedInAddToProfileUrl,
   buildEmbedSnippet,
+  buildSocialShareUrls,
 } from '../utils/share';
 
 interface CertificateShareProps {
@@ -54,6 +55,10 @@ const CertificateShare = ({
     imageUrl ?? `${window.location.origin}/og/${templateId}.png`,
     certificateTitle,
   );
+  const socialLinks = buildSocialShareUrls({
+    url: shortUrl,
+    text: `${certificateTitle} — verified on-chain by ${issuerName}`,
+  });
 
   return (
     <>
@@ -74,6 +79,7 @@ const CertificateShare = ({
         onClose={() => setShareOpen(false)}
         shortUrl={shortUrl}
         linkedInUrl={linkedInUrl}
+        socialLinks={socialLinks}
         embedSnippet={embedSnippet}
       />
     </>

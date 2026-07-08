@@ -54,6 +54,7 @@ test.describe('isReservedKey', () => {
 import {
   buildLinkedInAddToProfileUrl,
   buildEmbedSnippet,
+  buildSocialShareUrls,
 } from '../../src/utils/share';
 
 test.describe('share utils', () => {
@@ -84,5 +85,27 @@ test.describe('share utils', () => {
     expect(snippet).toContain('src="https://app.uverify.io/og/diploma.png"');
     expect(snippet).not.toContain('<2026>');
     expect(snippet).toContain('&quot;Diploma&quot;');
+  });
+
+  test('builds encoded social share intents', () => {
+    const links = buildSocialShareUrls({
+      url: 'https://go.uverify.io/RXYWODQzXG?name=Jane+Doe',
+      text: 'Certified Cardano Developer — verified on-chain by Cardano Academy',
+    });
+    const encodedUrl = encodeURIComponent(
+      'https://go.uverify.io/RXYWODQzXG?name=Jane+Doe',
+    );
+
+    expect(links.x).toContain('https://twitter.com/intent/tweet');
+    expect(links.x).toContain(`url=${encodedUrl}`);
+    expect(links.x).toContain('text=Certified%20Cardano%20Developer');
+    expect(links.bluesky).toContain('https://bsky.app/intent/compose?text=');
+    expect(links.whatsapp).toContain('https://wa.me/?text=');
+    expect(links.whatsapp).toContain(encodedUrl);
+    expect(links.facebook).toBe(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    );
+    expect(links.email).toContain('mailto:?subject=');
+    expect(links.email).toContain(encodedUrl);
   });
 });

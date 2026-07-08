@@ -22,6 +22,32 @@ export function buildLinkedInAddToProfileUrl(
   return `https://www.linkedin.com/profile/add?${params.toString()}`;
 }
 
+export interface SocialShareInput {
+  url: string;
+  text: string;
+}
+
+export interface SocialShareLinks {
+  x: string;
+  bluesky: string;
+  whatsapp: string;
+  facebook: string;
+  email: string;
+}
+
+export function buildSocialShareUrls(input: SocialShareInput): SocialShareLinks {
+  const encodedUrl = encodeURIComponent(input.url);
+  const encodedText = encodeURIComponent(input.text);
+  const encodedTextWithUrl = encodeURIComponent(`${input.text} ${input.url}`);
+  return {
+    x: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+    bluesky: `https://bsky.app/intent/compose?text=${encodedTextWithUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedTextWithUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    email: `mailto:?subject=${encodedText}&body=${encodedTextWithUrl}`,
+  };
+}
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')

@@ -434,6 +434,18 @@ test.describe('Share dialog', () => {
       'href',
       /linkedin\.com\/profile\/add/,
     );
+    await expect(page.getByTestId('share-x')).toHaveAttribute(
+      'href',
+      /twitter\.com\/intent\/tweet/,
+    );
+    await expect(page.getByTestId('share-whatsapp')).toHaveAttribute(
+      'href',
+      /wa\.me/,
+    );
+    await expect(page.getByTestId('share-email')).toHaveAttribute(
+      'href',
+      /^mailto:/,
+    );
   });
 
   test('is absent on templates that do not opt in', async ({ page }) => {
