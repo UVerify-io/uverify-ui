@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { SocialShareLinks } from '../utils/share';
 
@@ -15,7 +15,7 @@ const SOCIAL_BUTTONS: {
   key: keyof SocialShareLinks;
   label: string;
   color: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 }[] = [
   {
     key: 'x',
