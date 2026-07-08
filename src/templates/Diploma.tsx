@@ -30,7 +30,8 @@ class DiplomaTemplate extends Template {
   public name = 'Diploma';
   public defaultUpdatePolicy = 'first' as const;
   public theme: Partial<ThemeSettings> = {
-    background: 'bg-slate-950',
+    background:
+      'bg-[linear-gradient(145deg,#04060e_0%,#0c1020_55%,#04060e_100%)]',
     colors: {
       ice: {
         50: '255, 255, 255',
@@ -162,10 +163,7 @@ class DiplomaTemplate extends Template {
         : null;
 
     return (
-      <div
-        className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-6"
-        style={{ background: 'linear-gradient(145deg, #04060e 0%, #0c1020 55%, #04060e 100%)' }}
-      >
+      <div className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-6">
         <div
           className="relative w-full max-w-5xl overflow-hidden rounded-none sm:rounded-[18px]"
           style={{
@@ -227,19 +225,19 @@ class DiplomaTemplate extends Template {
                   {issuer}
                 </h1>
               </div>
-              <div className="flex flex-col items-end gap-3">
+              <div className="flex flex-col items-center gap-2.5">
                 <img src={uverifyIcon} width="56" height="65" alt="UVerify" style={{ opacity: 0.9 }} />
-                <div className="flex flex-col gap-2 print:hidden">
+                <div className="flex gap-1.5 print:hidden">
                   <PrintDownloadButton
                     filename={pdfFilename}
-                    className="w-36 rounded-lg border border-indigo-300/40 bg-white/5 py-2 text-center text-sm font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
+                    className="whitespace-nowrap rounded-md border border-indigo-300/30 bg-white/5 px-3 py-1.5 text-xs font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
                   />
                   <CertificateShare
                     hash={hash}
                     metadata={metadata}
                     certificate={certificate}
                     templateId="diploma"
-                    className="w-36 rounded-lg border border-indigo-300/40 bg-white/5 py-2 text-center text-sm font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
+                    className="whitespace-nowrap rounded-md border border-indigo-300/30 bg-white/5 px-3 py-1.5 text-xs font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
                   />
                 </div>
               </div>
