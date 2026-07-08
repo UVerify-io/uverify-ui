@@ -92,11 +92,11 @@ const ShareDialog = ({
   return (
     <div
       data-testid="share-dialog"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 print:hidden"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm print:hidden"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-md"
+        className="w-full max-w-md rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 p-6 shadow-center backdrop-blur-md"
         onClick={(event) => event.stopPropagation()}
       >
         <h2 className="mb-4 text-lg font-semibold text-white">
