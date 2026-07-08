@@ -163,9 +163,42 @@ class DiplomaTemplate extends Template {
         : null;
 
     return (
-      <div className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-6">
+      <div className="diploma-print-root min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-6">
+        <style>{`
+          @media print {
+            @page { size: A4 portrait; margin: 0; }
+            html, body {
+              -webkit-print-color-adjust: exact;
+              print-color-adjust: exact;
+            }
+            .diploma-print-root {
+              display: block !important;
+              padding: 0 !important;
+              min-height: 0 !important;
+            }
+            .diploma-print-card {
+              width: 100% !important;
+              max-width: none !important;
+              height: 100vh !important;
+              display: flex !important;
+              flex-direction: column !important;
+              border-radius: 0 !important;
+              box-shadow: none !important;
+              overflow: hidden !important;
+              break-inside: avoid;
+            }
+            .diploma-print-body {
+              flex: 1 1 auto !important;
+              display: flex !important;
+              flex-direction: column !important;
+            }
+            .diploma-print-body > [data-testid='print-qr'] {
+              margin-top: auto;
+            }
+          }
+        `}</style>
         <div
-          className="relative w-full max-w-5xl overflow-hidden rounded-none sm:rounded-[18px]"
+          className="diploma-print-card relative w-full max-w-5xl overflow-hidden rounded-none sm:rounded-[18px]"
           style={{
             boxShadow:
               '0 0 0 1px rgba(99,102,241,0.18), 0 32px 80px rgba(0,0,0,0.85), 0 0 100px rgba(55,48,163,0.1)',
@@ -255,7 +288,7 @@ class DiplomaTemplate extends Template {
 
           {/* ── Body panel ── */}
           <div
-            className="px-5 sm:px-16 py-8 sm:py-12"
+            className="diploma-print-body px-5 sm:px-16 py-8 sm:py-12"
             style={{ background: '#ffffff' }}
           >
             {/* "Awarded to" label with document actions on the right */}
