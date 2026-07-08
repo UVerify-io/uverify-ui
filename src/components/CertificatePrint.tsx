@@ -5,9 +5,11 @@ import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 export const PrintDownloadButton = ({
   filename,
   className,
+  label,
 }: {
   filename: string;
   className?: string;
+  label?: React.ReactNode;
 }) => {
   const handleDownload = () => {
     const previousTitle = document.title;
@@ -20,12 +22,14 @@ export const PrintDownloadButton = ({
     <button
       onClick={handleDownload}
       data-testid="print-download-button"
+      aria-label="Download PDF"
+      title="Download PDF"
       className={
         className ??
         'rounded-lg border border-indigo-300 px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-50 print:hidden'
       }
     >
-      Download PDF
+      {label ?? 'Download PDF'}
     </button>
   );
 };

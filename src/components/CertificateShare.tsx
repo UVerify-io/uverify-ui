@@ -17,7 +17,7 @@ interface CertificateShareProps {
   organizationName?: string;
   imageUrl?: string;
   className?: string;
-  label?: string;
+  label?: React.ReactNode;
 }
 
 const CertificateShare = ({
@@ -61,6 +61,7 @@ const CertificateShare = ({
         onClick={() => setShareOpen(true)}
         data-testid="share-button"
         aria-label="Share certificate"
+        title="Share"
         className={
           className ??
           'fixed bottom-6 right-6 z-40 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm hover:bg-white/20 print:hidden'

@@ -225,22 +225,7 @@ class DiplomaTemplate extends Template {
                   {issuer}
                 </h1>
               </div>
-              <div className="flex flex-col items-center gap-2.5">
-                <img src={uverifyIcon} width="56" height="65" alt="UVerify" style={{ opacity: 0.9 }} />
-                <div className="flex gap-1.5 print:hidden">
-                  <PrintDownloadButton
-                    filename={pdfFilename}
-                    className="whitespace-nowrap rounded-md border border-indigo-300/30 bg-white/5 px-3 py-1.5 text-xs font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
-                  />
-                  <CertificateShare
-                    hash={hash}
-                    metadata={metadata}
-                    certificate={certificate}
-                    templateId="diploma"
-                    className="whitespace-nowrap rounded-md border border-indigo-300/30 bg-white/5 px-3 py-1.5 text-xs font-medium text-indigo-100 transition-colors hover:bg-white/15 print:hidden"
-                  />
-                </div>
-              </div>
+              <img src={uverifyIcon} width="56" height="65" alt="UVerify" style={{ opacity: 0.9 }} />
             </div>
 
             {/* Programme / field title */}
@@ -273,13 +258,44 @@ class DiplomaTemplate extends Template {
             className="px-5 sm:px-16 py-8 sm:py-12"
             style={{ background: '#ffffff' }}
           >
-            {/* "Awarded to" label */}
-            <p
-              className="text-xs font-semibold uppercase mb-3"
-              style={{ color: '#94a3b8', letterSpacing: '0.2em' }}
-            >
-              Awarded to
-            </p>
+            {/* "Awarded to" label with document actions on the right */}
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <p
+                className="text-xs font-semibold uppercase"
+                style={{ color: '#94a3b8', letterSpacing: '0.2em' }}
+              >
+                Awarded to
+              </p>
+              <div className="flex gap-2 print:hidden">
+                <PrintDownloadButton
+                  filename={pdfFilename}
+                  className="rounded-md border border-slate-200 p-2 text-slate-400 transition-colors hover:border-indigo-300 hover:text-indigo-600 print:hidden"
+                  label={
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M12 3v12" />
+                      <path d="m7 10 5 5 5-5" />
+                      <path d="M5 21h14" />
+                    </svg>
+                  }
+                />
+                <CertificateShare
+                  hash={hash}
+                  metadata={metadata}
+                  certificate={certificate}
+                  templateId="diploma"
+                  className="rounded-md border border-slate-200 p-2 text-slate-400 transition-colors hover:border-indigo-300 hover:text-indigo-600 print:hidden"
+                  label={
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="18" cy="5" r="3" />
+                      <circle cx="6" cy="12" r="3" />
+                      <circle cx="18" cy="19" r="3" />
+                      <path d="m8.6 10.7 6.8-3.9" />
+                      <path d="m8.6 13.3 6.8 3.9" />
+                    </svg>
+                  }
+                />
+              </div>
+            </div>
 
             {/* Recipient name */}
             {recipientIsHash ? (
