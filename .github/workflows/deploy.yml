@@ -97,14 +97,14 @@ jobs:
 
       - name: 🔨 Download dependencies and build hosting
         env:
-          GITLAB_TOKEN_BLOCKFORCE: ${{ secrets.GITLAB_TOKEN_BLOCKFORCE }}
+          GH_TOKEN_BLOCKFORCE: ${{ secrets.GH_TOKEN_BLOCKFORCE }}
         run: npm ci && npm run build
 
       - name: 🦺 Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         env:
-          GITLAB_TOKEN_BLOCKFORCE: ${{ secrets.GITLAB_TOKEN_BLOCKFORCE }}
+          GH_TOKEN_BLOCKFORCE: ${{ secrets.GH_TOKEN_BLOCKFORCE }}
         run: npx playwright test
 
       - name: 🚀 Deploy to Firebase hosting
