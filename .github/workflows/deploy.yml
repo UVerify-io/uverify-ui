@@ -46,12 +46,14 @@ jobs:
         if: matrix.network == 'mainnet'
         run: |
           echo "BACKEND_URL=https://api.uverify.io" >> $GITHUB_ENV
+          echo "SHORT_LINK_DOMAIN=https://go.uverify.io" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_MAINNET }}" >> $GITHUB_ENV
 
       - name: 📝 Set preprod site
         if: matrix.network == 'preprod'
         run: |
           echo "BACKEND_URL=https://api.preprod.uverify.io" >> $GITHUB_ENV
+          echo "SHORT_LINK_DOMAIN=https://go.preprod.uverify.io" >> $GITHUB_ENV
           echo "FIREBASE_SITE=${{ secrets.FIREBASE_SITE_PREPROD }}" >> $GITHUB_ENV
 
       - name: 📝 Write .env file
@@ -59,6 +61,7 @@ jobs:
           echo 'VITE_VERSION=$npm_package_version' > .env
           echo "VITE_BACKEND_URL=${{ env.BACKEND_URL }}" >> .env
           echo "VITE_CARDANO_NETWORK=${{ matrix.network }}" >> .env
+          echo "VITE_SHORT_LINK_DOMAIN=${{ env.SHORT_LINK_DOMAIN }}" >> .env
 
       - name: 📝 Create .firebaserc file
         run: |
