@@ -1,5 +1,33 @@
 # Changelog
 
+## [3.12.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.11.0...ui-v3.12.0) (2026-07-18)
+
+
+### Features
+
+* add X, Bluesky, WhatsApp, Facebook and email share options ([134ddbb](https://github.com/UVerify-io/uverify-ui/commit/134ddbbc5fbb03f36d09dccca5b63c48f4e1a82f))
+* client-side short code derivation, salt cropping and short link config ([4b961bc](https://github.com/UVerify-io/uverify-ui/commit/4b961bc78a9976bb02b7eb449f34ece59b83f4bc))
+* diploma document actions as icon buttons beside the awarded-to label ([0c14049](https://github.com/UVerify-io/uverify-ui/commit/0c14049cf632d1b0831b1cf80742ab08584f0f93))
+* diploma print view with download button and verifiable QR code ([66ea45b](https://github.com/UVerify-io/uverify-ui/commit/66ea45b7e028a724c11cff4420deee0147ee15eb))
+* enable sharing for certificate of insurance and digital product passport ([bd0d661](https://github.com/UVerify-io/uverify-ui/commit/bd0d6619a2b4698878326ed36f7f35ee9cc598e8))
+* let additional templates ship their own og preview image ([71d5206](https://github.com/UVerify-io/uverify-ui/commit/71d5206f5b6f4135f71c1efed8d01d6024ac3c74))
+* make certificate sharing a per-template opt-in ([a713689](https://github.com/UVerify-io/uverify-ui/commit/a713689f2bd3b88cbfb047d85b860ada5792ce82))
+* make product verification template public for everyone ([da2c8ec](https://github.com/UVerify-io/uverify-ui/commit/da2c8ec588cdb28d6f3d79b669476a50a2a67278))
+* move diploma download and share actions into the certificate header ([05a8202](https://github.com/UVerify-io/uverify-ui/commit/05a8202b933fc4e93191da1c2d8fa368f8851416))
+* reserve uv_og_ keys and crop salt suffixes from displayed url params ([d4806a9](https://github.com/UVerify-io/uverify-ui/commit/d4806a917c8107d8ccbbae4f40fecd1b7bc2f6a1))
+* share dialog with short link, QR code, LinkedIn and embed snippet ([dc23dfd](https://github.com/UVerify-io/uverify-ui/commit/dc23dfd1f43862bebcfbe9f9f4c0d3b9de7f86ff))
+* ship per-template open graph images with hosting-level fallback ([f711db2](https://github.com/UVerify-io/uverify-ui/commit/f711db2f579a03c5de760745227001d4d5d992f0))
+
+
+### Bug Fixes
+
+* anchor diploma download and share actions below the certificate card ([ed4d4e6](https://github.com/UVerify-io/uverify-ui/commit/ed4d4e6f2a51360cca2f165d2c4a786b817d68b7))
+* compact diploma header actions and full viewport gradient background ([4bca154](https://github.com/UVerify-io/uverify-ui/commit/4bca154cb0fd492dc531d601ab1e6a7182bb6a95))
+* handle clipboard failures and clean up copy feedback timeout in share dialog ([727a6ac](https://github.com/UVerify-io/uverify-ui/commit/727a6ac483d4d53c215e439488e5e204d4846172))
+* print the diploma as a single full page ([468b610](https://github.com/UVerify-io/uverify-ui/commit/468b61062e90b90ddcab1fd1a26918698cec53bf))
+* update blockforce repository url to GitHub ([13b7ed2](https://github.com/UVerify-io/uverify-ui/commit/13b7ed254d5f2310302ad664864e3572376a24b9))
+* use ReactElement instead of unavailable JSX namespace in share dialog ([2566850](https://github.com/UVerify-io/uverify-ui/commit/25668506d32d03d1d79fe1ace3fee9f15a89cebc))
+
 ## [3.11.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.10.1...ui-v3.11.0) (2026-07-05)
 
 
