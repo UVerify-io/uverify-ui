@@ -429,7 +429,7 @@ test.describe('Share dialog', () => {
     await expect(page.getByTestId('share-short-url')).toHaveValue(
       'https://go.uverify.io/RXYWODQzXG',
     );
-    await expect(page.getByTestId('share-dialog').locator('svg')).toBeVisible();
+    await expect(page.getByTestId('share-dialog').getByRole('img')).toBeVisible();
     await expect(page.getByTestId('share-linkedin')).toHaveAttribute(
       'href',
       /linkedin\.com\/profile\/add/,
