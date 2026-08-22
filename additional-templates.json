@@ -17,7 +17,7 @@
     "type": "repository",
     "name": "Blockforce",
     "url": "https://github.com/blockforce-ai/uverify-template-blockforce",
-    "commit": "71e062b6f4dda11849d9d5311fd23200576f0dbf",
+    "commit": "e37daa16671e78131f01647675f1b504556f06e8",
     "path": "src/Certificate.tsx",
     "accessTokenName": "GH_TOKEN_BLOCKFORCE"
   }
