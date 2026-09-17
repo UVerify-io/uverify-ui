@@ -3,21 +3,29 @@
     "type": "repository",
     "name": "SocialHub",
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
-    "commit": "20561655fb4cf6714b8ae02d6aa2d24b0ee88770",
+    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
     "path": "social-hub/src/Certificate.tsx"
   },
   {
     "type": "repository",
     "name": "Tadamon",
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
-    "commit": "20561655fb4cf6714b8ae02d6aa2d24b0ee88770",
+    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
     "path": "tadamon/src/Certificate.tsx"
+  },
+  {
+    "type": "repository",
+    "name": "cardanoAcademyCertificate",
+    "url": "https://github.com/UVerify-io/uverify-additional-templates",
+    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
+    "path": "cardano-academy-certificate/src/Certificate.tsx",
+    "ogImage": "cardano-academy-certificate/og.png"
   },
   {
     "type": "repository",
     "name": "Blockforce",
     "url": "https://github.com/blockforce-ai/uverify-template-blockforce",
-    "commit": "e37daa16671e78131f01647675f1b504556f06e8",
+    "commit": "71e062b6f4dda11849d9d5311fd23200576f0dbf",
     "path": "src/Certificate.tsx",
     "accessTokenName": "GH_TOKEN_BLOCKFORCE"
   }
