@@ -40,3 +40,8 @@ firebase.json
 
 # Cloned external template repositories (fetched during build)
 .template-cache/
+
+# TypeScript build-mode artifacts (tsc -b), the build uses plain tsc
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
