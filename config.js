@@ -90,7 +90,7 @@ function addTemplate(name, absolutePath) {
   const key = name.charAt(0).toLowerCase() + name.slice(1);
 
   templateImports.push(`import ${importId} from '${importPath}';`);
-  templateEntries.push(`  ${key}: new ${importId}(config),`);
+  templateEntries.push(`  '${key}': new ${importId}(config),`);
   dynamicTemplateNames.push(key);
 
   const parentDir = path.dirname(absolutePath);
