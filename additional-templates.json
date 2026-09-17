@@ -3,21 +3,21 @@
     "type": "repository",
     "name": "SocialHub",
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
-    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
+    "commit": "1c1deee840ec9024b9372f6c6fbba6101291e1ae",
     "path": "social-hub/src/Certificate.tsx"
   },
   {
     "type": "repository",
     "name": "Tadamon",
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
-    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
+    "commit": "1c1deee840ec9024b9372f6c6fbba6101291e1ae",
     "path": "tadamon/src/Certificate.tsx"
   },
   {
     "type": "repository",
     "name": "cardanoAcademyCertificate",
     "url": "https://github.com/UVerify-io/uverify-additional-templates",
-    "commit": "43f264e24fb392a80f11a40ed1a9e254f09fb28e",
+    "commit": "1c1deee840ec9024b9372f6c6fbba6101291e1ae",
     "path": "cardano-academy-certificate/src/Certificate.tsx",
     "ogImage": "cardano-academy-certificate/og.png"
   },

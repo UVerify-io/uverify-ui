@@ -199,7 +199,10 @@ const Certificate = () => {
             candidateTemplate.requiredCredentials &&
             candidateTemplate.requiredCredentials.length > 0
           ) {
-            const issuerCredential = displayedCertificates[page - 1].issuer;
+            // The credential API is keyed by the hex payment credential, which
+            // the backend exposes as `address`. `issuer` is the same key as a
+            // Bech32 enterprise address and never matches.
+            const issuerCredential = displayedCertificates[page - 1].address;
             const credResults = await Promise.all(
               candidateTemplate.requiredCredentials.map((type) =>
                 axios

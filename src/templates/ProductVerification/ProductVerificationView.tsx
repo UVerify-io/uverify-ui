@@ -651,7 +651,7 @@ function ProductVerificationView({
           {extra.issuer ? (
             <div className="mt-1">
               <IssuerIdentityBadge
-                issuerPaymentCredential={extra.issuer}
+                issuerPaymentCredential={certificate?.address ?? extra.issuer}
                 credentialType="identity"
               />
             </div>
