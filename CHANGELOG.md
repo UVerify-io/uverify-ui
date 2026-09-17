@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.13.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.12.0...ui-v3.13.0) (2026-09-17)
+
+
+### Features
+
+* update blockforce template to its latest version ([4a456f4](https://github.com/UVerify-io/uverify-ui/commit/4a456f45d2bd3993b6e77687af1669dbae732e69))
+
 ## [3.12.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.11.0...ui-v3.12.0) (2026-07-18)
 
 
