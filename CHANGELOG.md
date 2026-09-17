@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.13.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.13.0...ui-v3.13.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* add academy certificate and rollback blockforce certificate ([9d6ded7](https://github.com/UVerify-io/uverify-ui/commit/9d6ded7402e2c390404c2235e4fd8ebefdc4ff1e))
+
 ## [3.13.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.12.0...ui-v3.13.0) (2026-09-17)
 
 
