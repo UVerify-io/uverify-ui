@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.13.2](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.13.1...ui-v3.13.2) (2026-09-17)
+
+
+### Bug Fixes
+
+* resolve issuer credentials by payment credential and update academy template ([f1bc113](https://github.com/UVerify-io/uverify-ui/commit/f1bc11338341392436902a15d3dce2d1935c25e7))
+
 ## [3.13.1](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.13.0...ui-v3.13.1) (2026-09-17)
 
 
