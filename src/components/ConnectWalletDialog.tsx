@@ -118,6 +118,7 @@ export function ConnectWalletDialog({
           'begin',
           'typhon',
           'gerowallet',
+          '1am',
         ]}
         onConnect={() => setIsWalletDialogOpen(false)}
         onConnectError={(walletname, error) => {
