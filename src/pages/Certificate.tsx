@@ -212,7 +212,12 @@ const Certificate = () => {
                   .catch(() => null),
               ),
             );
-            const allPresent = credResults.every((r) => r?.status === 200);
+            const allPresent = credResults.every(
+              (r) =>
+                r?.status === 200 &&
+                (!candidateTemplate.requireVerifiedCredentials ||
+                  r.data?.keriVerified === true),
+            );
             if (allPresent) {
               setTemplateId(metadataTemplateId);
               applyTheme(candidateTemplate.theme);
