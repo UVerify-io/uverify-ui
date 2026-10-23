@@ -99,7 +99,7 @@ const IssuerIdentityBadge = ({
       title={
         credential.keriVerified
           ? 'Identity verified via KERI/ACDC chain'
-          : 'KERIA agent unreachable — credential not yet verified'
+          : 'Self-announced credential, not verified via KERI'
       }
     >
       {credential.keriVerified ? (

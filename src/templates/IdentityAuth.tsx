@@ -5,7 +5,8 @@ import {
   type UVerifyCertificateExtraData,
   type UVerifyMetadata,
 } from '@uverify/core';
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
+import axios from 'axios';
 import { useUVerifyConfig } from '../utils/UVerifyConfigProvider';
 import uverifyIcon from '../assets/uverify.svg';
 import { timestampToDateTime } from '../utils/tools';
@@ -77,7 +78,7 @@ function KeriBadge({ verified }: { verified: boolean | null }) {
         letterSpacing: '0.04em',
       }}
     >
-      <span>⚠</span> KERIA agent unreachable
+      <span>⚠</span> Not verified
     </span>
   );
 }
@@ -143,6 +144,26 @@ function IdentityAuthView({
   const isRevoke = lifecycleType === 'REVOKE';
   const targetHash = (metadata['th'] ?? '') as string;
   const date = certificate ? timestampToDateTime(certificate.creationTime) : '';
+  const transactionHash = certificate?.transactionHash;
+
+  const [keriVerified, setKeriVerified] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (isRevoke || !transactionHash || !config.backendUrl) return;
+    axios
+      .get(`${config.backendUrl}/api/v1/credential/by-hash/${hash}`)
+      .then((response) => {
+        // Certificate hashes are not unique across wallets. Only trust the
+        // credential that was indexed from this certificate's transaction.
+        if (response.data?.txHash !== transactionHash) return;
+        setKeriVerified(
+          response.data.active === true && response.data.keriVerified === true,
+        );
+      })
+      .catch(() => {
+        // 404 until the indexer has processed the certificate
+      });
+  }, [hash, isRevoke, transactionHash, config.backendUrl]);
 
   const cardStyle: React.CSSProperties = {
     width: '100%',
@@ -221,7 +242,11 @@ function IdentityAuthView({
                 letterSpacing: '-0.01em',
               }}
             >
-              {isRevoke ? 'Revocation Notice' : 'Verified Credential'}
+              {isRevoke
+                ? 'Revocation Notice'
+                : keriVerified
+                  ? 'Verified Credential'
+                  : 'Credential Announcement'}
             </p>
           </div>
           <img
@@ -256,7 +281,7 @@ function IdentityAuthView({
           {/* KERI verification badge — only for AUTH certs */}
           {!isRevoke && (
             <div style={{ marginTop: '20px' }}>
-              <KeriBadge verified={null} />
+              <KeriBadge verified={keriVerified} />
               <p
                 style={{
                   fontSize: '11px',
@@ -265,8 +290,9 @@ function IdentityAuthView({
                   lineHeight: 1.6,
                 }}
               >
-                Verification status is resolved when this credential is displayed
-                in context of a product or document certificate.
+                The credential type is declared by the issuing wallet. KERI
+                Verified means the vLEI Verifier authorizes this AID and the AID
+                signed the binding to this wallet.
               </p>
             </div>
           )}
