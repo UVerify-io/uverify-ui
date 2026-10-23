@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.14.0](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.13.2...ui-v3.14.0) (2026-10-23)
+
+
+### Features
+
+* add 1AM to supported wallets ([3a55282](https://github.com/UVerify-io/uverify-ui/commit/3a552826fbbab7fdfed2a2da914cb899fe23fd88))
+* add 1AM to supported wallets ([6d8e69a](https://github.com/UVerify-io/uverify-ui/commit/6d8e69a70f7f5b8ad49bfd8d4f97c319633f9abc))
+
+
+### Bug Fixes
+
+* require verified credentials for opted-in templates ([86bdc85](https://github.com/UVerify-io/uverify-ui/commit/86bdc855a7abccaff292e8eae61014cd8dbac793))
+
 ## [3.13.2](https://github.com/UVerify-io/uverify-ui/compare/ui-v3.13.1...ui-v3.13.2) (2026-09-17)
 
 
